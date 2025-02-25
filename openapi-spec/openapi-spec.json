@@ -9,7 +9,7 @@
     "url" : "https://github.com/heshaam-42c/vehicle-locator-api"
   },
   "servers" : [ {
-    "url" : "http://localhost:8888"
+    "url" : "https://api.vehiclelocator.com"
   } ],
   "paths" : {
     "/identity/api/auth/signup" : {
@@ -161,71 +161,6 @@
               }
             },
             "description" : ""
-          },
-          "default": {
-            "description": "Default",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string",
-                  "maxLength": 1
-                }
-              }
-            }
-          }
-        }
-      },
-      "parameters" : [ ]
-    },
-    "/identity/api/auth/forget-password" : {
-      "post" : {
-        "operationId" : "forgot_password",
-        "summary" : "Forgot Password",
-        "description" : "Sends an OTP to email to reset password",
-        "tags" : [ "Identity / Auth" ],
-        "security" : [ ],
-        "requestBody" : {
-          "content" : {
-            "application/json" : {
-              "schema" : {
-                "type" : "object",
-                "required" : [ "email" ],
-                "additionalProperties": false,
-                "properties" : {
-                  "email" : {
-                    "type": "string",
-                    "pattern": "^[a-zA-Z0-9]{3,91}@test\\.com$",
-                    "minLength": 3,
-                    "maxLength": 100,
-                    "format": "o:HA:email",
-                    "x-42c-format": "o:HA:email",
-                    "example": "scanuser@test.com"
-                  }
-                }
-              }
-            }
-          }
-        },
-        "responses" : {
-          "200" : {
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/DefaultResponse"
-                }
-              }
-            },
-            "description" : "Successfully send OTP"
-          },
-          "404" : {
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/DefaultResponse"
-                }
-              }
-            },
-            "description" : "Email address not registered"
           },
           "default": {
             "description": "Default",
