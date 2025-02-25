@@ -1,0 +1,975 @@
+{
+  "openapi" : "3.0.1",
+  "info" : {
+    "title" : "Vehicle Locator (VL) API",
+    "version" : "1-oas3"
+  },
+  "externalDocs" : {
+    "description" : "Vehicle Locator (VL) API",
+    "url" : "https://github.com/heshaam-42c/vehicle-locator-api"
+  },
+  "servers" : [ {
+    "url" : "http://localhost:8888"
+  } ],
+  "paths" : {
+    "/identity/api/auth/signup" : {
+      "post" : {
+        "operationId" : "signup",
+        "summary" : "Sign up",
+        "description" : "Used to create an account",
+        "tags" : [ "Identity / Auth" ],
+        "security" : [ ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "type" : "object",
+                "required" : [ "email", "name", "number", "password" ],
+                "additionalProperties": false,
+                "properties" : {
+                  "email" : {
+                    "type": "string",
+                    "pattern": "^[a-zA-Z0-9]{3,91}@test\\.com$",
+                    "minLength": 3,
+                    "maxLength": 100,
+                    "format": "o:HA:email",
+                    "x-42c-format": "o:HA:email"
+                  },
+                  "name" : {
+                    "type" : "string",
+                    "pattern": "^.{3,300}$",
+                    "minLength": 3,
+                    "maxLength": 300,
+                    "example": "Conf Scan User"
+                  },
+                  "number" : {
+                    "type" : "string",
+                    "pattern": "^[0-9]{10,10}$",
+                    "minLength": 10,
+                    "maxLength": 10
+                  },
+                  "password" : {
+                    "type" : "string",
+                    "pattern": "^[0-9a-z]{3,300}$",
+                    "minLength": 3,
+                    "maxLength": 300,
+                    "example": "scanpassword"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/DefaultResponse"
+                }
+              }
+            },
+            "description" : "User successfully registered"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/DefaultResponse"
+                }
+              }
+            },
+            "description" : ""
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/DefaultResponse"
+                }
+              }
+            },
+            "description" : ""
+          },
+          "default": {
+            "description": "Default",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "maxLength": 1
+                }
+              }
+            }
+          }
+        }
+      },
+      "parameters" : [ ]
+    },
+    "/identity/api/auth/login" : {
+      "post" : {
+        "operationId" : "login",
+        "summary" : "Login",
+        "tags" : [ "Identity / Auth" ],
+        "security" : [ ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "type" : "object",
+                "required" : [ "email", "password" ],
+                "additionalProperties": false,
+                "properties" : {
+                  "email" : {
+                    "type": "string",
+                    "pattern": "^[a-zA-Z0-9]{3,91}@test\\.com$",
+                    "minLength": 3,
+                    "maxLength": 100,
+                    "format": "o:HA:email",
+                    "x-42c-format": "o:HA:email",
+                    "example": "scanuser@test.com"
+                  },
+                  "password" : {
+                    "type" : "string",
+                    "pattern": "^[0-9a-z]{3,300}$",
+                    "minLength": 3,
+                    "maxLength": 300,
+                    "example": "scanpassword"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/JwtResponse"
+                }
+              }
+            },
+            "description" : ""
+          },
+          "500" : {
+            "content" : {
+              "text/plain" : {
+                "schema" : {
+                  "type" : "string"
+                }
+              }
+            },
+            "description" : ""
+          },
+          "default": {
+            "description": "Default",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "maxLength": 1
+                }
+              }
+            }
+          }
+        }
+      },
+      "parameters" : [ ]
+    },
+    "/identity/api/auth/forget-password" : {
+      "post" : {
+        "operationId" : "forgot_password",
+        "summary" : "Forgot Password",
+        "description" : "Sends an OTP to email to reset password",
+        "tags" : [ "Identity / Auth" ],
+        "security" : [ ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "type" : "object",
+                "required" : [ "email" ],
+                "additionalProperties": false,
+                "properties" : {
+                  "email" : {
+                    "type": "string",
+                    "pattern": "^[a-zA-Z0-9]{3,91}@test\\.com$",
+                    "minLength": 3,
+                    "maxLength": 100,
+                    "format": "o:HA:email",
+                    "x-42c-format": "o:HA:email",
+                    "example": "scanuser@test.com"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/DefaultResponse"
+                }
+              }
+            },
+            "description" : "Successfully send OTP"
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/DefaultResponse"
+                }
+              }
+            },
+            "description" : "Email address not registered"
+          },
+          "default": {
+            "description": "Default",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "maxLength": 1
+                }
+              }
+            }
+          }
+        }
+      },
+      "parameters" : [ ]
+    },
+    "/identity/api/v2/vehicle/vehicles" : {
+      "get" : {
+        "operationId" : "get_vehicles",
+        "summary" : "Get user vehicles",
+        "tags" : [ "Identity / Vehicle" ],
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "type" : "object",
+                    "required" : [ "id", "model", "owner", "pincode", "status", "uuid", "vehicleLocation", "vin", "year" ],
+                    "additionalProperties": false,
+                    "properties" : {
+                      "id" : {
+                        "type" : "number"
+                      },
+                      "uuid" : {
+                        "type" : "string"
+                      },
+                      "year" : {
+                        "type" : "number"
+                      },
+                      "status" : {
+                        "type" : "string"
+                      },
+                      "vin" : {
+                        "type" : "string"
+                      },
+                      "pincode" : {
+                        "type" : "string"
+                      },
+                      "owner" : {
+                        "$ref" : "#/components/schemas/User"
+                      },
+                      "model" : {
+                        "type" : "object",
+                        "required" : [ "fuel_type", "id", "model", "vehicle_img", "vehiclecompany" ],
+                        "additionalProperties": false,
+                        "properties" : {
+                          "model" : {
+                            "type" : "string"
+                          },
+                          "fuel_type" : {
+                            "type" : "string"
+                          },
+                          "vehicle_img" : {
+                            "type" : "string"
+                          },
+                          "id" : {
+                            "type" : "number"
+                          },
+                          "vehiclecompany" : {
+                            "type" : "object",
+                            "required" : [ "id", "name" ],
+                            "additionalProperties": false,
+                            "properties" : {
+                              "id" : {
+                                "type" : "number"
+                              },
+                              "name" : {
+                                "type" : "string"
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "vehicleLocation" : {
+                        "type" : "object",
+                        "required" : [ "id", "latitude", "longitude" ],
+                        "additionalProperties": false,
+                        "properties" : {
+                          "id" : {
+                            "type" : "number"
+                          },
+                          "latitude" : {
+                            "type" : "string"
+                          },
+                          "longitude" : {
+                            "type" : "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "description" : ""
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/DefaultResponse"
+                }
+              }
+            },
+            "description" : "Internal Server Error"
+          },
+          "default": {
+            "description": "Default",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "maxLength": 1
+                }
+              }
+            }
+          }
+        }
+      },
+      "parameters" : [ ]
+    },
+    "/identity/api/v2/vehicle/add_vehicle" : {
+      "post" : {
+        "operationId" : "add_vehicle",
+        "summary" : "Add the user vehicle",
+        "tags" : [ "Identity / Vehicle" ],
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "type" : "object",
+                "required" : [ "pincode", "vin" ],
+                "additionalProperties": false,
+                "properties" : {
+                  "pincode" : {
+                    "type" : "string",
+                    "minLength": 4,
+                    "maxLength": 4,
+                    "pattern": "^[0-9]{4}$"
+                  },
+                  "vin" : {
+                    "type" : "string",
+                    "minLength": 17,
+                    "maxLength": 17,
+                    "pattern": "^[A-Z0-9]{17}$"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/DefaultResponse"
+                }
+              }
+            },
+            "description" : ""
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/DefaultResponse"
+                }
+              }
+            },
+            "description" : ""
+          }
+        }
+      },
+      "parameters" : [ ]
+    },
+    "/identity/api/v2/vehicle/{vehicleId}/location" : {
+      "get" : {
+        "operationId" : "get_location",
+        "summary" : "Get Vehicle Location",
+        "description" : "Get user's vehicle location",
+        "tags" : [ "Identity / Vehicle" ],
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "required" : [ "carId", "fullName", "vehicleLocation" ],
+                  "additionalProperties": false,
+                  "properties" : {
+                    "carId" : {
+                      "type" : "string"
+                    },
+                    "fullName" : {
+                      "type" : "string"
+                    },
+                    "vehicleLocation" : {
+                      "type" : "object",
+                      "required" : [ "id", "latitude", "longitude" ],
+                      "additionalProperties": false,
+                      "properties" : {
+                        "id" : {
+                          "type" : "number"
+                        },
+                        "latitude" : {
+                          "type" : "string"
+                        },
+                        "longitude" : {
+                          "type" : "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "description" : ""
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/DefaultResponse"
+                }
+              }
+            },
+            "description" : "Invalid vehicle_id for User"
+          },
+          "default": {
+            "description": "Default",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "maxLength": 1
+                }
+              }
+            }
+          }
+        }
+      },
+      "parameters" : [ {
+        "in" : "path",
+        "name" : "vehicleId",
+        "required" : true,
+        "schema" : {
+          "type" : "string",
+          "format" : "uuid",
+          "example": "0be319f0-f0dd-44aa-af0b-af927f3a383f"
+        }
+      } ]
+    }
+  },
+  "components" : {
+    "schemas" : {
+      "Order" : {
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "integer",
+            "readOnly" : true
+          },
+          "user" : {
+            "$ref" : "#/components/schemas/User"
+          },
+          "product" : {
+            "$ref" : "#/components/schemas/Product"
+          },
+          "quantity" : {
+            "type" : "integer"
+          },
+          "status" : {
+            "$ref" : "#/components/schemas/OrderStatusEnum"
+          },
+          "created_on" : {
+            "type" : "string",
+            "format" : "date-time"
+          }
+        },
+        "required" : [ "created_on", "id", "product", "user" ]
+      },
+      "User" : {
+        "type" : "object",
+        "additionalProperties": false,
+        "nullable": true,
+        "properties" : {
+          "email" : {
+            "type" : "string"
+          },
+          "number" : {
+            "type" : "string",
+            "nullable" : true
+          }
+        },
+        "required" : [ "email" ]
+      },
+      "NewProduct" : {
+        "type" : "object",
+        "properties" : {
+          "name" : {
+            "type" : "string"
+          },
+          "price" : {
+            "type" : "string",
+            "format" : "decimal",
+            "pattern" : "^\\d{0,18}(\\.\\d{0,2})?$"
+          },
+          "image_url" : {
+            "type" : "string",
+            "format" : "url"
+          }
+        },
+        "required" : [ "image_url", "name", "price" ]
+      },
+      "Product" : {
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "integer",
+            "readOnly" : true
+          },
+          "name" : {
+            "type" : "string"
+          },
+          "price" : {
+            "type" : "string",
+            "format" : "decimal",
+            "pattern" : "^\\d{0,18}(\\.\\d{0,2})?$"
+          },
+          "image_url" : {
+            "type" : "string",
+            "format" : "url"
+          }
+        },
+        "required" : [ "id", "image_url", "name", "price" ]
+      },
+      "OrderStatusEnum" : {
+        "enum" : [ "delivered", "return pending", "returned" ],
+        "type" : "string"
+      },
+      "ProductQuantity" : {
+        "type" : "object",
+        "properties" : {
+          "product_id" : {
+            "type" : "integer",
+            "example": 1
+          },
+          "quantity" : {
+            "type" : "integer",
+            "example": 1
+          }
+        },
+        "required" : [ "product_id", "quantity" ]
+      },
+      "Post" : {
+        "title" : "Post",
+        "required" : [ "id", "title", "content", "author", "comments", "authorid", "CreatedAt" ],
+        "type" : "object",
+        "additionalProperties": false,
+        "properties" : {
+          "id" : {
+            "type" : "string"
+          },
+          "title" : {
+            "type" : "string"
+          },
+          "content" : {
+            "type" : "string"
+          },
+          "author" : {
+            "$ref" : "#/components/schemas/Author"
+          },
+          "comments" : {
+            "type" : "array",
+            "items" : {
+              "type" : "object",
+              "required" : [ "CreatedAt", "author", "content", "id" ],
+              "properties" : {
+                "CreatedAt" : {
+                  "type" : "string"
+                },
+                "author" : {
+                  "type" : "object",
+                  "required" : [ "created_at", "email", "nickname", "profile_pic_url", "vehicleid" ],
+                  "properties" : {
+                    "vehicleid" : {
+                      "type" : "string",
+                      "format" : "uuid"
+                    },
+                    "email" : {
+                      "type" : "string"
+                    },
+                    "created_at" : {
+                      "type" : "string"
+                    },
+                    "profile_pic_url" : {
+                      "type" : "string"
+                    },
+                    "nickname" : {
+                      "type" : "string"
+                    }
+                  }
+                },
+                "content" : {
+                  "type" : "string"
+                },
+                "id" : {
+                  "type" : "string"
+                }
+              }
+            },
+            "description" : ""
+          },
+          "authorid" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "CreatedAt" : {
+            "type" : "string"
+          }
+        },
+        "example" : {
+          "id" : "ConZLXacq3MqhbLQDrbNLf",
+          "title" : "Title 3",
+          "content" : "Hello world 3",
+          "author" : {
+            "nickname" : "Hacker",
+            "email" : "hacker@darkweb.com",
+            "vehicleid" : "abac4018-5a38-466c-ab7f-361908afeab6",
+            "profile_pic_url" : "",
+            "created_at" : "2021-09-16T01:46:32.432Z"
+          },
+          "comments" : [ ],
+          "authorid" : 3,
+          "CreatedAt" : "2021-09-16T01:46:32.432Z"
+        }
+      },
+      "Author" : {
+        "title" : "Author",
+        "required" : [ "nickname", "email", "vehicleid", "profile_pic_url", "created_at" ],
+        "type" : "object",
+        "properties" : {
+          "nickname" : {
+            "type" : "string"
+          },
+          "email" : {
+            "type" : "string"
+          },
+          "vehicleid" : {
+            "type" : "string"
+          },
+          "profile_pic_url" : {
+            "type" : "string"
+          },
+          "created_at" : {
+            "type" : "string"
+          }
+        },
+        "example" : {
+          "nickname" : "Hacker",
+          "email" : "hacker@darkweb.com",
+          "vehicleid" : "abac4018-5a38-466c-ab7f-361908afeab6",
+          "profile_pic_url" : "",
+          "created_at" : "2021-09-16T01:46:32.432Z"
+        }
+      },
+      "VideoForm" : {
+        "type" : "object",
+        "additionalProperties": false,
+        "properties" : {
+          "id" : {
+            "type" : "integer",
+            "format" : "int64",
+            "minimum": 0,
+            "maximum": 1000000000000000000
+          },
+          "videoName" : {
+            "type" : "string",
+            "maxLength": 4095,
+            "minLength": 3
+          },
+          "video_url" : {
+            "type" : "string",
+            "maxLength": 4095,
+            "minLength": 3
+          },
+          "conversion_params" : {
+            "type" : "string",
+            "maxLength": 4095,
+            "minLength": 3
+          }
+        }
+      },
+      "DefaultResponse" : {
+        "type" : "object",
+        "required": ["message", "status"],
+        "additionalProperties": false,
+        "properties" : {
+          "message" : {
+            "type" : "string"
+          },
+          "status" : {
+            "type" : "integer",
+            "format" : "int32"
+          }
+        }
+      },
+      "OtpForm" : {
+        "required" : [ "email", "otp", "password" ],
+        "additionalProperties": false,
+        "type" : "object",
+        "properties" : {
+          "otp" : {
+            "maxLength" : 4,
+            "minLength" : 3,
+            "type" : "string",
+            "example": "9969"
+          },
+          "password" : {
+            "format": "o:HA:password",
+            "maxLength": 300,
+            "minLength": 3,
+            "type": "string",
+            "example": "scanpassword",
+            "pattern": "^[0-9a-z]{3,300}$",
+            "x-42c-format": "o:HA:password"
+          },
+          "email" : {
+            "format": "o:HA:email",
+            "maxLength": 100,
+            "minLength": 3,
+            "type": "string",
+            "example": "scanuser@test.com",
+            "pattern": "^[a-zA-Z0-9]{3,91}@test\\.com$",
+            "x-42c-format": "o:HA:email"
+          }
+        }
+      },
+      "JwtResponse" : {
+        "type" : "object",
+        "additionalProperties": false,
+        "properties" : {
+          "token" : {
+            "type" : "string"
+          },
+          "type" : {
+            "type" : "string"
+          },
+          "message" : {
+            "type" : "string",
+            "nullable": true
+          },
+          "role" : {
+            "type" : "string",
+            "enum" : [ "ROLE_UNDEFINED", "ROLE_USER", "ROLE_MECHANIC", "ROLE_ADMIN" ]
+          }
+        }
+      },
+      "LoginWithEmailToken" : {
+        "required" : [ "email", "token" ],
+        "additionalProperties": false,
+        "type" : "object",
+        "properties" : {
+          "email" : {
+            "maxLength": 100,
+            "minLength": 3,
+            "type": "string",
+            "format": "o:HA:email",
+            "example": "scanuser@test.com",
+            "pattern": "^[a-zA-Z0-9]{3,91}@test\\.com$",
+            "x-42c-format": "o:HA:email"
+          },
+          "token" : {
+            "maxLength" : 60,
+            "minLength" : 3,
+            "type" : "string"
+          }
+        }
+      },
+      "ProfileVideo" : {
+        "type" : "object",
+        "required" : [ "id", "video_name", "conversion_params", "profileVideo" ],
+        "additionalProperties": false,
+        "properties" : {
+          "id" : {
+            "type" : "number"
+          },
+          "video_name" : {
+            "type" : "string"
+          },
+          "conversion_params" : {
+            "type" : "string"
+          },
+          "profileVideo" : {
+            "type" : "string"
+          },
+          "user" : {
+            "$ref" : "#/components/schemas/User"
+          }
+        }
+      },
+      "Coupon" : {
+        "type" : "object",
+        "additionalProperties": false,
+        "properties" : {
+          "amount" : {
+            "type" : "string",
+            "maxLength": 4095,
+            "minLength": 2
+          },
+          "coupon_code" : {
+            "type" : "string",
+            "maxLength": 100,
+            "minLength": 2,
+            "example": "TRAC075"
+          },
+          "createdAt" : {
+            "type": "string",
+            "format": "o:standard:date-time",
+            "example": "2022-07-11T17:22:04.51Z",
+            "minLength": 23,
+            "maxLength": 23,
+            "x-42c-format": "o:standard:date-time"
+          }
+        },
+        "required" : [ "amount", "coupon_code" ]
+      },
+      "ServiceRequests" : {
+        "title" : "Service Requests",
+        "type" : "object",
+        "required" : [ "service_requests" ],
+        "properties" : {
+          "service_requests" : {
+            "type" : "array",
+            "items" : {
+              "type" : "object",
+              "required" : [ "created_on", "id", "mechanic", "vehicle" ],
+              "properties" : {
+                "id" : {
+                  "type" : "integer",
+                  "readOnly" : true
+                },
+                "mechanic" : {
+                  "type" : "object",
+                  "required" : [ "id", "mechanic_code", "user" ],
+                  "properties" : {
+                    "id" : {
+                      "type" : "integer",
+                      "readOnly" : true
+                    },
+                    "mechanic_code" : {
+                      "type" : "string"
+                    },
+                    "user" : {
+                      "type" : "object",
+                      "required" : [ "email" ],
+                      "properties" : {
+                        "email" : {
+                          "type" : "string"
+                        },
+                        "number" : {
+                          "type" : "string",
+                          "nullable" : true
+                        }
+                      }
+                    }
+                  }
+                },
+                "vehicle" : {
+                  "type" : "object",
+                  "properties" : {
+                    "id" : {
+                      "type" : "integer",
+                      "readOnly" : true
+                    },
+                    "vin" : {
+                      "type" : "string"
+                    },
+                    "owner" : {
+                      "type" : "object",
+                      "properties" : {
+                        "email" : {
+                          "type" : "string"
+                        },
+                        "number" : {
+                          "type" : "string",
+                          "nullable" : true
+                        }
+                      },
+                      "required" : [ "email" ]
+                    }
+                  },
+                  "required" : [ "id", "owner", "vin" ]
+                },
+                "problem_details" : {
+                  "type" : "string"
+                },
+                "status" : {
+                  "enum" : [ "Pending", "Finished" ],
+                  "type" : "string"
+                },
+                "created_on" : {
+                  "type" : "string",
+                  "format" : "date-time"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "securitySchemes" : {
+      "bearerAuth" : {
+        "type" : "http",
+        "scheme" : "bearer",
+        "bearerFormat" : "JWT"
+      },
+      "bearerAuthAdmin" : {
+        "type" : "http",
+        "scheme" : "bearer",
+        "bearerFormat" : "JWT"
+      }
+    }
+  }
+}

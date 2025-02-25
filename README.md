@@ -1,2 +1,2 @@
-# vehicle_locator_api
+# vehicle-locator-api
 Vehicle Locator API code repository

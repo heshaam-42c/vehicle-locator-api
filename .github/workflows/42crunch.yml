@@ -1,0 +1,74 @@
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+
+# This workflow locates REST API file contracts
+# (Swagger or OpenAPI format, v2 and v3, JSON and YAML)
+# and runs 300+ security checks on them using 42Crunch Security Audit technology.
+#
+# Documentation is located here: https://docs.42crunch.com/latest/content/tasks/integrate_github_actions.htm
+#
+# To use this workflow, you will need to complete the following setup steps.
+#
+# 1. Create a free 42Crunch account at https://platform.42crunch.com/register
+#
+# 2. Follow steps at https://docs.42crunch.com/latest/content/tasks/integrate_github_actions.htm
+#    to create an API Token on the 42Crunch platform
+#
+# 3. Add a secret in GitHub as explained in https://docs.42crunch.com/latest/content/tasks/integrate_github_actions.htm,
+#    store the 42Crunch API Token in that secret, and supply the secret's name as api-token parameter in this workflow
+#
+# If you have any questions or need help contact https://support.42crunch.com
+
+name: "42crunch"
+
+# follow standard Code Scanning triggers
+on: 
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+
+env:
+  PLATFORM_URL: https://demolabs.42crunch.cloud
+  PLATFORM_SERVICE_ENDPOINT: services.demolabs.42crunch.cloud:8001
+  TOKEN_ENV_VAR: ACCESS_TOKEN
+
+permissions:
+  contents: read
+
+jobs:
+  run_42c_audit:
+    permissions:
+      contents: read # for actions/checkout to fetch code
+      security-events: write # for 42Crunch/api-security-audit-action to upload results to Github Code Scanning
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout repo
+        uses: actions/checkout@v4
+      - name: 42crunch-static-api-testing
+        uses: 42crunch/api-security-audit-action@v3
+        with:
+          api-token: ${{ secrets.API_TOKEN }}
+          platform-url: ${{ env.PLATFORM_URL}}
+          default-collection-name: GitHubActions heshaam-42c/vehicle-locator-api--${{ github.ref_name }}
+          # Upload results to Github code scanning
+          upload-to-code-scanning: true
+          log-level: debug
+          json-report: audit-action-report-${{ github.run_id }}
+          sarif-report: 42c-audit-report-${{ github.run_id }}.sarif
+          ignore-failures: false
+      - name: save-audit-report
+        if: always()        
+        uses: actions/upload-artifact@v4
+        with:
+          name: auditaction-report-${{ github.run_id }}
+          path: audit-action-report-${{ github.run_id }}.json
+          if-no-files-found: error
+      - name: save-audit-sarif-report
+        if: always()        
+        uses: actions/upload-artifact@v4
+        with:
+          name: 42c-audit-sarif-report-${{ github.run_id }}
+          path: 42c-audit-report-${{ github.run_id }}.sarif
+          if-no-files-found: warn
