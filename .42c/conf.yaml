@@ -1,0 +1,3 @@
+apis:
+  openapi-spec/openapi-spec.json:
+    alias: vehicle-locator-vl-api
