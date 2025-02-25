@@ -289,6 +289,26 @@
                             "type" : "string"
                           }
                         }
+                      },
+                      "previousOwners": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "number"
+                            },
+                            "name": {
+                              "type": "string"
+                            },
+                            "email": {
+                              "type": "string"
+                            },
+                            "number": {
+                              "type": "string"
+                            }
+                          }
+                        }
                       }
                     }
                   },
@@ -424,6 +444,26 @@
                         },
                         "longitude" : {
                           "type" : "string"
+                        }
+                      }
+                    },
+                    "previousOwners": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "number"
+                          },
+                          "name": {
+                            "type": "string"
+                          },
+                          "email": {
+                            "type": "string"
+                          },
+                          "number": {
+                            "type": "string"
+                          }
                         }
                       }
                     }
