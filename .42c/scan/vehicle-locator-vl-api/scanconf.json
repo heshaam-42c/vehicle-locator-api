@@ -55,7 +55,7 @@
         "bearerAuth": {
           "name": "SCAN42C_SECURITY_BEARERAUTH",
           "from": "environment",
-          "required": true
+          "required": false
         },
         "host": {
           "name": "SCAN42C_HOST",
@@ -172,8 +172,8 @@
               },
               "variableAssignments": {
                 "vehicleId": {
-                  "from": "response",
                   "in": "body",
+                  "from": "response",
                   "contentType": "json",
                   "path": {
                     "type": "jsonPointer",
@@ -278,8 +278,8 @@
             },
             "variableAssignments": {
               "bearerAuth": {
-                "from": "response",
                 "in": "body",
+                "from": "response",
                 "contentType": "json",
                 "path": {
                   "type": "jsonPointer",
