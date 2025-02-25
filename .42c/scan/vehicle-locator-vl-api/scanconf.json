@@ -196,6 +196,9 @@
           ],
           "fuzzing": true
         }
+      ],
+      "authorizationTests": [
+        "BOLA-GetVehicleLocation"
       ]
     },
     "get_vehicles": {
@@ -264,7 +267,7 @@
             "requestBody": {
               "mode": "json",
               "json": {
-                "email": "scanuser@test.com",
+                "email": "{{email}}",
                 "password": "scanpassword"
               }
             }
@@ -275,17 +278,6 @@
           "200": {
             "expectations": {
               "httpStatus": 200
-            },
-            "variableAssignments": {
-              "bearerAuth": {
-                "in": "body",
-                "from": "response",
-                "contentType": "json",
-                "path": {
-                  "type": "jsonPointer",
-                  "value": "/token"
-                }
-              }
             }
           },
           "500": {
@@ -306,7 +298,10 @@
           "requests": [
             {
               "fuzzing": true,
-              "$ref": "#/operations/login/request"
+              "$ref": "#/operations/login/request",
+              "environment": {
+                "email": "scanuser@test.com"
+              }
             }
           ],
           "fuzzing": true
@@ -392,12 +387,73 @@
             "description": "bearerAuth security",
             "requests": [
               {
-                "$ref": "#/operations/login/request"
+                "$ref": "#/operations/login/request",
+                "environment": {
+                  "email": "scanuser@test.com"
+                },
+                "responses": {
+                  "200": {
+                    "expectations": {
+                      "httpStatus": 200
+                    },
+                    "variableAssignments": {
+                      "bearerAuth": {
+                        "in": "body",
+                        "from": "response",
+                        "contentType": "json",
+                        "path": {
+                          "type": "jsonPointer",
+                          "value": "/token"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          "attackUser": {
+            "credential": "{{attackUser}}",
+            "requests": [
+              {
+                "$ref": "#/operations/login/request",
+                "environment": {
+                  "email": "attackuser@test.com"
+                },
+                "responses": {
+                  "200": {
+                    "expectations": {
+                      "httpStatus": 200
+                    },
+                    "variableAssignments": {
+                      "attackUser": {
+                        "in": "body",
+                        "from": "response",
+                        "contentType": "json",
+                        "path": {
+                          "type": "jsonPointer",
+                          "value": "/token"
+                        }
+                      }
+                    }
+                  }
+                }
               }
             ]
           }
         }
       }
     }
-  ]
+  ],
+  "authorizationTests": {
+    "BOLA-GetVehicleLocation": {
+      "key": "authentication-swapping-bola",
+      "source": [
+        "bearerAuth/bearerAuth"
+      ],
+      "target": [
+        "bearerAuth/attackUser"
+      ]
+    }
+  }
 }
