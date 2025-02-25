@@ -360,22 +360,10 @@
                 "additionalProperties": false,
                 "properties" : {
                   "pincode" : {
-                    "type": "string",
-                    "format": "o:Vehicle-Locator-API:pincode",
-                    "example": "1039",
-                    "pattern": "^[0-9]{4}$",
-                    "minLength": 4,
-                    "maxLength": 4,
-                    "x-42c-format": "o:Vehicle-Locator-API:pincode"
+                    "type": "string"
                   },
                   "vin" : {
-                    "type": "string",
-                    "format": "o:Vehicle-Locator-API:VIN",
-                    "example": "SALVA2AE4EH877322",
-                    "pattern": "^[A-Z0-9]{17}$",
-                    "minLength": 17,
-                    "maxLength": 17,
-                    "x-42c-format": "o:Vehicle-Locator-API:VIN"
+                    "type": "string"
                   }
                 }
               }
