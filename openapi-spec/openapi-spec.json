@@ -748,22 +748,22 @@
             "example": "9969"
           },
           "password" : {
-            "format": "o:HA:password",
-            "maxLength": 64,
-            "minLength": 8,
+            "format": "o:Vehicle-Locator-API:password",
+            "maxLength": 300,
+            "minLength": 3,
             "type": "string",
             "example": "scanpassword",
-            "pattern": "^[a-zA-Z0-9&@#!?]{8,64}$",
-            "x-42c-format": "o:HA:password"
+            "pattern": "^[a-zA-Z0-9&@#!?]{3,300}$",
+            "x-42c-format": "o:Vehicle-Locator-API:password"
           },
           "email" : {
-            "format": "o:HA:email",
+            "format": "o:Vehicle-Locator-API:email",
             "maxLength": 320,
             "minLength": 6,
             "type": "string",
             "example": "scanuser@test.com",
             "pattern": "^(?:[\\w\\-+!#$%&'*/=?^`|{}~]+(?:\\.[\\w\\-+!#$%&'*/=?^`|{}~]+)*)@(?:(?:[A-Za-z0-9](?:[\\w\\-]{0,61}[A-Za-z0-9])?)(?:\\.(?:[A-Za-z0-9](?:[\\w\\-]{0,61}[A-Za-z0-9])?))*\\.[A-Za-z]{2,})$",
-            "x-42c-format": "o:HA:email"
+            "x-42c-format": "o:Vehicle-Locator-API:email"
           }
         }
       },
@@ -796,10 +796,10 @@
             "maxLength": 320,
             "minLength": 6,
             "type": "string",
-            "format": "o:HA:email",
+            "format": "o:Vehicle-Locator-API:email",
             "example": "scanuser@test.com",
             "pattern": "^(?:[\\w\\-+!#$%&'*/=?^`|{}~]+(?:\\.[\\w\\-+!#$%&'*/=?^`|{}~]+)*)@(?:(?:[A-Za-z0-9](?:[\\w\\-]{0,61}[A-Za-z0-9])?)(?:\\.(?:[A-Za-z0-9](?:[\\w\\-]{0,61}[A-Za-z0-9])?))*\\.[A-Za-z]{2,})$",
-            "x-42c-format": "o:HA:email"
+            "x-42c-format": "o:Vehicle-Locator-API:email"
           },
           "token" : {
             "maxLength" : 60,
