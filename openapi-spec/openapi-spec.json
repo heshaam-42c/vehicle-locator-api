@@ -19,6 +19,7 @@
         "description" : "Used to create an account",
         "tags" : [ "Identity / Auth" ],
         "security" : [ ],
+        "x-42c-no-authentication": true,
         "requestBody" : {
           "content" : {
             "application/json" : {
@@ -29,11 +30,12 @@
                 "properties" : {
                   "email" : {
                     "type": "string",
-                    "pattern": "^[a-zA-Z0-9]{3,91}@test\\.com$",
-                    "minLength": 3,
-                    "maxLength": 100,
-                    "format": "o:HA:email",
-                    "x-42c-format": "o:HA:email"
+                    "pattern": "^(?:[\\w\\-+!#$%&'*/=?^`|{}~]+(?:\\.[\\w\\-+!#$%&'*/=?^`|{}~]+)*)@(?:(?:[A-Za-z0-9](?:[\\w\\-]{0,61}[A-Za-z0-9])?)(?:\\.(?:[A-Za-z0-9](?:[\\w\\-]{0,61}[A-Za-z0-9])?))*\\.[A-Za-z]{2,})$",
+                    "minLength": 6,
+                    "maxLength": 320,
+                    "format": "o:Vehicle-Locator-API:email",
+                    "x-42c-format": "o:Vehicle-Locator-API:email",
+                    "example": "scanuser@test.com"
                   },
                   "name" : {
                     "type" : "string",
@@ -49,11 +51,13 @@
                     "maxLength": 10
                   },
                   "password" : {
-                    "type" : "string",
-                    "pattern": "^[0-9a-z]{3,300}$",
+                    "type": "string",
+                    "pattern": "^[a-zA-Z0-9&@#!?]{3,300}$",
                     "minLength": 3,
                     "maxLength": 300,
-                    "example": "scanpassword"
+                    "format": "o:Vehicle-Locator-API:password",
+                    "example": "scanpassword",
+                    "x-42c-format": "o:Vehicle-Locator-API:password"
                   }
                 }
               }
@@ -112,6 +116,7 @@
         "summary" : "Login",
         "tags" : [ "Identity / Auth" ],
         "security" : [ ],
+        "x-42c-no-authentication": true,
         "requestBody" : {
           "content" : {
             "application/json" : {
@@ -122,19 +127,21 @@
                 "properties" : {
                   "email" : {
                     "type": "string",
-                    "pattern": "^[a-zA-Z0-9]{3,91}@test\\.com$",
-                    "minLength": 3,
-                    "maxLength": 100,
-                    "format": "o:HA:email",
-                    "x-42c-format": "o:HA:email",
-                    "example": "scanuser@test.com"
+                    "pattern": "^(?:[\\w\\-+!#$%&'*/=?^`|{}~]+(?:\\.[\\w\\-+!#$%&'*/=?^`|{}~]+)*)@(?:(?:[A-Za-z0-9](?:[\\w\\-]{0,61}[A-Za-z0-9])?)(?:\\.(?:[A-Za-z0-9](?:[\\w\\-]{0,61}[A-Za-z0-9])?))*\\.[A-Za-z]{2,})$",
+                    "minLength": 6,
+                    "maxLength": 320,
+                    "format": "o:Vehicle-Locator-API:email",
+                    "example": "scanuser@test.com",
+                    "x-42c-format": "o:Vehicle-Locator-API:email"
                   },
                   "password" : {
-                    "type" : "string",
-                    "pattern": "^[0-9a-z]{3,300}$",
+                    "type": "string",
+                    "pattern": "^[a-zA-Z0-9&@#!?]{3,300}$",
                     "minLength": 3,
                     "maxLength": 300,
-                    "example": "scanpassword"
+                    "format": "o:Vehicle-Locator-API:password",
+                    "example": "scanpassword",
+                    "x-42c-format": "o:Vehicle-Locator-API:password"
                   }
                 }
               }
@@ -200,7 +207,13 @@
                         "type" : "number"
                       },
                       "uuid" : {
-                        "type" : "string"
+                        "type": "string",
+                        "format": "uuid",
+                        "example": "a83a29f5-0d63-46f2-8f2e-44c2f1d2e07e",
+                        "pattern": "^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}$",
+                        "minLength": 36,
+                        "maxLength": 36,
+                        "x-42c-format": "o:uuid"
                       },
                       "year" : {
                         "type" : "number"
@@ -209,10 +222,22 @@
                         "type" : "string"
                       },
                       "vin" : {
-                        "type" : "string"
+                        "type": "string",
+                        "format": "o:Vehicle-Locator-API:VIN",
+                        "example": "SALVA2AE4EH877322",
+                        "pattern": "^[A-Z0-9]{17}$",
+                        "minLength": 17,
+                        "maxLength": 17,
+                        "x-42c-format": "o:Vehicle-Locator-API:VIN"
                       },
                       "pincode" : {
-                        "type" : "string"
+                        "type": "string",
+                        "format": "o:Vehicle-Locator-API:pincode",
+                        "example": "1039",
+                        "pattern": "^[0-9]{4}$",
+                        "minLength": 4,
+                        "maxLength": 4,
+                        "x-42c-format": "o:Vehicle-Locator-API:pincode"
                       },
                       "owner" : {
                         "$ref" : "#/components/schemas/User"
@@ -266,7 +291,8 @@
                         }
                       }
                     }
-                  }
+                  },
+                  "maxItems": 10
                 }
               }
             },
@@ -314,16 +340,22 @@
                 "additionalProperties": false,
                 "properties" : {
                   "pincode" : {
-                    "type" : "string",
+                    "type": "string",
+                    "format": "o:Vehicle-Locator-API:pincode",
+                    "example": "1039",
+                    "pattern": "^[0-9]{4}$",
                     "minLength": 4,
                     "maxLength": 4,
-                    "pattern": "^[0-9]{4}$"
+                    "x-42c-format": "o:Vehicle-Locator-API:pincode"
                   },
                   "vin" : {
-                    "type" : "string",
+                    "type": "string",
+                    "format": "o:Vehicle-Locator-API:VIN",
+                    "example": "SALVA2AE4EH877322",
+                    "pattern": "^[A-Z0-9]{17}$",
                     "minLength": 17,
                     "maxLength": 17,
-                    "pattern": "^[A-Z0-9]{17}$"
+                    "x-42c-format": "o:Vehicle-Locator-API:VIN"
                   }
                 }
               }
@@ -429,9 +461,13 @@
         "name" : "vehicleId",
         "required" : true,
         "schema" : {
-          "type" : "string",
-          "format" : "uuid",
-          "example": "0be319f0-f0dd-44aa-af0b-af927f3a383f"
+          "type": "string",
+          "format": "uuid",
+          "example": "0be319f0-f0dd-44aa-af0b-af927f3a383f",
+          "pattern": "^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}$",
+          "minLength": 36,
+          "maxLength": 36,
+          "x-42c-format": "o:uuid"
         }
       } ]
     }
@@ -458,8 +494,13 @@
             "$ref" : "#/components/schemas/OrderStatusEnum"
           },
           "created_on" : {
-            "type" : "string",
-            "format" : "date-time"
+            "type": "string",
+            "format": "date-time",
+            "example": "2021-08-30T23:01:14.274085491+15:55",
+            "pattern": "^[0-9]{4}-(?:0[1-9]|1[0-2])-(?:0[1-9]|[12][0-9]|3[01])T(?:[01][0-9]|2[0-3]):[0-5][0-9]:(?:[0-5][0-9]|60)(?:\\.[0-9]{1,15})?(?:Z|[+\\-](?:[01][0-9]|2[0-3]):[0-5][0-9])$",
+            "minLength": 20,
+            "maxLength": 38,
+            "x-42c-format": "o:date-time"
           }
         },
         "required" : [ "created_on", "id", "product", "user" ]
@@ -569,8 +610,13 @@
                   "required" : [ "created_at", "email", "nickname", "profile_pic_url", "vehicleid" ],
                   "properties" : {
                     "vehicleid" : {
-                      "type" : "string",
-                      "format" : "uuid"
+                      "type": "string",
+                      "format": "uuid",
+                      "example": "a83a29f5-0d63-46f2-8f2e-44c2f1d2e07e",
+                      "pattern": "^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}$",
+                      "minLength": 36,
+                      "maxLength": 36,
+                      "x-42c-format": "o:uuid"
                     },
                     "email" : {
                       "type" : "string"
@@ -703,20 +749,20 @@
           },
           "password" : {
             "format": "o:HA:password",
-            "maxLength": 300,
-            "minLength": 3,
+            "maxLength": 64,
+            "minLength": 8,
             "type": "string",
             "example": "scanpassword",
-            "pattern": "^[0-9a-z]{3,300}$",
+            "pattern": "^[a-zA-Z0-9&@#!?]{8,64}$",
             "x-42c-format": "o:HA:password"
           },
           "email" : {
             "format": "o:HA:email",
-            "maxLength": 100,
-            "minLength": 3,
+            "maxLength": 320,
+            "minLength": 6,
             "type": "string",
             "example": "scanuser@test.com",
-            "pattern": "^[a-zA-Z0-9]{3,91}@test\\.com$",
+            "pattern": "^(?:[\\w\\-+!#$%&'*/=?^`|{}~]+(?:\\.[\\w\\-+!#$%&'*/=?^`|{}~]+)*)@(?:(?:[A-Za-z0-9](?:[\\w\\-]{0,61}[A-Za-z0-9])?)(?:\\.(?:[A-Za-z0-9](?:[\\w\\-]{0,61}[A-Za-z0-9])?))*\\.[A-Za-z]{2,})$",
             "x-42c-format": "o:HA:email"
           }
         }
@@ -747,12 +793,12 @@
         "type" : "object",
         "properties" : {
           "email" : {
-            "maxLength": 100,
-            "minLength": 3,
+            "maxLength": 320,
+            "minLength": 6,
             "type": "string",
             "format": "o:HA:email",
             "example": "scanuser@test.com",
-            "pattern": "^[a-zA-Z0-9]{3,91}@test\\.com$",
+            "pattern": "^(?:[\\w\\-+!#$%&'*/=?^`|{}~]+(?:\\.[\\w\\-+!#$%&'*/=?^`|{}~]+)*)@(?:(?:[A-Za-z0-9](?:[\\w\\-]{0,61}[A-Za-z0-9])?)(?:\\.(?:[A-Za-z0-9](?:[\\w\\-]{0,61}[A-Za-z0-9])?))*\\.[A-Za-z]{2,})$",
             "x-42c-format": "o:HA:email"
           },
           "token" : {
@@ -805,7 +851,8 @@
             "example": "2022-07-11T17:22:04.51Z",
             "minLength": 23,
             "maxLength": 23,
-            "x-42c-format": "o:standard:date-time"
+            "x-42c-format": "o:standard:date-time",
+            "pattern": "(\\d{4}-\\d{2}-\\d{2})[A-Z]+(\\d{2}:\\d{2}:\\d{2}).([0-9+-:]+)"
           }
         },
         "required" : [ "amount", "coupon_code" ]
@@ -885,8 +932,13 @@
                   "type" : "string"
                 },
                 "created_on" : {
-                  "type" : "string",
-                  "format" : "date-time"
+                  "type": "string",
+                  "format": "date-time",
+                  "example": "2021-08-30T23:01:14.274085491+15:55",
+                  "pattern": "^[0-9]{4}-(?:0[1-9]|1[0-2])-(?:0[1-9]|[12][0-9]|3[01])T(?:[01][0-9]|2[0-3]):[0-5][0-9]:(?:[0-5][0-9]|60)(?:\\.[0-9]{1,15})?(?:Z|[+\\-](?:[01][0-9]|2[0-3]):[0-5][0-9])$",
+                  "minLength": 20,
+                  "maxLength": 38,
+                  "x-42c-format": "o:date-time"
                 }
               }
             }
@@ -896,11 +948,6 @@
     },
     "securitySchemes" : {
       "bearerAuth" : {
-        "type" : "http",
-        "scheme" : "bearer",
-        "bearerFormat" : "JWT"
-      },
-      "bearerAuthAdmin" : {
         "type" : "http",
         "scheme" : "bearer",
         "bearerFormat" : "JWT"
