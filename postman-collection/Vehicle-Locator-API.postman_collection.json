@@ -1,0 +1,107 @@
+{
+    "info": {
+      "name": "Vehicle Locator API",
+      "description": "Postman collection for testing the Vehicle Locator API",
+      "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+      "_postman_id": "vehicle-locator-api-collection"
+    },
+    "item": [
+      {
+        "name": "Get API Root",
+        "request": {
+          "method": "GET",
+          "header": [],
+          "url": {
+            "raw": "http://localhost:3000/",
+            "protocol": "http",
+            "host": ["localhost"],
+            "port": "3000",
+            "path": [""]
+          }
+        }
+      },
+      {
+        "name": "Get All Vehicles",
+        "request": {
+          "method": "GET",
+          "header": [],
+          "url": {
+            "raw": "http://localhost:3000/vehicles",
+            "protocol": "http",
+            "host": ["localhost"],
+            "port": "3000",
+            "path": ["vehicles"]
+          }
+        }
+      },
+      {
+        "name": "Add New Vehicle",
+        "request": {
+          "method": "POST",
+          "header": [
+            { "key": "Content-Type", "value": "application/json" }
+          ],
+          "body": {
+            "mode": "raw",
+            "raw": "{\n  \"id\": \"vehicle123\",\n  \"lat\": 40.7128,\n  \"lng\": -74.0060\n}"
+          },
+          "url": {
+            "raw": "http://localhost:3000/vehicles",
+            "protocol": "http",
+            "host": ["localhost"],
+            "port": "3000",
+            "path": ["vehicles"]
+          }
+        }
+      },
+      {
+        "name": "Get Vehicle by ID",
+        "request": {
+          "method": "GET",
+          "header": [],
+          "url": {
+            "raw": "http://localhost:3000/vehicles/vehicle123",
+            "protocol": "http",
+            "host": ["localhost"],
+            "port": "3000",
+            "path": ["vehicles", "vehicle123"]
+          }
+        }
+      },
+      {
+        "name": "Update Vehicle Location",
+        "request": {
+          "method": "PUT",
+          "header": [
+            { "key": "Content-Type", "value": "application/json" }
+          ],
+          "body": {
+            "mode": "raw",
+            "raw": "{\n  \"lat\": 41.0,\n  \"lng\": -75.0\n}"
+          },
+          "url": {
+            "raw": "http://localhost:3000/vehicles/vehicle123/location",
+            "protocol": "http",
+            "host": ["localhost"],
+            "port": "3000",
+            "path": ["vehicles", "vehicle123", "location"]
+          }
+        }
+      },
+      {
+        "name": "Delete Vehicle",
+        "request": {
+          "method": "DELETE",
+          "header": [],
+          "url": {
+            "raw": "http://localhost:3000/vehicles/vehicle123",
+            "protocol": "http",
+            "host": ["localhost"],
+            "port": "3000",
+            "path": ["vehicles", "vehicle123"]
+          }
+        }
+      }
+    ]
+  }
+  

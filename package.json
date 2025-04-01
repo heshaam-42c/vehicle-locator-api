@@ -1,0 +1,14 @@
+{
+  "name": "vehicle-locator-api",
+  "version": "1.0.0",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "mongoose": "^8.13.1",
+    "uuid": "^11.1.0"
+  }
+}

@@ -1,7 +1,6 @@
-deploy/vagrant/*.log
-deploy/vagrant/.vagrant
 .secrets
 .vscode/
 .DS_Store
 .env
-/protect/storage
+node_modules/
+package-lock.json
