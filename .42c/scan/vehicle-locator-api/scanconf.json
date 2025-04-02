@@ -59,10 +59,10 @@
           "default": "http://localhost:3000"
         },
         "bearerAuth": {
-          "name": "SCAN42C_BEARER_AUTH",
-          "default": "blank",
+          "name": "SCAN42C_SECURITY_BEARERAUTH",
+          "from": "environment",
           "required": false,
-          "from": "environment"
+          "default": "blank"
         }
       }
     }
