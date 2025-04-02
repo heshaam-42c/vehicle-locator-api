@@ -63,7 +63,7 @@ jobs:
         if: always()        
         uses: actions/upload-artifact@v4
         with:
-          name: auditaction-report-${{ github.run_id }}
+          name: audit-action-report-${{ github.run_id }}
           path: audit-action-report-${{ github.run_id }}.json
           if-no-files-found: error
       - name: save-audit-sarif-report
