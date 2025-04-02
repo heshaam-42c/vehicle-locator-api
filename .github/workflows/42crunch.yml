@@ -33,6 +33,7 @@ env:
   PLATFORM_URL: https://demolabs.42crunch.cloud
   PLATFORM_SERVICE_ENDPOINT: services.demolabs.42crunch.cloud:8001
   TOKEN_ENV_VAR: ACCESS_TOKEN
+  SCAN_CONFIG: github-actions-cicd
 
 permissions:
   contents: read
@@ -92,7 +93,7 @@ jobs:
       - name: Build and start containers
         run: docker-compose -f docker-compose-db.yaml up -d
       - name: Wait for services to be ready
-        run: sleep 10 # or better, use healthchecks if defined in docker-compose.yml
+        run: sleep 1 # or better, use healthchecks if defined in docker-compose.yml
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -102,7 +103,43 @@ jobs:
         run: npm install
       - name: Start app
         run: npm start &
-      - run: |
-          curl -X GET \
-          -H "Content-Type: application/json" \
-          http://localhost:3000/
+      - name: download_audit_report    
+        uses: actions/download-artifact@v4
+        with:
+          name: audit-action-report-${{ github.run_id }}  
+      # Get the API ID from the audit report
+      - name: get vehicle_api id
+        id: get_vehicle_api_id
+        run: |
+          apiId=$(cat ./audit-action-report-${{ github.run_id }}.json | jq -r '.audit.report."openapi-spec/openapi-spec.json".apiId')
+          echo "VEHICLE_API_UUID=$apiId" >> $GITHUB_OUTPUT
+          cat audit-action-report-${{ github.run_id }}.json
+      # Scan V2
+      - name: get_scan_conf_alias
+        id: parse_alias
+        run: |
+          aliasId=$(cat ./.42c/conf.yaml | yq '.apis."openapi-spec/openapi-spec.json".alias')
+          echo "SCAN_ALIAS=$aliasId" >> $GITHUB_OUTPUT
+      - name: upload_v2_scan_config
+        id: upload_v2_scan_config
+        run: | 
+            scanconfig_response=$(python .42c/scripts/scan_v2_config.py --quiet ${{ secrets.API_TOKEN }} ${{steps.get_vehicle_api_id.outputs.VEHICLE_API_UUID}} -f .42c/scan/${{ steps.parse_alias.outputs.SCAN_ALIAS }}/scanconf.json -n ${{ env.SCAN_CONFIG }} -p ${{env.PLATFORM_URL}})
+            echo $scanconfig_response
+            echo "SCANV2_TOKEN=$scanconfig_response" >> $GITHUB_OUTPUT
+      - name: 42crunch-dynamic-api-testing
+        run: |
+            docker pull ${{vars.SCAN_AGENT_V2}}
+            docker run -e SCAN_TOKEN=${{ steps.upload_v2_scan_config.outputs.SCANV2_TOKEN }} -e SCAN42C_HOST=http://host.docker.internal:3000 -e PLATFORM_SERVICE=${{ env.PLATFORM_SERVICE_ENDPOINT }} ${{vars.SCAN_AGENT_V2}}
+            
+            echo "Retrieving Scan report URL"
+            # List the scan reports for the target API and save the Task ID for github-actions
+            taskId=$(python .42c/scripts/manage_scanv2_reports.py ${{ secrets.API_TOKEN }} ${{steps.get_vehicle_api_id.outputs.VEHICLE_API_UUID}} -o list -p ${{ env.PLATFORM_URL}} -q | grep ${{ env.SCAN_CONFIG }} | cut -d',' -f1)
+            echo "Task ID - $taskId"
+
+            configId=$(python .42c/scripts/manage_scanv2_reports.py ${{ secrets.API_TOKEN }} ${{steps.get_vehicle_api_id.outputs.VEHICLE_API_UUID}} -o list -p ${{ env.PLATFORM_URL}} -q | grep ${{ env.SCAN_CONFIG }} | cut -d',' -f2)
+            echo "Config ID - $configId"
+
+            # Retrieve the scan report for the target API using Task ID
+            python .42c/scripts/manage_scanv2_reports.py ${{ secrets.API_TOKEN }} ${{steps.get_vehicle_api_id.outputs.VEHICLE_API_UUID}} -o retrieve -p ${{ env.PLATFORM_URL}} -t $taskId
+            # Print the scan report URL using Scan Config ID
+            echo "Scan report - ${{ env.PLATFORM_URL }}/apis/${{steps.get_vehicle_api_id.outputs.VEHICLE_API_UUID}}/scan/report?configId=$configId"
