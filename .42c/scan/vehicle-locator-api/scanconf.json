@@ -1,0 +1,387 @@
+{
+  "version": "2.0.0",
+  "runtimeConfiguration": {
+    "environment": "default",
+    "laxTestingModeEnabled": false,
+    "apiConnectivityCheck": true,
+    "logLevel": "error",
+    "logDestination": "stdout+platform",
+    "logMaxFileSize": 2147483648,
+    "requestHeaderNameRequestId": "x-scan-request-id",
+    "requestHeaderNameScenarioId": "x-scan-scenario-id",
+    "requestHeaderNameRequestType": "x-scan-request-type",
+    "requestFlowrate": 100,
+    "requestTimeout": 30,
+    "requestTlsInsecureSkipVerify": true,
+    "responseFollowRedirection": false,
+    "responseMaxBodySizeScan": 10485760,
+    "happyPathOnly": false,
+    "maxRequestRetryAttempts": 5,
+    "maxScanDuration": 1800,
+    "memoryLimit": 2147483648,
+    "memoryTimeSpan": 10,
+    "reportMaxRequestSizeHappyPath": 8092,
+    "reportMaxRequestSizeTest": 8092,
+    "reportIncludeRequestBody": true,
+    "reportIncludeResponseBody": true,
+    "reportMaxHttpResponseSizeHappyPath": 8092,
+    "reportMaxBodySizeHappyPath": 8092,
+    "reportMaxHttpResponseSizeTest": 8092,
+    "reportMaxBodySizeTest": 8092,
+    "reportIssuesOnly": false,
+    "reportMaxIssues": 1000,
+    "reportMaxSize": 20971520,
+    "reportGenerateCurlCommand": true
+  },
+  "customizations": {
+    "happyPaths": {
+      "retry": 1,
+      "responsePolicy": {
+        "httpStatusExpected": true,
+        "mustBeConformant": true
+      },
+      "httpStatusExpected": []
+    },
+    "tests": {
+      "responsePolicy": {
+        "httpStatusExpected": true,
+        "mustBeConformant": true
+      }
+    }
+  },
+  "environments": {
+    "default": {
+      "variables": {
+        "host": {
+          "name": "SCAN42C_HOST",
+          "from": "environment",
+          "required": false,
+          "default": "http://localhost:3000"
+        }
+      }
+    }
+  },
+  "operations": {
+    "getStatus": {
+      "operationId": "getStatus",
+      "request": {
+        "operationId": "getStatus",
+        "request": {
+          "type": "42c",
+          "details": {
+            "operationId": "getStatus",
+            "method": "GET",
+            "url": "{{host}}/"
+          }
+        },
+        "defaultResponse": "200",
+        "responses": {
+          "200": {
+            "expectations": {
+              "httpStatus": 200
+            }
+          }
+        }
+      },
+      "scenarios": [
+        {
+          "key": "happy.path",
+          "requests": [
+            {
+              "fuzzing": true,
+              "$ref": "#/operations/getStatus/request"
+            }
+          ],
+          "fuzzing": true
+        }
+      ]
+    },
+    "getVehicles": {
+      "operationId": "getVehicles",
+      "request": {
+        "operationId": "getVehicles",
+        "request": {
+          "type": "42c",
+          "details": {
+            "operationId": "getVehicles",
+            "method": "GET",
+            "url": "{{host}}/vehicles"
+          }
+        },
+        "defaultResponse": "200",
+        "responses": {
+          "200": {
+            "expectations": {
+              "httpStatus": 200
+            }
+          }
+        }
+      },
+      "scenarios": [
+        {
+          "key": "happy.path",
+          "requests": [
+            {
+              "fuzzing": true,
+              "$ref": "#/operations/getVehicles/request"
+            }
+          ],
+          "fuzzing": true
+        }
+      ]
+    },
+    "addVehicle": {
+      "operationId": "addVehicle",
+      "request": {
+        "operationId": "addVehicle",
+        "request": {
+          "type": "42c",
+          "details": {
+            "operationId": "addVehicle",
+            "method": "POST",
+            "url": "{{host}}/vehicles",
+            "headers": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "requestBody": {
+              "mode": "json",
+              "json": {
+                "color": "Black",
+                "lat": 72.12,
+                "lng": 44.15,
+                "make": "Toyota",
+                "model": "Camry",
+                "vin": "{{$randomFromSchema}}",
+                "year": 2025
+              }
+            }
+          }
+        },
+        "defaultResponse": "201",
+        "responses": {
+          "201": {
+            "expectations": {
+              "httpStatus": 201
+            },
+            "variableAssignments": {
+              "vehicle_id": {
+                "in": "body",
+                "from": "response",
+                "contentType": "json",
+                "path": {
+                  "type": "jsonPointer",
+                  "value": "/id"
+                }
+              }
+            }
+          },
+          "400": {
+            "expectations": {
+              "httpStatus": 400
+            }
+          },
+          "409": {
+            "expectations": {
+              "httpStatus": 409
+            }
+          }
+        }
+      },
+      "scenarios": [
+        {
+          "key": "happy.path",
+          "requests": [
+            {
+              "fuzzing": true,
+              "$ref": "#/operations/addVehicle/request"
+            },
+            {
+              "$ref": "#/operations/deleteVehicleById/request"
+            }
+          ],
+          "fuzzing": true
+        }
+      ]
+    },
+    "getVehicleById": {
+      "operationId": "getVehicleById",
+      "request": {
+        "operationId": "getVehicleById",
+        "request": {
+          "type": "42c",
+          "details": {
+            "operationId": "getVehicleById",
+            "method": "GET",
+            "url": "{{host}}/vehicles/{id}",
+            "paths": [
+              {
+                "key": "id",
+                "value": "{{vehicle_id}}"
+              }
+            ]
+          }
+        },
+        "defaultResponse": "200",
+        "responses": {
+          "200": {
+            "expectations": {
+              "httpStatus": 200
+            }
+          },
+          "404": {
+            "expectations": {
+              "httpStatus": 404
+            }
+          }
+        }
+      },
+      "before": [
+        {
+          "$ref": "#/operations/addVehicle/request"
+        }
+      ],
+      "after": [
+        {
+          "$ref": "#/operations/deleteVehicleById/request"
+        }
+      ],
+      "scenarios": [
+        {
+          "key": "happy.path",
+          "requests": [
+            {
+              "fuzzing": true,
+              "$ref": "#/operations/getVehicleById/request"
+            }
+          ],
+          "fuzzing": true
+        }
+      ]
+    },
+    "deleteVehicleById": {
+      "operationId": "deleteVehicleById",
+      "request": {
+        "operationId": "deleteVehicleById",
+        "request": {
+          "type": "42c",
+          "details": {
+            "operationId": "deleteVehicleById",
+            "method": "DELETE",
+            "url": "{{host}}/vehicles/{id}",
+            "paths": [
+              {
+                "key": "id",
+                "value": "{{vehicle_id}}"
+              }
+            ]
+          }
+        },
+        "defaultResponse": "200",
+        "responses": {
+          "200": {
+            "expectations": {
+              "httpStatus": 200
+            }
+          },
+          "404": {
+            "expectations": {
+              "httpStatus": 404
+            }
+          }
+        }
+      },
+      "scenarios": [
+        {
+          "key": "happy.path",
+          "requests": [
+            {
+              "$ref": "#/operations/addVehicle/request"
+            },
+            {
+              "fuzzing": true,
+              "$ref": "#/operations/deleteVehicleById/request"
+            }
+          ],
+          "fuzzing": true
+        }
+      ]
+    },
+    "updateVehicleLocation": {
+      "operationId": "updateVehicleLocation",
+      "request": {
+        "operationId": "updateVehicleLocation",
+        "request": {
+          "type": "42c",
+          "details": {
+            "operationId": "updateVehicleLocation",
+            "method": "PUT",
+            "url": "{{host}}/vehicles/{id}/location",
+            "headers": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "paths": [
+              {
+                "key": "id",
+                "value": "{{vehicle_id}}"
+              }
+            ],
+            "requestBody": {
+              "mode": "json",
+              "json": {
+                "lat": 39.15,
+                "lng": -3.71
+              }
+            }
+          }
+        },
+        "defaultResponse": "200",
+        "responses": {
+          "200": {
+            "expectations": {
+              "httpStatus": 200
+            }
+          },
+          "400": {
+            "expectations": {
+              "httpStatus": 400
+            }
+          },
+          "404": {
+            "expectations": {
+              "httpStatus": 404
+            }
+          }
+        }
+      },
+      "before": [
+        {
+          "$ref": "#/operations/addVehicle/request"
+        }
+      ],
+      "after": [
+        {
+          "$ref": "#/operations/deleteVehicleById/request"
+        }
+      ],
+      "scenarios": [
+        {
+          "key": "happy.path",
+          "requests": [
+            {
+              "fuzzing": true,
+              "$ref": "#/operations/updateVehicleLocation/request"
+            }
+          ],
+          "fuzzing": true
+        }
+      ]
+    }
+  },
+  "authenticationDetails": []
+}

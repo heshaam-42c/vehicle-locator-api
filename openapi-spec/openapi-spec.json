@@ -14,6 +14,7 @@
       "/": {
           "get": {
               "summary": "API status",
+              "operationId": "getStatus",
               "responses": {
                   "200": {
                       "description": "Welcome message"
@@ -24,6 +25,7 @@
       "/vehicles": {
           "get": {
               "summary": "Get all vehicles",
+              "operationId": "getVehicles",
               "responses": {
                   "200": {
                       "description": "A list of vehicles",
@@ -42,6 +44,7 @@
           },
           "post": {
               "summary": "Add a new vehicle",
+              "operationId": "addVehicle",
               "requestBody": {
                   "required": true,
                   "content": {
@@ -75,13 +78,20 @@
       "/vehicles/{id}": {
           "get": {
               "summary": "Get a vehicle by ID",
+              "operationId": "getVehicleById",
               "parameters": [
                   {
                       "name": "id",
                       "in": "path",
                       "required": true,
                       "schema": {
-                          "type": "string"
+                        "type": "string",
+                        "format": "uuid",
+                        "example": "a83a29f5-0d63-46f2-8f2e-44c2f1d2e07e",
+                        "pattern": "^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}$",
+                        "minLength": 36,
+                        "maxLength": 36,
+                        "x-42c-format": "o:uuid"
                       }
                   }
               ],
@@ -103,13 +113,20 @@
           },
           "delete": {
               "summary": "Delete a vehicle by ID",
+              "operationId": "deleteVehicleById",
               "parameters": [
                   {
                       "name": "id",
                       "in": "path",
                       "required": true,
                       "schema": {
-                          "type": "string"
+                        "type": "string",
+                        "format": "uuid",
+                        "example": "a83a29f5-0d63-46f2-8f2e-44c2f1d2e07e",
+                        "pattern": "^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}$",
+                        "minLength": 36,
+                        "maxLength": 36,
+                        "x-42c-format": "o:uuid"
                       }
                   }
               ],
@@ -133,13 +150,20 @@
       "/vehicles/{id}/location": {
           "put": {
               "summary": "Update vehicle location",
+              "operationId": "updateVehicleLocation",
               "parameters": [
                   {
                       "name": "id",
                       "in": "path",
                       "required": true,
                       "schema": {
-                          "type": "string"
+                        "type": "string",
+                        "format": "uuid",
+                        "example": "a83a29f5-0d63-46f2-8f2e-44c2f1d2e07e",
+                        "pattern": "^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}$",
+                        "minLength": 36,
+                        "maxLength": 36,
+                        "x-42c-format": "o:uuid"
                       }
                   }
               ],
@@ -184,8 +208,14 @@
                       "description": "MongoDB ID"
                   },
                   "id": {
-                      "type": "string",
-                      "description": "Vehicle ID"
+                    "type": "string",
+                    "description": "Vehicle ID",
+                    "format": "uuid",
+                    "example": "a83a29f5-0d63-46f2-8f2e-44c2f1d2e07e",
+                    "pattern": "^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}$",
+                    "minLength": 36,
+                    "maxLength": 36,
+                    "x-42c-format": "o:uuid"
                   },
                   "lat": {
                       "type": "number",
@@ -196,6 +226,50 @@
                       "type": "number",
                       "format": "float",
                       "description": "Longitude"
+                  },
+                  "vin": {
+                    "type": "string",
+                    "description": "Vehicle Identification Number",
+                    "format": "o:Vehicle-Locator-API:VIN",
+                    "example": "SALVA2AE4EH877322",
+                    "pattern": "^[A-Z0-9]{17}$",
+                    "minLength": 17,
+                    "maxLength": 17,
+                    "x-42c-format": "o:Vehicle-Locator-API:VIN"
+                  },
+                  "make": {
+                      "type": "string",
+                      "description": "Vehicle make"
+                  },
+                  "model": {
+                      "type": "string",
+                      "description": "Vehicle model"
+                  },
+                  "year": {
+                      "type": "integer",
+                      "description": "Vehicle year"
+                  },
+                  "color": {
+                      "type": "string",
+                      "description": "Vehicle color"
+                  },
+                  "status": {
+                      "type": "string",
+                      "enum": [
+                          "active",
+                          "inactive"
+                      ],
+                      "description": "Vehicle status"
+                  },
+                  "lastUpdated": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "Last update date",
+                    "example": "2021-08-30T23:01:14.274085491+15:55",
+                    "pattern": "^[0-9]{4}-(?:0[1-9]|1[0-2])-(?:0[1-9]|[12][0-9]|3[01])T(?:[01][0-9]|2[0-3]):[0-5][0-9]:(?:[0-5][0-9]|60)(?:\\.[0-9]{1,15})?(?:Z|[+\\-](?:[01][0-9]|2[0-3]):[0-5][0-9])$",
+                    "minLength": 20,
+                    "maxLength": 38,
+                    "x-42c-format": "o:date-time"
                   }
               },
               "required": [
@@ -207,8 +281,14 @@
           "VehicleInput": {
               "type": "object",
               "properties": {
-                  "id": {
-                      "type": "string"
+                  "vin": {
+                    "type": "string",
+                    "format": "o:Vehicle-Locator-API:VIN",
+                    "example": "SALVA2AE4EH877322",
+                    "pattern": "^[A-Z0-9]{17}$",
+                    "minLength": 17,
+                    "maxLength": 17,
+                    "x-42c-format": "o:Vehicle-Locator-API:VIN"
                   },
                   "lat": {
                       "type": "number",
@@ -217,12 +297,28 @@
                   "lng": {
                       "type": "number",
                       "format": "float"
+                  },
+                  "make": {
+                      "type": "string"
+                  },
+                  "model": {
+                      "type": "string"
+                  },
+                  "year": {
+                      "type": "integer"
+                  },
+                  "color": {
+                      "type": "string"
                   }
               },
               "required": [
-                  "id",
+                  "vin",
                   "lat",
-                  "lng"
+                  "lng",
+                  "make",
+                  "model",
+                  "year",
+                  "color"
               ]
           },
           "LocationUpdate": {
