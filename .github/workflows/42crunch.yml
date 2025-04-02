@@ -126,7 +126,7 @@ jobs:
       - name: 42crunch-dynamic-api-testing
         run: |
             docker pull ${{vars.SCAN_AGENT_V2}}
-            docker run -e SCAN_TOKEN=${{ steps.upload_v2_scan_config.outputs.SCANV2_TOKEN }} -e SCAN42C_HOST=http://localhost:3000 -e PLATFORM_SERVICE=${{ env.PLATFORM_SERVICE_ENDPOINT }} ${{vars.SCAN_AGENT_V2}}
+            docker run --network=host -e SCAN_TOKEN=${{ steps.upload_v2_scan_config.outputs.SCANV2_TOKEN }} -e SCAN42C_HOST=http://localhost:3000 -e PLATFORM_SERVICE=${{ env.PLATFORM_SERVICE_ENDPOINT }} ${{vars.SCAN_AGENT_V2}}
             
             echo "Retrieving Scan report URL"
             # List the scan reports for the target API and save the Task ID for github-actions
