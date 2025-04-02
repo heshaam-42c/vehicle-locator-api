@@ -57,6 +57,12 @@
           "from": "environment",
           "required": false,
           "default": "http://localhost:3000"
+        },
+        "bearerAuth": {
+          "name": "SCAN42C_BEARER_AUTH",
+          "default": "blank",
+          "required": false,
+          "from": "environment"
         }
       }
     }
@@ -66,6 +72,9 @@
       "operationId": "getStatus",
       "request": {
         "operationId": "getStatus",
+        "auth": [
+          "bearerAuth"
+        ],
         "request": {
           "type": "42c",
           "details": {
@@ -100,6 +109,9 @@
       "operationId": "getVehicles",
       "request": {
         "operationId": "getVehicles",
+        "auth": [
+          "bearerAuth"
+        ],
         "request": {
           "type": "42c",
           "details": {
@@ -139,6 +151,9 @@
       "operationId": "addVehicle",
       "request": {
         "operationId": "addVehicle",
+        "auth": [
+          "bearerAuth"
+        ],
         "request": {
           "type": "42c",
           "details": {
@@ -215,6 +230,9 @@
       "operationId": "getVehicleById",
       "request": {
         "operationId": "getVehicleById",
+        "auth": [
+          "bearerAuth"
+        ],
         "request": {
           "type": "42c",
           "details": {
@@ -270,6 +288,9 @@
       "operationId": "deleteVehicleById",
       "request": {
         "operationId": "deleteVehicleById",
+        "auth": [
+          "bearerAuth"
+        ],
         "request": {
           "type": "42c",
           "details": {
@@ -318,6 +339,9 @@
       "operationId": "updateVehicleLocation",
       "request": {
         "operationId": "updateVehicleLocation",
+        "auth": [
+          "bearerAuth"
+        ],
         "request": {
           "type": "42c",
           "details": {
@@ -388,5 +412,19 @@
       ]
     }
   },
-  "authenticationDetails": []
+  "authenticationDetails": [
+    {
+      "bearerAuth": {
+        "type": "bearer",
+        "default": "bearerAuth",
+        "description": "",
+        "credentials": {
+          "bearerAuth": {
+            "credential": "{{bearerAuth}}",
+            "description": ""
+          }
+        }
+      }
+    }
+  ]
 }
