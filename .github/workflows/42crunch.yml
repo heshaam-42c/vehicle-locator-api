@@ -90,11 +90,8 @@ jobs:
         uses: docker/setup-buildx-action@v3
       - name: Set up Docker Compose
         run: sudo apt-get update && sudo apt-get install docker-compose -y
-      - name: Build and start containers
+      - name: Start MongoDB
         run: docker-compose -f docker-compose-db.yaml up -d
-      - name: Wait for services to be ready
-        run: sleep 1 # or better, use healthchecks if defined in docker-compose.yml
-
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
@@ -129,7 +126,7 @@ jobs:
       - name: 42crunch-dynamic-api-testing
         run: |
             docker pull ${{vars.SCAN_AGENT_V2}}
-            docker run -e SCAN_TOKEN=${{ steps.upload_v2_scan_config.outputs.SCANV2_TOKEN }} -e SCAN42C_HOST=http://host.docker.internal:3000 -e PLATFORM_SERVICE=${{ env.PLATFORM_SERVICE_ENDPOINT }} ${{vars.SCAN_AGENT_V2}}
+            docker run -e SCAN_TOKEN=${{ steps.upload_v2_scan_config.outputs.SCANV2_TOKEN }} -e SCAN42C_HOST=http://localhost:3000 -e PLATFORM_SERVICE=${{ env.PLATFORM_SERVICE_ENDPOINT }} ${{vars.SCAN_AGENT_V2}}
             
             echo "Retrieving Scan report URL"
             # List the scan reports for the target API and save the Task ID for github-actions
