@@ -1,8 +1,10 @@
 # vehicle-locator-api
 Vehicle Locator API code repository
 
-cd deploy/docker
+### Docker compose
+docker compose -f docker-compose-db.yaml up -d
 
-docker compose pull
+### Dockerfile
+docker build -t vehicle-mongodb .
 
-docker compose -f docker-compose.yml --compatibility up -d
+docker run -d --name mongodb -p 27017:27017 -p 28017:28017 vehicle-mongodb
