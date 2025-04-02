@@ -284,6 +284,7 @@
           },
           "VehicleInput": {
               "type": "object",
+              "additionalProperties": false,
               "properties": {
                   "vin": {
                     "type": "string",
@@ -331,6 +332,7 @@
           },
           "LocationUpdate": {
               "type": "object",
+              "additionalProperties": false,
               "properties": {
                   "lat": {
                       "type": "number",
