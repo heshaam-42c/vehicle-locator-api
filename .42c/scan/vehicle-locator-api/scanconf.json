@@ -131,7 +131,12 @@
       },
       "before": [
         {
-          "$ref": "#/operations/addVehicle/request"
+          "$ref": "#/operations/postVehicle/request"
+        }
+      ],
+      "after": [
+        {
+          "$ref": "#/operations/deleteVehicleById/request"
         }
       ],
       "scenarios": [
@@ -141,85 +146,6 @@
             {
               "fuzzing": true,
               "$ref": "#/operations/getVehicles/request"
-            }
-          ],
-          "fuzzing": true
-        }
-      ]
-    },
-    "addVehicle": {
-      "operationId": "addVehicle",
-      "request": {
-        "operationId": "addVehicle",
-        "auth": [
-          "bearerAuth"
-        ],
-        "request": {
-          "type": "42c",
-          "details": {
-            "operationId": "addVehicle",
-            "method": "POST",
-            "url": "{{host}}/vehicles",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "requestBody": {
-              "mode": "json",
-              "json": {
-                "color": "Black",
-                "lat": 72.12,
-                "lng": 44.15,
-                "make": "Toyota",
-                "model": "Camry",
-                "vin": "{{$randomFromSchema}}",
-                "year": 2025
-              }
-            }
-          }
-        },
-        "defaultResponse": "201",
-        "responses": {
-          "201": {
-            "expectations": {
-              "httpStatus": 201
-            },
-            "variableAssignments": {
-              "vehicle_id": {
-                "in": "body",
-                "from": "response",
-                "contentType": "json",
-                "path": {
-                  "type": "jsonPointer",
-                  "value": "/id"
-                }
-              }
-            }
-          },
-          "400": {
-            "expectations": {
-              "httpStatus": 400
-            }
-          },
-          "409": {
-            "expectations": {
-              "httpStatus": 409
-            }
-          }
-        }
-      },
-      "scenarios": [
-        {
-          "key": "happy.path",
-          "requests": [
-            {
-              "fuzzing": true,
-              "$ref": "#/operations/addVehicle/request"
-            },
-            {
-              "$ref": "#/operations/deleteVehicleById/request"
             }
           ],
           "fuzzing": true
@@ -263,7 +189,7 @@
       },
       "before": [
         {
-          "$ref": "#/operations/addVehicle/request"
+          "$ref": "#/operations/postVehicle/request"
         }
       ],
       "after": [
@@ -324,7 +250,7 @@
           "key": "happy.path",
           "requests": [
             {
-              "$ref": "#/operations/addVehicle/request"
+              "$ref": "#/operations/postVehicle/request"
             },
             {
               "fuzzing": true,
@@ -390,7 +316,7 @@
       },
       "before": [
         {
-          "$ref": "#/operations/addVehicle/request"
+          "$ref": "#/operations/postVehicle/request"
         }
       ],
       "after": [
@@ -405,6 +331,85 @@
             {
               "fuzzing": true,
               "$ref": "#/operations/updateVehicleLocation/request"
+            }
+          ],
+          "fuzzing": true
+        }
+      ]
+    },
+    "postVehicle": {
+      "operationId": "postVehicle",
+      "request": {
+        "operationId": "postVehicle",
+        "auth": [
+          "bearerAuth"
+        ],
+        "request": {
+          "type": "42c",
+          "details": {
+            "operationId": "postVehicle",
+            "method": "POST",
+            "url": "{{host}}/vehicles",
+            "headers": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "requestBody": {
+              "mode": "json",
+              "json": {
+                "color": "Black",
+                "lat": 72.12,
+                "lng": 44.15,
+                "make": "Toyota",
+                "model": "Camry",
+                "vin": "{{$randomFromSchema}}",
+                "year": 2025
+              }
+            }
+          }
+        },
+        "defaultResponse": "201",
+        "responses": {
+          "201": {
+            "expectations": {
+              "httpStatus": 201
+            },
+            "variableAssignments": {
+              "vehicle_id": {
+                "in": "body",
+                "from": "response",
+                "contentType": "json",
+                "path": {
+                  "type": "jsonPointer",
+                  "value": "/id"
+                }
+              }
+            }
+          },
+          "400": {
+            "expectations": {
+              "httpStatus": 400
+            }
+          },
+          "409": {
+            "expectations": {
+              "httpStatus": 409
+            }
+          }
+        }
+      },
+      "scenarios": [
+        {
+          "key": "happy.path",
+          "requests": [
+            {
+              "fuzzing": true,
+              "$ref": "#/operations/postVehicle/request"
+            },
+            {
+              "$ref": "#/operations/deleteVehicleById/request"
             }
           ],
           "fuzzing": true

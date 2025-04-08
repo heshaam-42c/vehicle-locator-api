@@ -49,7 +49,7 @@
           },
           "post": {
               "summary": "Add a new vehicle",
-              "operationId": "addVehicle",
+              "operationId": "postVehicle",
               "requestBody": {
                   "required": true,
                   "content": {
