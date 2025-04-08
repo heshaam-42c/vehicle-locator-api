@@ -63,6 +63,12 @@
           "from": "environment",
           "required": false,
           "default": "blank"
+        },
+        "adminAuth": {
+          "name": "SCAN42C_SECURITY_ADMINAUTH",
+          "default": "admin",
+          "required": false,
+          "from": "environment"
         }
       }
     }
@@ -215,7 +221,7 @@
       "request": {
         "operationId": "deleteVehicleById",
         "auth": [
-          "bearerAuth"
+          "bearerAuth/adminAuth"
         ],
         "request": {
           "type": "42c",
@@ -259,6 +265,9 @@
           ],
           "fuzzing": true
         }
+      ],
+      "authorizationTests": [
+        "BFLA"
       ]
     },
     "updateVehicleLocation": {
@@ -427,9 +436,23 @@
           "bearerAuth": {
             "credential": "{{bearerAuth}}",
             "description": ""
+          },
+          "adminAuth": {
+            "credential": "{{adminAuth}}"
           }
         }
       }
     }
-  ]
+  ],
+  "authorizationTests": {
+    "BFLA": {
+      "key": "authentication-swapping-bfla",
+      "source": [
+        "bearerAuth/adminAuth"
+      ],
+      "target": [
+        "bearerAuth/bearerAuth"
+      ]
+    }
+  }
 }
