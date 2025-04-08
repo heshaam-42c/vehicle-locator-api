@@ -20,6 +20,7 @@
           "get": {
               "summary": "API status",
               "operationId": "getStatus",
+              "security": [],
               "responses": {
                   "200": {
                       "description": "Welcome message"
