@@ -24,88 +24,60 @@ mongoose.connect('mongodb://localhost:27017/vehicleLocator', {
   .catch(err => console.error('❌ MongoDB connection error:', err));
 
 
-function api_authenticate(user, pass, req, res) {
-  console.log('>>> Logging user ' + user + ' with password: ' + pass);
-  const users = db.collection('users');
+// 🚗 User schema & model
+const userSchema = new mongoose.Schema({
+  id: { type: String, required: true, unique: true },
+  email: { type: String, required: true, unique: true },
+  pass: { type: String, required: true },
+  name: { type: String, required: true },
+  is_admin: { type: Boolean, required: true }
+}, {
+  versionKey: false
+});
 
-  users.findOne({ email: user, password: pass }, function (err, result) {
-    if (err) {
-      console.log('>>> Query error...' + err);
-      res.status(500).json({ "message": "system error" });
-    }
-    if (result !== null) {
-      // API10: This is bad logging, as it dumps the full user record
-      console.log('>>> Found User:  ' + result);
-      var user_profile = result;
-      // API7/API3: Add full record to JWT token (including clear password)
-      var payload = { user_profile };
-      var token = create_jwt ('RS384', 'pixiUsers', 'https://issuer.42crunch.demo', user_profile.email, payload, privateKey);
-      res.status(200).json({ message: "success", token: token, _id: user_profile._id });
-    }
-    else
-      res.status(401).json({ message: "sorry dear, invalid login" });
-  });
+const User = mongoose.model('User', userSchema);
+
+async function api_authenticate(email, pass, req, res) {
+  console.log('>>> Logging user ' + email + ' with password: ' + pass);
+  
+  let user = await User.findOne({ email: email, pass: pass });
+
+  if (!user) {
+    return res.status(401).send('Invalid email or password');
+  } else {
+    // Create JWT token
+    var token = create_jwt ('RS384', 'vehicleLocatorUsers', 'https://issuer.42crunch.demo', user.email, { id: user.id }, privateKey);
+    res.status(200).json({ message: "success", token: token, _id: user.id });
+  }
 }
 
-function api_register(user, pass, req, res) {
-  console.log('>>> Registering user: ' + user + ' with password: ' + pass);
-  const users = db.collection('users');
-  // Check if user exists first
-  users.findOne({ email: user }, function (err, result) {
-    if (err) {
-      console.log('>>> Query error...' + err);
-      res.status(500).json({ "message": "system error" });
+async function api_register(email, pass, req, res) {
+  console.log('>>> Registering user: ' + email + ' with password: ' + pass);
+
+  const name = req.body.name;
+  const is_admin = req.body.is_admin || false;
+
+  if (!email || !pass || !name) {
+    return res.status(400).send('Missing required fields: email, password, name');
+  }
+
+  let user = await User.findOne({ email: email });
+  if (user) {
+    return res.status(400).send('User already exists');
+  }
+  
+  try {
+    user = new User({ email, pass, name, is_admin });
+    user.id = uuidv4();
+    await user.save();
+    res.status(200).json(user);
+  } catch (err) {
+    if (err.code === 11000) {
+      res.status(409).send('User ID already exists - ' + err.message);
+    } else {
+      res.status(500).send('Error saving user - ' + err.message);
     }
-    if (result !== null) {
-      // Bad message: the error message should not indicate what the error is.
-      res.status(400).json({ "message": "user is already registered" });
-    }
-    else {
-      if (req.body.is_admin) {
-        var admin = true;
-      }
-      else {
-        var admin = false
-      }
-      var name = req.body.name;
-      var subject = user;
-      console.log(">>> Username: " + name);
-      // Voluntary error to return an exception is the account_balance is negative.
-      if (req.body.account_balance < 0) {
-        var err = new Error().stack;
-        res.status(400).json(err);
-        return;
-      }
-      var payload = {
-        _id: uuidv4(),
-        email: user,
-        password: pass,
-        name: name,
-        account_balance: req.body.account_balance,
-        is_admin: admin,
-        onboarding_date: new Date()
-      };
-      // forceServerObjectId forces Mongo to use the specified _id instead of generating a random one.
-      users.insertOne(payload, { forceServerObjectId: true }, function (err, user) {
-        if (err) {
-          console.log('>>> Query error...' + err);
-          res.status(500).json({ "message": "system error" });
-        }
-        if (user.insertedId != null) {
-          var user_profile = payload;
-          var jwt_payload = { user_profile };
-          try {
-            var token = create_jwt ('RS384', 'pixiUsers', 'https://issuer.42crunch.demo', subject, jwt_payload, privateKey);
-            res.status(200).json({ message: "success", token: token, _id: payload._id });
-          }
-          catch {
-            console.log(">>> Error occurred during JWT creation");
-            res.status(400).json({ message: "registration failure", token: null, _id: null });
-          }
-        } //if user
-      }) //insert
-    } // else
-  });
+  }
 }
 
 function create_jwt (algorithm, audience, issuer, subject, jwt_payload, key) {
@@ -128,8 +100,16 @@ function create_jwt (algorithm, audience, issuer, subject, jwt_payload, key) {
 
 function api_token_check(req, res, next) {
 
-  console.log('>>> Validating token: ' + JSON.stringify(req.headers['x-access-token']));
-  var token = req.headers['x-access-token'];
+  console.log('>>> Validating token: ' + JSON.stringify(req.headers['authorization']));
+  var bearerToken = req.headers['authorization'];
+  var token = null;
+  if (bearerToken) {
+    // Bearer token is in the format "Bearer <token>"
+    var parts = bearerToken.split(' ');
+    if (parts.length === 2 && parts[0] === 'Bearer') {
+      token = parts[1];
+    }
+  }
 
   // decode jwt token
   if (token) {
@@ -157,22 +137,22 @@ function api_token_check(req, res, next) {
 }
 
 // user related.
-app.post('/api/user/login', async (req, res) => {
-	if ((!req.body.user) || (!req.body.pass)) {
+app.post('/user/login', async (req, res) => {
+	if ((!req.body.email) || (!req.body.pass)) {
 		res.status(422).json({ "message": "missing username and or password parameters" });
 	}
 	else {
-		api_authenticate(req.body.user, req.body.pass, req, res);
+		api_authenticate(req.body.email, req.body.pass, req, res);
 	}
 })
 
-app.post('/api/user/register', async (req, res) => {
-	if ((!req.body.user) || (!req.body.pass)) {
-		res.status(422).json({ "message": "missing username and or password parameters" });
+app.post('/user/register', async (req, res) => {
+	if ((!req.body.email) || (!req.body.pass)) {
+		res.status(422).json({ "message": "missing email and or password parameters" });
 	} else if (req.body.pass.length <= 4) {
 		res.status(422).json({ "message": "password length too short, minimum of 5 characters" })
 	} else {
-		api_register(req.body.user, req.body.pass, req, res);
+		api_register(req.body.email, req.body.pass, req, res);
 	}
 })
 

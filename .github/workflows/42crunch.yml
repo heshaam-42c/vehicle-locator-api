@@ -101,6 +101,7 @@ jobs:
           cd app
           npm install
           npm start &
+          ./dataReset.sh
       - name: download_audit_report    
         uses: actions/download-artifact@v4
         with:

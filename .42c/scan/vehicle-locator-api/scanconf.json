@@ -52,35 +52,140 @@
   "environments": {
     "default": {
       "variables": {
+        "bearerAuth": {
+          "name": "SCAN42C_SECURITY_BEARERAUTH",
+          "from": "environment",
+          "required": false
+        },
         "host": {
           "name": "SCAN42C_HOST",
           "from": "environment",
           "required": false,
           "default": "http://localhost:3000"
-        },
-        "bearerAuth": {
-          "name": "SCAN42C_SECURITY_BEARERAUTH",
-          "from": "environment",
-          "required": false,
-          "default": "blank"
-        },
-        "adminAuth": {
-          "name": "SCAN42C_SECURITY_ADMINAUTH",
-          "default": "admin",
-          "required": false,
-          "from": "environment"
         }
       }
     }
   },
   "operations": {
+    "authenticate": {
+      "operationId": "authenticate",
+      "request": {
+        "operationId": "authenticate",
+        "request": {
+          "type": "42c",
+          "details": {
+            "operationId": "authenticate",
+            "method": "POST",
+            "url": "{{host}}/user/login",
+            "headers": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "requestBody": {
+              "mode": "json",
+              "json": {
+                "email": "{{email}}",
+                "pass": "{{pass}}"
+              }
+            }
+          }
+        },
+        "defaultResponse": "200",
+        "responses": {
+          "200": {
+            "expectations": {
+              "httpStatus": 200
+            }
+          },
+          "422": {
+            "expectations": {
+              "httpStatus": 422
+            }
+          },
+          "default": {
+            "expectations": {
+              "httpStatus": "default"
+            }
+          }
+        }
+      },
+      "scenarios": [
+        {
+          "key": "happy.path",
+          "requests": [
+            {
+              "fuzzing": true,
+              "$ref": "#/operations/authenticate/request",
+              "environment": {
+                "email": "scanuser@test.com",
+                "pass": "scanpassword"
+              }
+            }
+          ],
+          "fuzzing": true
+        }
+      ]
+    },
+    "deleteVehicleById": {
+      "operationId": "deleteVehicleById",
+      "request": {
+        "operationId": "deleteVehicleById",
+        "auth": [
+          "bearerAuth"
+        ],
+        "request": {
+          "type": "42c",
+          "details": {
+            "operationId": "deleteVehicleById",
+            "method": "DELETE",
+            "url": "{{host}}/vehicles/{id}",
+            "paths": [
+              {
+                "key": "id",
+                "value": "{{vehicle_id}}"
+              }
+            ]
+          }
+        },
+        "defaultResponse": "200",
+        "responses": {
+          "200": {
+            "expectations": {
+              "httpStatus": 200
+            }
+          },
+          "404": {
+            "expectations": {
+              "httpStatus": 404
+            }
+          }
+        }
+      },
+      "scenarios": [
+        {
+          "key": "happy.path",
+          "requests": [
+            {
+              "$ref": "#/operations/postVehicle/request"
+            },
+            {
+              "fuzzing": true,
+              "$ref": "#/operations/deleteVehicleById/request"
+            }
+          ],
+          "fuzzing": true
+        }
+      ],
+      "authorizationTests": [
+        "BOLA"
+      ]
+    },
     "getStatus": {
       "operationId": "getStatus",
       "request": {
         "operationId": "getStatus",
-        "auth": [
-          "bearerAuth"
-        ],
         "request": {
           "type": "42c",
           "details": {
@@ -105,53 +210,6 @@
             {
               "fuzzing": true,
               "$ref": "#/operations/getStatus/request"
-            }
-          ],
-          "fuzzing": true
-        }
-      ]
-    },
-    "getVehicles": {
-      "operationId": "getVehicles",
-      "request": {
-        "operationId": "getVehicles",
-        "auth": [
-          "bearerAuth"
-        ],
-        "request": {
-          "type": "42c",
-          "details": {
-            "operationId": "getVehicles",
-            "method": "GET",
-            "url": "{{host}}/vehicles"
-          }
-        },
-        "defaultResponse": "200",
-        "responses": {
-          "200": {
-            "expectations": {
-              "httpStatus": 200
-            }
-          }
-        }
-      },
-      "before": [
-        {
-          "$ref": "#/operations/postVehicle/request"
-        }
-      ],
-      "after": [
-        {
-          "$ref": "#/operations/deleteVehicleById/request"
-        }
-      ],
-      "scenarios": [
-        {
-          "key": "happy.path",
-          "requests": [
-            {
-              "fuzzing": true,
-              "$ref": "#/operations/getVehicles/request"
             }
           ],
           "fuzzing": true
@@ -214,27 +272,24 @@
           ],
           "fuzzing": true
         }
+      ],
+      "authorizationTests": [
+        "BOLA"
       ]
     },
-    "deleteVehicleById": {
-      "operationId": "deleteVehicleById",
+    "getVehicles": {
+      "operationId": "getVehicles",
       "request": {
-        "operationId": "deleteVehicleById",
+        "operationId": "getVehicles",
         "auth": [
-          "bearerAuth/adminAuth"
+          "bearerAuth/adminBearerAuth"
         ],
         "request": {
           "type": "42c",
           "details": {
-            "operationId": "deleteVehicleById",
-            "method": "DELETE",
-            "url": "{{host}}/vehicles/{id}",
-            "paths": [
-              {
-                "key": "id",
-                "value": "{{vehicle_id}}"
-              }
-            ]
+            "operationId": "getVehicles",
+            "method": "GET",
+            "url": "{{host}}/vehicles"
           }
         },
         "defaultResponse": "200",
@@ -243,10 +298,94 @@
             "expectations": {
               "httpStatus": 200
             }
-          },
-          "404": {
+          }
+        }
+      },
+      "before": [
+        {
+          "$ref": "#/operations/postVehicle/request"
+        }
+      ],
+      "after": [
+        {
+          "$ref": "#/operations/deleteVehicleById/request"
+        }
+      ],
+      "scenarios": [
+        {
+          "key": "happy.path",
+          "requests": [
+            {
+              "fuzzing": true,
+              "$ref": "#/operations/getVehicles/request"
+            }
+          ],
+          "fuzzing": true
+        }
+      ],
+      "authorizationTests": [
+        "BFLA"
+      ]
+    },
+    "postVehicle": {
+      "operationId": "postVehicle",
+      "request": {
+        "operationId": "postVehicle",
+        "auth": [
+          "bearerAuth"
+        ],
+        "request": {
+          "type": "42c",
+          "details": {
+            "operationId": "postVehicle",
+            "method": "POST",
+            "url": "{{host}}/vehicles",
+            "headers": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "requestBody": {
+              "mode": "json",
+              "json": {
+                "color": "Black",
+                "lat": -26.523462783452146,
+                "lng": -96.59882815504184,
+                "make": "Toyota",
+                "model": "Camry",
+                "vin": "{{$randomFromSchema}}",
+                "year": 2024
+              }
+            }
+          }
+        },
+        "defaultResponse": "201",
+        "responses": {
+          "201": {
             "expectations": {
-              "httpStatus": 404
+              "httpStatus": 201
+            },
+            "variableAssignments": {
+              "vehicle_id": {
+                "from": "response",
+                "in": "body",
+                "contentType": "json",
+                "path": {
+                  "type": "jsonPointer",
+                  "value": "/id"
+                }
+              }
+            }
+          },
+          "400": {
+            "expectations": {
+              "httpStatus": 400
+            }
+          },
+          "409": {
+            "expectations": {
+              "httpStatus": 409
             }
           }
         }
@@ -256,18 +395,79 @@
           "key": "happy.path",
           "requests": [
             {
+              "fuzzing": true,
               "$ref": "#/operations/postVehicle/request"
             },
             {
-              "fuzzing": true,
               "$ref": "#/operations/deleteVehicleById/request"
             }
           ],
           "fuzzing": true
         }
-      ],
-      "authorizationTests": [
-        "BFLA"
+      ]
+    },
+    "register": {
+      "operationId": "register",
+      "request": {
+        "operationId": "register",
+        "request": {
+          "type": "42c",
+          "details": {
+            "operationId": "register",
+            "method": "POST",
+            "url": "{{host}}/user/register",
+            "headers": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "requestBody": {
+              "mode": "json",
+              "json": {
+                "email": "{{email}}",
+                "is_admin": "{{is_admin}}",
+                "name": "VehicleUser",
+                "pass": "{{pass}}"
+              }
+            }
+          }
+        },
+        "defaultResponse": "200",
+        "responses": {
+          "200": {
+            "expectations": {
+              "httpStatus": 200
+            }
+          },
+          "202": {
+            "expectations": {
+              "httpStatus": 202
+            }
+          },
+          "default": {
+            "expectations": {
+              "httpStatus": "default"
+            }
+          }
+        }
+      },
+      "scenarios": [
+        {
+          "key": "happy.path",
+          "requests": [
+            {
+              "fuzzing": true,
+              "$ref": "#/operations/register/request",
+              "environment": {
+                "email": "{{$randomString}}@test.com",
+                "is_admin": "false",
+                "pass": "scanpassword"
+              }
+            }
+          ],
+          "fuzzing": true
+        }
       ]
     },
     "updateVehicleLocation": {
@@ -298,8 +498,8 @@
             "requestBody": {
               "mode": "json",
               "json": {
-                "lat": 39.15,
-                "lng": -3.71
+                "lat": 89.88203621800963,
+                "lng": 73.44076363723124
               }
             }
           }
@@ -344,85 +544,9 @@
           ],
           "fuzzing": true
         }
-      ]
-    },
-    "postVehicle": {
-      "operationId": "postVehicle",
-      "request": {
-        "operationId": "postVehicle",
-        "auth": [
-          "bearerAuth"
-        ],
-        "request": {
-          "type": "42c",
-          "details": {
-            "operationId": "postVehicle",
-            "method": "POST",
-            "url": "{{host}}/vehicles",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "requestBody": {
-              "mode": "json",
-              "json": {
-                "color": "Black",
-                "lat": 72.12,
-                "lng": 44.15,
-                "make": "Toyota",
-                "model": "Camry",
-                "vin": "{{$randomFromSchema}}",
-                "year": 2025
-              }
-            }
-          }
-        },
-        "defaultResponse": "201",
-        "responses": {
-          "201": {
-            "expectations": {
-              "httpStatus": 201
-            },
-            "variableAssignments": {
-              "vehicle_id": {
-                "in": "body",
-                "from": "response",
-                "contentType": "json",
-                "path": {
-                  "type": "jsonPointer",
-                  "value": "/id"
-                }
-              }
-            }
-          },
-          "400": {
-            "expectations": {
-              "httpStatus": 400
-            }
-          },
-          "409": {
-            "expectations": {
-              "httpStatus": 409
-            }
-          }
-        }
-      },
-      "scenarios": [
-        {
-          "key": "happy.path",
-          "requests": [
-            {
-              "fuzzing": true,
-              "$ref": "#/operations/postVehicle/request"
-            },
-            {
-              "$ref": "#/operations/deleteVehicleById/request"
-            }
-          ],
-          "fuzzing": true
-        }
+      ],
+      "authorizationTests": [
+        "BOLA"
       ]
     }
   },
@@ -431,24 +555,116 @@
       "bearerAuth": {
         "type": "bearer",
         "default": "bearerAuth",
-        "description": "",
         "credentials": {
           "bearerAuth": {
             "credential": "{{bearerAuth}}",
-            "description": ""
+            "description": "bearerAuth security",
+            "requests": [
+              {
+                "$ref": "#/operations/authenticate/request",
+                "environment": {
+                  "email": "scanuser@test.com",
+                  "pass": "scanpassword"
+                },
+                "responses": {
+                  "200": {
+                    "expectations": {
+                      "httpStatus": 200
+                    },
+                    "variableAssignments": {
+                      "bearerAuth": {
+                        "from": "response",
+                        "in": "body",
+                        "contentType": "json",
+                        "path": {
+                          "type": "jsonPointer",
+                          "value": "/token"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            ]
           },
-          "adminAuth": {
-            "credential": "{{adminAuth}}"
+          "adminBearerAuth": {
+            "credential": "{{adminBearerAuth}}",
+            "requests": [
+              {
+                "$ref": "#/operations/authenticate/request",
+                "environment": {
+                  "email": "scanadmin@test.com",
+                  "pass": "scanpassword"
+                },
+                "responses": {
+                  "200": {
+                    "expectations": {
+                      "httpStatus": 200
+                    },
+                    "variableAssignments": {
+                      "adminBearerAuth": {
+                        "from": "response",
+                        "in": "body",
+                        "contentType": "json",
+                        "path": {
+                          "type": "jsonPointer",
+                          "value": "/token"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          "BOLA-BearerAuth": {
+            "credential": "{{BOLA-BearerAuth}}",
+            "requests": [
+              {
+                "$ref": "#/operations/authenticate/request",
+                "environment": {
+                  "email": "scanbola@test.com",
+                  "pass": "scanpassword"
+                },
+                "responses": {
+                  "200": {
+                    "expectations": {
+                      "httpStatus": 200
+                    },
+                    "variableAssignments": {
+                      "BOLA-BearerAuth": {
+                        "from": "response",
+                        "in": "body",
+                        "contentType": "json",
+                        "path": {
+                          "type": "jsonPointer",
+                          "value": "/token"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            ]
           }
         }
       }
     }
   ],
   "authorizationTests": {
+    "BOLA": {
+      "key": "authentication-swapping-bola",
+      "source": [
+        "bearerAuth/bearerAuth"
+      ],
+      "target": [
+        "bearerAuth/BOLA-BearerAuth"
+      ]
+    },
     "BFLA": {
       "key": "authentication-swapping-bfla",
       "source": [
-        "bearerAuth/adminAuth"
+        "bearerAuth/adminBearerAuth"
       ],
       "target": [
         "bearerAuth/bearerAuth"
