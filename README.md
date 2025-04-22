@@ -45,3 +45,5 @@ Conformance Scan configuration:
 | API5:2023 - Broken Function Level Authorization         | GET /vehicles                 |
 | API8:2019 - Injection                                   | POST /vehicles                |
 
+### API1:2023
+Attacker is able to get and delete vehicles they do not own
