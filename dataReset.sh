@@ -1,6 +1,6 @@
 #! /bin/sh
 
-if [ "$1" == "build" ]; then
+if [ "$1" == "clean" ]; then
     echo "Refreshing DB"
     docker-compose -f docker-compose-db.yaml down
     docker-compose -f docker-compose-db.yaml up -d
