@@ -34,23 +34,21 @@ Conformance Scan configuration:
 
 ![image](https://github.com/user-attachments/assets/1149d806-6418-4af4-96c2-e04f832010a1)
 
-| Vulnerability                                           | Location                      |
-| ------------------------------------------------------- | ----------------------------- |
-| API1:2023 - Broken Object Level Authorization           | GET /vehicles/{id}            |
-| API1:2023 - Broken Object Level Authorization           | DELETE /vehicles/{id}         |
-| API1:2023 - Broken Object Level Authorization           | PUT /vehicles/{id}/location   |
-| API2:2023 - Broken Authentication                       | GET /                         |
-| API3:2023 - Broken Object Property Level Authorization  | POST /vehicles                |
-| API3:2023 - Broken Object Property Level Authorization  | PUT /vehicles/{id}/location   |
-| API5:2023 - Broken Function Level Authorization         | GET /vehicles                 |
-| API8:2019 - Injection                                   | POST /vehicles                |
+| Vulnerability                                           | Location                                   |
+| ------------------------------------------------------- | ------------------------------------------ |
+| API1:2023 - Broken Object Level Authorization           | [GET /vehicles/{id}](#api12023)            |
+| API1:2023 - Broken Object Level Authorization           | [DELETE /vehicles/{id}](#api12023)         |
+| API1:2023 - Broken Object Level Authorization           | [PUT /vehicles/{id}/location](#api12023)   |
+| API2:2023 - Broken Authentication                       | [GET /](#api22023)                         |
+| API3:2023 - Broken Object Property Level Authorization  | [POST /vehicles](#api32023)                |
+| API3:2023 - Broken Object Property Level Authorization  | [PUT /vehicles/{id}/location](#api32023)   |
+| API5:2023 - Broken Function Level Authorization         | [GET /vehicles](#api52023)                 |
+| API8:2019 - Injection                                   | [POST /vehicles](#api82019)                |
 
 ### API1:2023
 Description: User is able to GET and DELETE vehicles with invalid authorization
 
 ![image](https://github.com/user-attachments/assets/9f4f0786-f519-4aa9-937c-24910f235476)
-
-Link to the sample section: [API1:2023](#api12023).
 
 ### API2:2023
 Description: User is able to get API root without authentication
