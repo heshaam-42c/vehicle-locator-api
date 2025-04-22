@@ -40,14 +40,19 @@ const User = mongoose.model('User', userSchema);
 async function api_authenticate(email, pass, req, res) {
   console.log('>>> Logging user ' + email + ' with password: ' + pass);
   
-  let user = await User.findOne({ email: email, pass: pass });
+  try {
+    let user = await User.findOne({ email: email, pass: pass });    
 
-  if (!user) {
-    return res.status(401).send('Invalid email or password');
-  } else {
-    // Create JWT token
-    var token = create_jwt ('RS384', 'vehicleLocatorUsers', 'https://issuer.42crunch.demo', user.email, { id: user.id }, privateKey);
-    res.status(200).json({ message: "success", token: token, _id: user.id });
+    if (!user) {
+      return res.status(401).send('Invalid email or password');
+    } else {
+      // Create JWT token
+      var token = create_jwt ('RS384', 'vehicleLocatorUsers', 'https://issuer.42crunch.demo', user.email, { id: user.id }, privateKey);
+      res.status(200).json({ message: "success", token: token, _id: user.id });
+    }
+  } catch (err) {
+    console.error('Error during authentication:', err);
+    res.status(500).send('Internal server error');
   }
 }
 
@@ -60,17 +65,17 @@ async function api_register(email, pass, req, res) {
   if (!email || !pass || !name) {
     return res.status(400).send('Missing required fields: email, password, name');
   }
-
-  let user = await User.findOne({ email: email });
-  if (user) {
-    return res.status(400).send('User already exists');
-  }
   
   try {
-    user = new User({ email, pass, name, is_admin });
-    user.id = uuidv4();
-    await user.save();
-    res.status(200).json(user);
+    let user = await User.findOne({ email: email });
+    if (user) {
+      return res.status(400).send('User already exists');
+    } else {
+      user = new User({ email, pass, name, is_admin });
+      user.id = uuidv4();
+      await user.save();
+      res.status(200).json({ message: "success", _id: user.id });
+    }
   } catch (err) {
     if (err.code === 11000) {
       res.status(409).send('User ID already exists - ' + err.message);
@@ -223,15 +228,20 @@ app.put('/vehicles/:id/location', api_token_check, async (req, res) => {
     return res.status(400).send('Missing lat or lng');
   }
 
-  const vehicle = await Vehicle.findOneAndUpdate(
-    { id: req.params.id },
-    { lat, lng },
-    { new: true }
-  );
+  try {
+    const vehicle = await Vehicle.findOneAndUpdate(
+      { id: req.params.id },
+      { lat, lng },
+      { new: true }
+    );
+  
+    if (!vehicle) return res.status(404).send('Vehicle not found');
+  
+    res.json(vehicle);
+  } catch (err) {
+    res.status(500).send('Error updating vehicle location - ' + err.message);
+  }
 
-  if (!vehicle) return res.status(404).send('Vehicle not found');
-
-  res.json(vehicle);
 });
 
 // Delete a vehicle

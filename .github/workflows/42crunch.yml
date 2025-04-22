@@ -103,7 +103,6 @@ jobs:
           npm start &
       - name: Create user data
         run: |
-          sleep 5
           chmod +x ./dataReset.sh
           ./dataReset.sh
       - name: download_audit_report    
