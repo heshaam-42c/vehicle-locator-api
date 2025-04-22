@@ -32,6 +32,8 @@ Conformance Scan configuration:
 
 ## OWASP API Top 10 Vulnerabilities
 
+![image](https://github.com/user-attachments/assets/1149d806-6418-4af4-96c2-e04f832010a1)
+
 | Vulnerability                                           | Location                      |
 | ------------------------------------------------------- | ----------------------------- |
 | API1:2023 - Broken Object Level Authorization           | GET /vehicles/{id}            |
