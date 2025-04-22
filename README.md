@@ -50,6 +50,8 @@ Description: User is able to GET and DELETE vehicles with invalid authorization
 
 ![image](https://github.com/user-attachments/assets/9f4f0786-f519-4aa9-937c-24910f235476)
 
+Link to the sample section: [Link Text](https://github.com/heshaam-42c/vehicle-locator-api/edit/main/README.md#api12023).
+
 ### API2:2023
 Description: User is able to get API root without authentication
 
