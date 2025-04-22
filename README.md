@@ -46,4 +46,23 @@ Conformance Scan configuration:
 | API8:2019 - Injection                                   | POST /vehicles                |
 
 ### API1:2023
-Attacker is able to get and delete vehicles they do not own
+User is able to GET and DELETE vehicles with invalid authorization
+
+![image](https://github.com/user-attachments/assets/9f4f0786-f519-4aa9-937c-24910f235476)
+
+### API2:2023
+User is able to get API root without authentication
+![image](https://github.com/user-attachments/assets/934ae725-6065-43f4-bd1d-82df576b9470)
+
+### API3:2023
+User is able to inject invalid properties into POST and PUT request schemas
+![image](https://github.com/user-attachments/assets/c867542f-0e01-41ac-929a-887f10d120fa)
+
+### API5:2023
+Unauthorized user is able to access admin endpoint
+![image](https://github.com/user-attachments/assets/079324e8-432c-462d-87fb-742298b3addb)
+
+### API8:2019
+VIN parameter in request schema is not properly validated
+![image](https://github.com/user-attachments/assets/ee9f19dc-d89f-4723-ace3-cc4169253aa2)
+
