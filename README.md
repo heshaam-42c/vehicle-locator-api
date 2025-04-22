@@ -10,17 +10,19 @@ cd app
 
 npm install
 
-npm start
+npm start &
 
+### Run user-creation script
+./dataReset.sh
 
-API is running at http://localhost:3000
+API should be ready and running at http://localhost:3000
 
 ## Vulnerabilities
 
-API1:2023 - Broken Object Level Authorization
+| Vulnerability                                           | Location             |
+| ------------------------------------------------------- | -------------------- |
+| API1:2023 - Broken Object Level Authorization           | PUT /vehicles/{id}   |
+| API2:2023 - Broken Authentication                       | GET /                |
+| API3:2023 - Broken Object Property Level Authorization  | POST /vehicles       |
+| API5:2023 - Broken Function Level Authorization         | GET /vehicles        |
 
-API2:2023 - Broken Authentication
-
-API3:2023 - Broken Object Property Level Authorization
-
-API5:2023 - Broken Function Level Authorization
