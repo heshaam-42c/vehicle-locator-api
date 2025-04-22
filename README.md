@@ -21,9 +21,13 @@ npm start &
 
 API should be ready and running at http://localhost:3000
 
-GitHub Actions workflow with 42Crunch Audit and Scan at
+GitHub Actions workflow with 42Crunch Audit and Scan:
 ```
 .github/workflows/42crunch.yml
+```
+Conformance Scan configuration:
+```
+.42c/scan/vehicle-locator-api/scanconf.json
 ```
 
 ## OWASP API Top 10 Vulnerabilities
