@@ -20,7 +20,6 @@
             "get": {
                 "summary": "API status",
                 "operationId": "getStatus",
-                "security": [],
                 "responses": {
                     "200": {
                         "description": "Welcome message"
@@ -211,7 +210,8 @@
                             }
                         }
                     }
-                }
+                },
+                "x-42c-no-authentication": true
             }
         },
         "/vehicles": {

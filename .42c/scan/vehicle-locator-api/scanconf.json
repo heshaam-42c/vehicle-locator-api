@@ -186,6 +186,9 @@
       "operationId": "getStatus",
       "request": {
         "operationId": "getStatus",
+        "auth": [
+          "bearerAuth"
+        ],
         "request": {
           "type": "42c",
           "details": {
@@ -368,8 +371,8 @@
             },
             "variableAssignments": {
               "vehicle_id": {
-                "from": "response",
                 "in": "body",
+                "from": "response",
                 "contentType": "json",
                 "path": {
                   "type": "jsonPointer",
@@ -573,8 +576,8 @@
                     },
                     "variableAssignments": {
                       "bearerAuth": {
-                        "from": "response",
                         "in": "body",
+                        "from": "response",
                         "contentType": "json",
                         "path": {
                           "type": "jsonPointer",
@@ -603,8 +606,8 @@
                     },
                     "variableAssignments": {
                       "adminBearerAuth": {
-                        "from": "response",
                         "in": "body",
+                        "from": "response",
                         "contentType": "json",
                         "path": {
                           "type": "jsonPointer",
@@ -633,8 +636,8 @@
                     },
                     "variableAssignments": {
                       "BOLA-BearerAuth": {
-                        "from": "response",
                         "in": "body",
+                        "from": "response",
                         "contentType": "json",
                         "path": {
                           "type": "jsonPointer",
