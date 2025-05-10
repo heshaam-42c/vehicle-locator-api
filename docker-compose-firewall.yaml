@@ -1,0 +1,28 @@
+services:
+  db:
+    image: mongodb/mongodb-community-server:latest
+    command: mongod --quiet
+    container_name: mongodb
+    ports:
+      - "27017:27017"
+      - "28017:28017"
+  api-firewall:
+    image: 42crunch/apifirewall:latest
+    ports:
+      - '4241:4241'
+    volumes:
+      - ./storage/apifirewall/ssl:/opt/guardian/conf/ssl
+      - ./storage/apifirewall/logs:/opt/guardian/logs
+    command: ["/bin/squire", "-platform", "protection.demolabs.42crunch.cloud:8001", "-debug"]
+    environment:
+      - PROTECTION_TOKEN=${PROTECTION_TOKEN}
+      - LISTEN_PORT=4241
+      - TARGET_URL=http://host.docker.internal:3000
+      - LISTEN_NO_TLS=true
+      - SERVER_NAME=vehicle-api-secured.42crunch.test
+      - GUARDIAN_NODE_NAME=Local-Firewall
+      - GUARDIAN_INSTANCE_NAME=Local-Firewall
+      - LOG_LEVEL=DEBUG
+      - LOG_DESTINATION=PLATFORM+STDOUT
+    env_file:
+      - .env
