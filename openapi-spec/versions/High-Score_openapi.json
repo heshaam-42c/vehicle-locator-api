@@ -7,7 +7,7 @@
     },
     "servers": [
         {
-            "url": "https://vehicle-api-secured.42crunch.test:4241"
+            "url": "https://vehicle-api-secured.42crunch.test"
         }
     ],
     "security": [

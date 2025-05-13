@@ -90,8 +90,6 @@ jobs:
         uses: docker/setup-buildx-action@v3
       - name: Set up Docker Compose
         run: sudo apt-get install docker-compose -y
-      - name: Start MongoDB
-        run: docker-compose -f docker-compose-db.yaml up -d
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
@@ -101,8 +99,9 @@ jobs:
           cd app
           npm install
           npm start &
-      - name: Create user data
+      - name: Start MongoDB & create user data
         run: |
+          cd docker
           chmod +x ./dataReset.sh
           ./dataReset.sh
       - name: download_audit_report    
