@@ -101,18 +101,13 @@
 		{
 			"name": "Get API Root",
 			"request": {
-				"auth": {
-					"type": "noauth"
-				},
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:3000/",
-					"protocol": "http",
+					"raw": "{{baseUrl}}/",
 					"host": [
-						"localhost"
+						"{{baseUrl}}"
 					],
-					"port": "3000",
 					"path": [
 						""
 					]
@@ -126,12 +121,10 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:3000/vehicles",
-					"protocol": "http",
+					"raw": "{{baseUrl}}/vehicles",
 					"host": [
-						"localhost"
+						"{{baseUrl}}"
 					],
-					"port": "3000",
 					"path": [
 						"vehicles"
 					]
@@ -166,15 +159,13 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"vin\": \"A9K3JFIU23FH54J1\",\n  \"lat\": 40.7128,\n  \"lng\": -74.0060,\n  \"make\": \"Toyota\",\n  \"model\": \"Camry\",\n  \"year\": 2025,\n  \"color\": \"Blue\"\n}"
+					"raw": "{\n  \"vin\": \"A9K3JFIU23FH54J1K\",\n  \"lat\": 40.7128,\n  \"lng\": -74.0060,\n  \"make\": \"Toyota\",\n  \"model\": \"Camry\",\n  \"year\": 2025,\n  \"color\": \"Blue\"\n}"
 				},
 				"url": {
-					"raw": "http://localhost:3000/vehicles",
-					"protocol": "http",
+					"raw": "{{baseUrl}}/vehicles",
 					"host": [
-						"localhost"
+						"{{baseUrl}}"
 					],
-					"port": "3000",
 					"path": [
 						"vehicles"
 					]
@@ -188,12 +179,10 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:3000/vehicles/:vehicleId",
-					"protocol": "http",
+					"raw": "{{baseUrl}}/vehicles/:vehicleId",
 					"host": [
-						"localhost"
+						"{{baseUrl}}"
 					],
-					"port": "3000",
 					"path": [
 						"vehicles",
 						":vehicleId"
@@ -223,12 +212,10 @@
 					"raw": "{\n  \"lat\": 41.0,\n  \"lng\": -75.0\n}"
 				},
 				"url": {
-					"raw": "http://localhost:3000/vehicles/:vehicleId/location",
-					"protocol": "http",
+					"raw": "{{baseUrl}}/vehicles/:vehicleId/location",
 					"host": [
-						"localhost"
+						"{{baseUrl}}"
 					],
-					"port": "3000",
 					"path": [
 						"vehicles",
 						":vehicleId",
@@ -250,12 +237,10 @@
 				"method": "DELETE",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:3000/vehicles/:vehicleId",
-					"protocol": "http",
+					"raw": "{{baseUrl}}/vehicles/:vehicleId",
 					"host": [
-						"localhost"
+						"{{baseUrl}}"
 					],
-					"port": "3000",
 					"path": [
 						"vehicles",
 						":vehicleId"

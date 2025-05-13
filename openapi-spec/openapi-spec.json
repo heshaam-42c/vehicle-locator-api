@@ -24,7 +24,7 @@
                     "200": {
                         "description": "Welcome message",
                         "content": {
-                            "text/plain": {
+                            "text/html": {
                                 "schema": {
                                     "type": "string"
                                 }
@@ -227,7 +227,7 @@
                 "operationId": "getVehicles",
                 "responses": {
                     "200": {
-                        "description": "A list of vehicles",
+                        "description": "A list of all vehicles",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -266,10 +266,24 @@
                         }
                     },
                     "400": {
-                        "description": "Invalid input"
+                        "description": "Invalid input",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorMessage"
+                                }
+                            }
+                        }
                     },
                     "409": {
-                        "description": "Vehicle ID already exists"
+                        "description": "Vehicle ID already exists",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorMessage"
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -306,7 +320,14 @@
                         }
                     },
                     "404": {
-                        "description": "Vehicle not found"
+                        "description": "Vehicle not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorMessage"
+                                }
+                            }
+                        }
                     }
                 }
             },
@@ -341,7 +362,14 @@
                         }
                     },
                     "404": {
-                        "description": "Vehicle not found"
+                        "description": "Vehicle not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorMessage"
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -388,10 +416,24 @@
                         }
                     },
                     "400": {
-                        "description": "Invalid input"
+                        "description": "Invalid input",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorMessage"
+                                }
+                            }
+                        }
                     },
                     "404": {
-                        "description": "Vehicle not found"
+                        "description": "Vehicle not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorMessage"
+                                }
+                            }
+                        }
                     }
                 }
             }

@@ -10,7 +10,7 @@ async function getVehicles(req, res) {
 // Get a single vehicle by ID
 async function getVehicle (req, res) {
     const vehicle = await VehicleModel.findOne({ id: req.params.id });
-    vehicle ? res.json(vehicle) : res.status(404).send('Vehicle not found');
+    vehicle ? res.json(vehicle) : res.status(404).json({ message: "Vehicle not found" });
 }
 
 // Add a new vehicle
@@ -18,10 +18,17 @@ async function addVehicle (req, res) {
     const { vin, lat, lng, make, model, year, color } = req.body;
 
     if (!vin || lat == null || lng == null || !make || !model || !year || !color) {
-        return res.status(400).send('Missing required vehicle info: vin, lat, lng, make, model, year, color');
+        return res.status(400).json({ message: "Missing required vehicle info: vin, lat, lng, make, model, year, color" });
     }
 
     try {
+        // Check if a vehicle with the same VIN already exists
+        const existingVehicle = await VehicleModel.findOne({ vin });
+        if (existingVehicle) {
+            return res.status(409).json({ message: "A vehicle with this VIN already exists" });
+        }
+
+        // Create and save the new vehicle
         const vehicle = new VehicleModel({ vin, lat, lng, make, model, year, color });
         vehicle.id = uuidv4();
         vehicle.lastUpdated = Date.now();
@@ -29,11 +36,7 @@ async function addVehicle (req, res) {
         await vehicle.save();
         res.status(201).json(vehicle);
     } catch (err) {
-        if (err.code === 11000) {
-            res.status(409).send('Vehicle ID already exists - ' + err.message);
-        } else {
-            res.status(500).send('Error saving vehicle - ' + err.message);
-        }
+        res.status(500).json({ message: "Error saving vehicle - " + err.message });
     }
 }
 
@@ -42,7 +45,7 @@ async function updateVehicle (req, res) {
     const { lat, lng } = req.body;
 
     if (lat == null || lng == null) {
-        return res.status(400).send('Missing lat or lng');
+        return res.status(400).json({ message: "Missing lat or lng" });
     }
 
     try {
@@ -52,11 +55,11 @@ async function updateVehicle (req, res) {
             { new: true }
         );
 
-        if (!vehicle) return res.status(404).send('Vehicle not found');
+        if (!vehicle) return res.status(404).json({ message: "Vehicle not found" });
 
         res.json(vehicle);
     } catch (err) {
-        res.status(500).send('Error updating vehicle location - ' + err.message);
+        res.status(500).json({ message: "Error updating vehicle location - " + err.message });
     }
 
 }
@@ -64,7 +67,7 @@ async function updateVehicle (req, res) {
 // Delete a vehicle
 async function deleteVehicle (req, res) {
     const vehicle = await VehicleModel.findOneAndDelete({ id: req.params.id });
-    if (!vehicle) return res.status(404).send('Vehicle not found');
+    if (!vehicle) return res.status(404).json({ message: "Vehicle not found" });
     res.json(vehicle);
 }
 
