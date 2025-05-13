@@ -76,6 +76,8 @@ jobs:
       - name: update-api-firewall
         run: |
           apiId=$(cat ./audit-action-report-${{ github.run_id }}.json | jq -r '.audit.report."openapi-spec/openapi-spec.json".apiId')
+          echo "API ID - $apiId"
+          
           python .42c/scripts/protection.py $apiId ${{ env.PLATFORM_URL}} ${{ secrets.API_TOKEN }}
 
   run_42c_scan:
