@@ -39,7 +39,7 @@ permissions:
   contents: read
 
 jobs:
-  run_42c_audit:
+  run_42c_audit_and_update_protection:
     permissions:
       contents: read # for actions/checkout to fetch code
       security-events: write # for 42Crunch/api-security-audit-action to upload results to Github Code Scanning
