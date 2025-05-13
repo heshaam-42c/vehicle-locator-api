@@ -75,6 +75,33 @@
 								}
 							},
 							"response": []
+						},
+						{
+							"name": "Login with No-SQL injection",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "user=userscanlogin@acme.com&pass[$ne]=",
+									"options": {
+										"raw": {
+											"language": "text"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/user/login",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"user",
+										"login"
+									]
+								}
+							},
+							"response": []
 						}
 					],
 					"description": "API Attacks that are detected and blocked with a low OpenAPI Audit score"
