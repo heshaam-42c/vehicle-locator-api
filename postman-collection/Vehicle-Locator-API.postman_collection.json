@@ -8,6 +8,140 @@
 	},
 	"item": [
 		{
+			"name": "API Attacks",
+			"item": [
+				{
+					"name": "Low-Score Attacks",
+					"item": [
+						{
+							"name": "Unauthenticated Access",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var jsonData = pm.response.json();",
+											"if (jsonData.id != null) {",
+											"    pm.collectionVariables.set(\"vehicleId\", jsonData.id);",
+											"}"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"vin\": \"A9K3JFIU23FH54J1K\",\n  \"lat\": 40.7128,\n  \"lng\": -74.0060,\n  \"make\": \"Toyota\",\n  \"model\": \"Camry\",\n  \"year\": 2025,\n  \"color\": \"Blue\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/vehicles",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"vehicles"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Undocumented Endpoint",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/vehicle/vin/1DEFK23JADWH2315F",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"vehicle",
+										"vin",
+										"1DEFK23JADWH2315F"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Medium-Score Attacks",
+					"item": [
+						{
+							"name": "Schema Injection",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"lat\": 41.0,\n  \"lng\": -75.0,\n  \"status\": \"inactive\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/vehicles/:vehicleId/location",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"vehicles",
+										":vehicleId",
+										"location"
+									],
+									"variable": [
+										{
+											"key": "vehicleId",
+											"value": "{{vehicleId}}"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "High-Score Attacks",
+					"item": [
+						{
+							"name": "Data Leakage",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/vehicles",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"vehicles"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
 			"name": "User Registration",
 			"event": [
 				{

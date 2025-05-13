@@ -1,10 +1,11 @@
 #! /bin/sh
 
-if [ "$1" != "clean" ]; then
-    echo "Refreshing DB"
+if [ "$1" == "clean" ]; then
+    echo "Stopping DB..."
     docker-compose -f docker-compose-db.yaml down
 fi
 
+echo "Creating DB..."
 docker-compose -f docker-compose-db.yaml up -d
 
 echo "Creating Users..."
