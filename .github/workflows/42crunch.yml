@@ -73,6 +73,10 @@ jobs:
           name: 42c-audit-sarif-report-${{ github.run_id }}
           path: 42c-audit-report-${{ github.run_id }}.sarif
           if-no-files-found: warn
+      - name: update-api-firewall
+        run: |
+          apiId=$(cat ./audit-action-report-${{ github.run_id }}.json | jq -r '.audit.report."openapi-spec/openapi-spec.json".apiId')
+          python .42c/scripts/protection.py $apiId ${{ env.PLATFORM_URL}} ${{ secrets.API_TOKEN }}
 
   run_42c_scan:
     permissions:

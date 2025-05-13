@@ -77,7 +77,7 @@
 							"response": []
 						}
 					],
-					"description": "API Attacks that are blocked with a low OpenAPI Audit score"
+					"description": "API Attacks that are detected and blocked with a low OpenAPI Audit score"
 				},
 				{
 					"name": "Medium-Score Attacks",
@@ -117,7 +117,7 @@
 							"response": []
 						}
 					],
-					"description": "API Attacks that are blocked with a medium OpenAPI Audit score"
+					"description": "API Attacks that are detected and blocked with a medium OpenAPI Audit score"
 				},
 				{
 					"name": "High-Score Attacks",
@@ -140,7 +140,7 @@
 							"response": []
 						}
 					],
-					"description": "API Attacks that are blocked with a high OpenAPI Audit score"
+					"description": "API Attacks that are detected and blocked with a high OpenAPI Audit score"
 				}
 			]
 		},
