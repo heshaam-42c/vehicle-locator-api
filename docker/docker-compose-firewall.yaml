@@ -1,11 +1,4 @@
 services:
-  db:
-    image: mongodb/mongodb-community-server:latest
-    command: mongod --quiet
-    container_name: mongodb
-    ports:
-      - "27017:27017"
-      - "28017:28017"
   api-firewall:
     image: 42crunch/apifirewall:latest
     ports:

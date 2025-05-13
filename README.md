@@ -16,6 +16,7 @@ npm start &
 
 ### Run user-creation script
 ```
+cd docker
 ./dataReset.sh
 ```
 
