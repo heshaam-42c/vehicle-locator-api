@@ -22,7 +22,14 @@
                 "operationId": "getStatus",
                 "responses": {
                     "200": {
-                        "description": "Welcome message"
+                        "description": "Welcome message",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
                     }
                 }
             }

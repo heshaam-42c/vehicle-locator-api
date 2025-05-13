@@ -33,7 +33,7 @@ async function api_authenticate(email, pass, req, res) {
         let user = await UserModel.findOne({ email: email, pass: pass });
 
         if (!user) {
-            return res.status(401).send('Invalid email or password');
+            return res.status(401).json({ message: "Invalid email or password" });
         } else {
             // Create JWT token
             var token = create_jwt('RS384', 'vehicleLocatorUsers', 'https://issuer.42crunch.demo', user.email, { id: user.id }, privateKey);
@@ -41,7 +41,7 @@ async function api_authenticate(email, pass, req, res) {
         }
     } catch (err) {
         console.error('Error during authentication:', err);
-        res.status(500).send('Internal server error');
+        res.status(500).send({ message: "Internal server error" });
     }
 }
 
@@ -52,13 +52,13 @@ async function api_register(email, pass, req, res) {
     const is_admin = req.body.is_admin || false;
 
     if (!email || !pass || !name) {
-        return res.status(400).send('Missing required fields: email, password, name');
+        return res.status(400).json({ message: "Missing required fields: email, password, name" });
     }
 
     try {
         let user = await UserModel.findOne({ email: email });
         if (user) {
-            return res.status(400).send('User already exists');
+            return res.status(400).json({ message: "User already exists" });
         } else {
             user = new UserModel({ email, pass, name, is_admin });
             user.id = uuidv4();
@@ -67,9 +67,9 @@ async function api_register(email, pass, req, res) {
         }
     } catch (err) {
         if (err.code === 11000) {
-            res.status(409).send('User ID already exists - ' + err.message);
+            res.status(409).json({ message: "User ID already exists - " + err.message });
         } else {
-            res.status(500).send('Error saving user - ' + err.message);
+            res.status(500).json({ message: "Error saving user - " + err.message });
         }
     }
 }
