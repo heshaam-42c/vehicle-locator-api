@@ -145,7 +145,7 @@ jobs:
             # Print the scan report URL using Scan Config ID
             echo "Scan report - ${{ env.PLATFORM_URL }}/apis/${{steps.get_vehicle_api_id.outputs.VEHICLE_API_UUID}}/scan/report?configId=$configId"
 
-  update-42c-protection:
+  update_42c_protection:
     runs-on: ubuntu-latest
     needs: run_42c_audit
     permissions:
