@@ -39,7 +39,7 @@ permissions:
   contents: read
 
 jobs:
-  run_42c_audit_and_update_protection:
+  run_42c_audit:
     permissions:
       contents: read # for actions/checkout to fetch code
       security-events: write # for 42Crunch/api-security-audit-action to upload results to Github Code Scanning
@@ -73,16 +73,12 @@ jobs:
           name: 42c-audit-sarif-report-${{ github.run_id }}
           path: 42c-audit-report-${{ github.run_id }}.sarif
           if-no-files-found: warn
-      - name: update-api-firewall
-        run: |
-          apiId=$(cat ./audit-action-report-${{ github.run_id }}.json | jq -r '.audit.report."openapi-spec/openapi-spec.json".apiId')
-          python .42c/scripts/protection.py $apiId ${{ env.PLATFORM_URL}} ${{ secrets.API_TOKEN }}
 
   run_42c_scan:
     permissions:
       contents: read # for actions/checkout to fetch code
     runs-on: ubuntu-latest
-    needs: run_42c_audit_and_update_protection
+    needs: run_42c_audit
     services:
       docker:
         image: docker:20.10.7
@@ -148,3 +144,20 @@ jobs:
             python .42c/scripts/manage_scanv2_reports.py ${{ secrets.API_TOKEN }} ${{steps.get_vehicle_api_id.outputs.VEHICLE_API_UUID}} -o retrieve -p ${{ env.PLATFORM_URL}} -t $taskId
             # Print the scan report URL using Scan Config ID
             echo "Scan report - ${{ env.PLATFORM_URL }}/apis/${{steps.get_vehicle_api_id.outputs.VEHICLE_API_UUID}}/scan/report?configId=$configId"
+
+  update-42c-protection:
+    runs-on: ubuntu-latest
+    needs: run_42c_audit
+    permissions:
+      contents: read # for actions/checkout to fetch code
+    steps:
+      - name: checkout repo
+        uses: actions/checkout@v4
+      - name: download_audit_report    
+        uses: actions/download-artifact@v4
+        with:
+          name: audit-action-report-${{ github.run_id }}
+      - name: update-api-firewall
+        run: |
+          apiId=$(cat ./audit-action-report-${{ github.run_id }}.json | jq -r '.audit.report."openapi-spec/openapi-spec.json".apiId')
+          python .42c/scripts/protection.py $apiId ${{ env.PLATFORM_URL}} ${{ secrets.API_TOKEN }}
