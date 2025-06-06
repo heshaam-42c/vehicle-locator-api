@@ -286,59 +286,7 @@
                 }
             },
             "Vehicle": {
-                "type": "object",
-                "properties": {
-                    "_id": {
-                        "type": "string",
-                        "description": "MongoDB ID"
-                    },
-                    "id": {
-                        "type": "string"
-                    },
-                    "lat": {
-                        "type": "number",
-                        "format": "float"
-                    },
-                    "lng": {
-                        "type": "number",
-                        "format": "float"
-                    },
-                    "vin": {
-                        "type": "string"
-                    },
-                    "make": {
-                        "type": "string",
-                        "description": "Vehicle make"
-                    },
-                    "model": {
-                        "type": "string",
-                        "description": "Vehicle model"
-                    },
-                    "year": {
-                        "type": "integer",
-                        "description": "Vehicle year"
-                    },
-                    "color": {
-                        "type": "string",
-                        "description": "Vehicle color"
-                    },
-                    "status": {
-                        "type": "string",
-                        "enum": [
-                            "active",
-                            "inactive"
-                        ],
-                        "description": "Vehicle status"
-                    },
-                    "lastUpdated": {
-                        "type": "string"
-                    }
-                },
-                "required": [
-                    "id",
-                    "lat",
-                    "lng"
-                ]
+                "type": "object"
             },
             "VehicleInput": {
                 "type": "object",

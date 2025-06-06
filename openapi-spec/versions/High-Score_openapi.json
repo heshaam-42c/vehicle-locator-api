@@ -663,19 +663,15 @@
                 "type": "object",
                 "additionalProperties": false,
                 "properties": {
-                    "lat": {
-                        "type": "number",
-                        "format": "float",
-                        "description": "Latitude",
-                        "minimum": -90,
-                        "maximum": 90
-                    },
-                    "lng": {
-                        "type": "number",
-                        "format": "float",
-                        "description": "Longitude",
-                        "minimum": -180,
-                        "maximum": 180
+                    "id": {
+                        "type": "string",
+                        "description": "Vehicle ID",
+                        "format": "uuid",
+                        "example": "a83a29f5-0d63-46f2-8f2e-44c2f1d2e07e",
+                        "pattern": "^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}$",
+                        "minLength": 36,
+                        "maxLength": 36,
+                        "x-42c-format": "o:uuid"
                     },
                     "vin": {
                         "type": "string",
