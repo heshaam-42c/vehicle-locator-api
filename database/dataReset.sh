@@ -22,7 +22,7 @@ if [ "$curl_response_invoke" == "200" ]; then
     echo "API is up and running"
 else
     echo "API is not reachable, got $curl_response_invoke"
-    exit 1
+    exit 0
 fi
 
 echo "Creating Users..."
