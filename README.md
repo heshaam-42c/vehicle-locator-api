@@ -86,6 +86,8 @@ Description: User is able to inject invalid properties into POST and PUT request
 ### API3:2023(API3:2019)
 Description: Endpoint leaks excessive data like vehicle location (latitude & longitude) to the user
 
+![image](https://github.com/user-attachments/assets/27af7e30-c440-4edd-9dd4-25d307e3f015)
+
 ### API5:2023
 Description: Unauthorized user is able to access admin endpoint
 
