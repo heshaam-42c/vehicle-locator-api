@@ -94,16 +94,16 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20.x
+      - name: Start MongoDB & create user data
+        run: |
+          cd database
+          chmod +x ./dataReset.sh
+          ./dataReset.sh
       - name: Install dependencies & Start app
         run: |
           cd app
           npm install
           npm start &
-      - name: Start MongoDB & create user data
-        run: |
-          cd docker
-          chmod +x ./dataReset.sh
-          ./dataReset.sh
       - name: download_audit_report    
         uses: actions/download-artifact@v4
         with:
