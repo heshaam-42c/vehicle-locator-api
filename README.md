@@ -47,6 +47,18 @@ cd api-firewall
 
 Firewall should be running at http://vehicle-api-secured.42crunch.test:4241
 
+## Stop API Firwall
+```
+cd api-firewall
+./deployFirewall.sh down
+```
+
+## Stop Database
+```
+cd database
+./database.sh down
+```
+
 ## GitHub Actions workflow includes 42Crunch Audit, Scan, and Protect:
 ```
 .github/workflows/42crunch.yml

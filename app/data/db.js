@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import UserModel from '../models/userModel.js';
+import VehicleModel from '../models/vehicleModel.js';
 import { v4 as uuidv4 } from 'uuid';
 
 const connectDB = async () => {
@@ -9,6 +10,7 @@ const connectDB = async () => {
         console.log(`✅ MongoDB Database successfully connected: ${connection.connection.host}`);
         // Seed default users
         await seedDefaultUsers();
+        await seedDefaultVehicles();
     } catch (error) {
         console.log(`❌ MongoDB connection Error: ${error.message}`);
         process.exit(1);
@@ -61,6 +63,28 @@ const seedDefaultUsers = async () => {
     }
   } catch (error) {
     console.error("Error seeding default users:", error.message);
+  }
+};
+
+// Function to seed default users
+const seedDefaultVehicles = async () => {
+  try {
+    const newVehicle = new VehicleModel({
+      vin: "1HGCM82633A123456", // Example VIN
+      lat: "-23", 
+      lng: "96",
+      make: "Honda",
+      model: "Civic", 
+      year: "2024",
+      color: "Black",
+      status: "active",
+      lastUpdated: Date.now(),
+      id: uuidv4(), // Generate a unique vehicle ID
+    });
+    await newVehicle.save();
+    console.log("Default vehicle created");
+  } catch (error) {
+    console.error("Error seeding default vehicles:", error.message);
   }
 };
 

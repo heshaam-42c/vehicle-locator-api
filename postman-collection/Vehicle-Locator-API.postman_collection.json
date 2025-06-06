@@ -14,7 +14,7 @@
 					"name": "Low-Score Attacks",
 					"item": [
 						{
-							"name": "Unauthenticated Access",
+							"name": "API2:2023 - Unauthenticated Access",
 							"event": [
 								{
 									"listen": "test",
@@ -110,7 +110,37 @@
 					"name": "Medium-Score Attacks",
 					"item": [
 						{
-							"name": "Schema Injection",
+							"name": "API8:2019 - SQL injection",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"email\": \"scanuser@test.com ' or 1=1\",\n    \"pass\": \"scanpassword\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/user/login",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"user",
+										"login"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "API6:2019 - Schema Injection",
 							"request": {
 								"method": "PUT",
 								"header": [
@@ -150,7 +180,7 @@
 					"name": "High-Score Attacks",
 					"item": [
 						{
-							"name": "Data Leakage",
+							"name": "API3:2023 - Data Leakage (Vehicle Location)",
 							"request": {
 								"method": "GET",
 								"header": [],
