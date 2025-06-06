@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 import vehicleRoutes from './routes/vehicleRoutes.js';
 import authRoutes from './routes/authRoutes.js'
 import rootRoute from './routes/rootRoute.js'
-import connectDB from './config/db.js';
+import connectDB from './data/db.js';
 
 dotenv.config();
 connectDB();
