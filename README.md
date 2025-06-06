@@ -1,13 +1,15 @@
 # vehicle-locator-api
 Vehicle Locator API code repository
 
+## Run the API
+
 ### Start Database
 ```
 cd database
 ./database.sh
 ```
 
-### Optional - create .env file inside app folder to override these variables:
+#### Optional - create .env file inside app folder to override these default variables:
 ```
 PORT=3000
 MONGO_URI=mongodb://localhost:27017/vehicleLocator
@@ -25,12 +27,20 @@ API should be ready and running at http://localhost:3000 with default seed users
 2. Regular User
 3. BOLA Test User
 
-Conformance Scan configuration:
+### Conformance Scan configuration:
 ```
 .42c/scan/vehicle-locator-api/scanconf.json
 ```
 
-GitHub Actions workflow for 42Crunch Audit, Scan, and Protect:
+## Start API Firewall
+```
+cd api-firewall
+./deployFirewall.sh
+```
+
+Firewall should be running at http://vehicle-api-secured.42crunch.test:4241
+
+## GitHub Actions workflow includes 42Crunch Audit, Scan, and Protect:
 ```
 .github/workflows/42crunch.yml
 ```
