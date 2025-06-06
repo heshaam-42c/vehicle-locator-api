@@ -2,9 +2,15 @@
 Vehicle Locator API code repository
 
 ### Start Database
-#### Docker compose
 ```
-docker compose -f docker-compose-db.yaml up -d
+cd database
+./database.sh
+```
+
+### Optional - create .env file inside app folder to override these variables:
+```
+PORT=3000
+MONGO_URI=mongodb://localhost:27017/vehicleLocator
 ```
 
 ### Install dependencies & run API
@@ -14,21 +20,19 @@ npm install
 npm start &
 ```
 
-### Run user-creation script
-```
-cd docker
-./dataReset.sh
-```
+API should be ready and running at http://localhost:3000 with default seed users created:
+1. Admin User
+2. Regular User
+3. BOLA Test User
 
-API should be ready and running at http://localhost:3000
-
-GitHub Actions workflow with 42Crunch Audit and Scan:
-```
-.github/workflows/42crunch.yml
-```
 Conformance Scan configuration:
 ```
 .42c/scan/vehicle-locator-api/scanconf.json
+```
+
+GitHub Actions workflow for 42Crunch Audit, Scan, and Protect:
+```
+.github/workflows/42crunch.yml
 ```
 
 ## OWASP API Top 10 Vulnerabilities

@@ -97,8 +97,8 @@ jobs:
       - name: Start MongoDB & create user data
         run: |
           cd database
-          chmod +x ./dataReset.sh
-          ./dataReset.sh
+          chmod +x ./database.sh
+          ./database.sh
       - name: Install dependencies & Start app
         run: |
           cd app
