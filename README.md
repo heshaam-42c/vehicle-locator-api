@@ -1,7 +1,7 @@
 # vehicle-locator-api
 Code repository for the intentionally vulnerable Vehicle Locator API. This is a NodeJS API built with OWASP API Top 10 security vulnerabilities.
 
-## Run the API locally
+## Run the Vehicle Locator API
 
 ### 1. Start Database
 ```
@@ -15,17 +15,22 @@ PORT=3000
 MONGO_URI=mongodb://localhost:27017/vehicleLocator
 ```
 
-### 2. Install NodeJS dependencies & run the API
+### 2. Install NodeJS dependencies & Run the API
 ```
 cd app
 npm install
 npm start
 ```
 
-### 3. Vehicle Locator API should be ready and running at http://localhost:3000 with default seed users created:
+#### Vehicle Locator API should be ready and running at http://localhost:3000 with default seed users created:
 - Admin User (scanadmin@test.com)
 - Regular User (scanuser@test.com)
 - BOLA Test User (scanbola@test.com)
+
+#### Postman Collection:
+```
+postman-collection/Vehicle-Locator-API.postman_collection.json
+```
 
 #### OpenAPI Spec:
 ```
@@ -37,9 +42,14 @@ openapi-spec/openapi-spec.json
 .42c/scan/vehicle-locator-api/scanconf.json
 ```
 
-## Start API Firewall
-#### Create .env file inside api-firewall folder with your PROTECTION_TOKEN
+## Run the API Firewall
 
+#### Create .env file inside api-firewall folder with your PROTECTION_TOKEN
+```
+PROTECTION_TOKEN=<your_protection_token>
+```
+
+### Start the Firewall
 ```
 cd api-firewall
 ./deployFirewall.sh
@@ -47,19 +57,19 @@ cd api-firewall
 
 Firewall should be running at http://vehicle-api-secured.42crunch.test:4241
 
-## Stop API Firwall
+## Stop the API Firwall
 ```
 cd api-firewall
 ./deployFirewall.sh down
 ```
 
-## Stop Database
+## Stop the Database
 ```
 cd database
 ./database.sh down
 ```
 
-## GitHub Actions workflow includes 42Crunch Audit, Scan, and Protect:
+## GitHub Actions workflow (includes 42Crunch Audit, Scan, and Protect):
 ```
 .github/workflows/42crunch.yml
 ```
@@ -68,17 +78,17 @@ cd database
 
 ![image](https://github.com/user-attachments/assets/1149d806-6418-4af4-96c2-e04f832010a1)
 
-| Vulnerability                                           | Location                                   |
-| ------------------------------------------------------- | ------------------------------------------ |
-| API1:2023 - Broken Object Level Authorization           | [GET /vehicles/{id}](#api12023)            |
-| API1:2023 - Broken Object Level Authorization           | [DELETE /vehicles/{id}](#api12023)         |
-| API1:2023 - Broken Object Level Authorization           | [PUT /vehicles/{id}/location](#api12023)   |
-| API2:2023 - Broken Authentication                       | [GET /](#api22023)                         |
-| API3:2023 - Broken Object Property Level Authorization  | [POST /vehicles](#api32023api62019)        |
-| API3:2023 - Broken Object Property Level Authorization  | [PUT /vehicles/{id}/location](#api32023api62019)|
-| API3:2023 - Broken Object Property Level Authorization  | [GET /vehicles](#api32023api32019)         |
-| API5:2023 - Broken Function Level Authorization         | [GET /vehicles](#api52023)                 |
-| API8:2019 - Injection                                   | [POST /vehicles](#api82019)                |
+| Vulnerability                                                       | Location                                   |
+| ------------------------------------------------------------------- | ------------------------------------------ |
+| API1:2023 - Broken Object Level Authorization                       | [GET /vehicles/{id}](#api12023)            |
+| API1:2023 - Broken Object Level Authorization                       | [DELETE /vehicles/{id}](#api12023)         |
+| API1:2023 - Broken Object Level Authorization                       | [PUT /vehicles/{id}/location](#api12023)   |
+| API2:2023 - Broken Authentication                                   | [GET /](#api22023)                         |
+| API3:2023 (API6:2019) - Broken Object Property Level Authorization  | [POST /vehicles](#api32023api62019)        |
+| API3:2023 (API6:2019) - Broken Object Property Level Authorization  | [PUT /vehicles/{id}/location](#api32023api62019)|
+| API3:2023 (API3:2019) - Broken Object Property Level Authorization  | [GET /vehicles](#api32023api32019)         |
+| API5:2023 - Broken Function Level Authorization                     | [GET /vehicles](#api52023)                 |
+| API8:2019 - Injection                                               | [POST /vehicles](#api82019)                |
 
 ### API1:2023
 Description: User is able to GET and DELETE vehicles with invalid authorization
