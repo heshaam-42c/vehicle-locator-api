@@ -61,6 +61,16 @@
                 "responses": {
                     "200": {
                         "description": "200 OK"
+                    },
+                    "default": {
+                        "description": "unexpected error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorMessage"
+                                }
+                            }
+                        }
                     }
                 },
                 "x-42c-no-authentication": true
@@ -88,6 +98,16 @@
                 "responses": {
                     "200": {
                         "description": "successfully registered, token received"
+                    },
+                    "default": {
+                        "description": "unexpected error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorMessage"
+                                }
+                            }
+                        }
                     }
                 },
                 "x-42c-no-authentication": true
