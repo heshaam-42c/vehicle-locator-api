@@ -3,16 +3,10 @@ Code repository for the intentionally vulnerable Vehicle Locator API. This is a 
 
 ## Run the Vehicle Locator API
 
-### 1. Start Database
+### 1. Start the Database
 ```
 cd database
 ./database.sh
-```
-
-#### Optional - create .env file inside app folder to override these default variables:
-```
-PORT=3000
-MONGO_URI=mongodb://localhost:27017/vehicleLocator
 ```
 
 ### 2. Install NodeJS dependencies & Run the API
@@ -26,6 +20,12 @@ npm start
 - Admin User (scanadmin@test.com)
 - Regular User (scanuser@test.com)
 - BOLA Test User (scanbola@test.com)
+
+#### Optional - create .env file inside app folder to override these default variables:
+```
+PORT=3000
+MONGO_URI=mongodb://localhost:27017/vehicleLocator
+```
 
 #### Postman Collection:
 ```
@@ -44,12 +44,12 @@ openapi-spec/openapi-spec.json
 
 ## Run the API Firewall
 
-#### Create .env file inside api-firewall folder with your PROTECTION_TOKEN
+### 1. Create .env file inside api-firewall folder with your PROTECTION_TOKEN
 ```
 PROTECTION_TOKEN=<your_protection_token>
 ```
 
-### Start the Firewall
+### 2. Start the Firewall
 ```
 cd api-firewall
 ./deployFirewall.sh
