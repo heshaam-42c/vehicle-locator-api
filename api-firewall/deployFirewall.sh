@@ -1,9 +1,12 @@
 #! /bin/sh
 
+docker_yaml=docker-compose-firewall.yaml
+
 if [ "$1" == "down" ]; then
-  docker-compose -f docker-compose-firewall.yaml down
+  echo "Stopping API Firewall..."
+  docker-compose -f $docker_yaml down
   exit 0
 fi
 
 echo "Deploying API Firewall"
-docker-compose -f docker-compose-firewall.yaml up -d
+docker-compose -f $docker_yaml up -d
