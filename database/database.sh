@@ -1,18 +1,17 @@
 #! /bin/sh
 
+docker_yaml=docker-compose-db.yaml
+
 if [ "$1" == "down" ]; then
     echo "Stopping DB..."
-    docker-compose -f docker-compose-db.yaml down
+    docker-compose -f $docker_yaml down
     exit 0
 fi
 
-if [ "$1" == "clean" ]; then
-    echo "Stopping DB..."
-    docker-compose -f docker-compose-db.yaml down
-fi
-
+echo "Stopping DB..."
+docker-compose -f $docker_yaml down
 echo "Creating DB..."
-docker-compose -f docker-compose-db.yaml up -d
+docker-compose -f $docker_yaml up -d
 
 # Check if API is running
 api_invoke_url="http://localhost:3000/"
@@ -22,6 +21,8 @@ if [ "$curl_response_invoke" == "200" ]; then
     echo "API is up and running"
 else
     echo "API is not reachable, got $curl_response_invoke"
+    echo "Please check if the API is running."
+    echo "To start API: change dir to /app folder and type 'npm start'"
     exit 0
 fi
 
