@@ -3,7 +3,7 @@
     "info": {
         "title": "Vehicle Locator API",
         "description": "API to track and manage vehicle locations",
-        "version": "1.0.0"
+        "version": "1.0.1"
     },
     "servers": [
         {
@@ -22,7 +22,14 @@
                 "operationId": "getStatus",
                 "responses": {
                     "200": {
-                        "description": "Welcome message"
+                        "description": "Welcome message",
+                        "content": {
+                            "text/html": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -40,6 +47,7 @@
                     "content": {
                         "application/json": {
                             "schema": {
+                                "additionalProperties": false,
                                 "required": [
                                     "pass",
                                     "email"
@@ -47,10 +55,22 @@
                                 "type": "object",
                                 "properties": {
                                     "email": {
-                                      "type": "string"
+                                      "type": "string",
+                                      "format": "o:HA:email",
+                                      "example": "scanuser@test.com",
+                                      "pattern": "^(?:[\\w\\-+!#$%&'*/=?^`|{}~]+(?:\\.[\\w\\-+!#$%&'*/=?^`|{}~]+)*)@(?:(?:[A-Za-z0-9](?:[\\w\\-]{0,61}[A-Za-z0-9])?)(?:\\.(?:[A-Za-z0-9](?:[\\w\\-]{0,61}[A-Za-z0-9])?))*\\.[A-Za-z]{2,})$",
+                                      "minLength": 6,
+                                      "maxLength": 320,
+                                      "x-42c-format": "o:HA:email"
                                     },
                                     "pass": {
-                                      "type": "string"
+                                      "type": "string",
+                                      "format": "o:HA:password",
+                                      "example": "hellopixi",
+                                      "pattern": "^[a-zA-Z0-9&@#!?]{8,64}$",
+                                      "minLength": 8,
+                                      "maxLength": 64,
+                                      "x-42c-format": "o:HA:password"
                                     }
                                 }
                             }
@@ -65,6 +85,16 @@
                             "application/json": {
                                 "schema": {
                                     "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "missing parameters",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorMessage"
                                 }
                             }
                         }
@@ -109,6 +139,16 @@
                             "application/json": {
                                 "schema": {
                                     "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "202": {
+                        "description": "email address already registered",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorMessage"
                                 }
                             }
                         }
@@ -171,8 +211,18 @@
                             }
                         }
                     },
-                    "default": {
-                        "description": "Unexpected error",
+                    "400": {
+                        "description": "Invalid input",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorMessage"
+                                }
+                            }
+                        }
+                    },
+                    "409": {
+                        "description": "Vehicle ID already exists",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -194,7 +244,13 @@
                         "in": "path",
                         "required": true,
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "format": "uuid",
+                            "example": "a83a29f5-0d63-46f2-8f2e-44c2f1d2e07e",
+                            "pattern": "^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}$",
+                            "minLength": 36,
+                            "maxLength": 36,
+                            "x-42c-format": "o:uuid"
                         }
                     }
                 ],
@@ -209,8 +265,8 @@
                             }
                         }
                     },
-                    "default": {
-                        "description": "Unexpected error",
+                    "404": {
+                        "description": "Vehicle not found",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -230,7 +286,13 @@
                         "in": "path",
                         "required": true,
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "format": "uuid",
+                            "example": "a83a29f5-0d63-46f2-8f2e-44c2f1d2e07e",
+                            "pattern": "^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}$",
+                            "minLength": 36,
+                            "maxLength": 36,
+                            "x-42c-format": "o:uuid"
                         }
                     }
                 ],
@@ -245,8 +307,8 @@
                             }
                         }
                     },
-                    "default": {
-                        "description": "Unexpected error",
+                    "404": {
+                        "description": "Vehicle not found",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -268,7 +330,13 @@
                         "in": "path",
                         "required": true,
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "format": "uuid",
+                            "example": "a83a29f5-0d63-46f2-8f2e-44c2f1d2e07e",
+                            "pattern": "^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}$",
+                            "minLength": 36,
+                            "maxLength": 36,
+                            "x-42c-format": "o:uuid"
                         }
                     }
                 ],
@@ -293,8 +361,18 @@
                             }
                         }
                     },
-                    "default": {
-                        "description": "Unexpected error",
+                    "400": {
+                        "description": "Invalid input",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorMessage"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Vehicle not found",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -328,6 +406,7 @@
                     "email"
                 ],
                 "type": "object",
+                "additionalProperties": false,
                 "example": {
                     "email": "register@test.com",
                     "pass": "testpassword",
@@ -336,12 +415,27 @@
                 },
                 "properties": {
                     "email": {
-                        "type": "string"
+                        "format": "o:HA:email",
+                        "type": "string",
+                        "example": "scanuser@test.com",
+                        "pattern": "^(?:[\\w\\-+!#$%&'*/=?^`|{}~]+(?:\\.[\\w\\-+!#$%&'*/=?^`|{}~]+)*)@(?:(?:[A-Za-z0-9](?:[\\w\\-]{0,61}[A-Za-z0-9])?)(?:\\.(?:[A-Za-z0-9](?:[\\w\\-]{0,61}[A-Za-z0-9])?))*\\.[A-Za-z]{2,})$",
+                        "minLength": 6,
+                        "maxLength": 320,
+                        "x-42c-format": "o:HA:email"
                     },
                     "pass": {
-                        "type": "string"
+                        "maxLength": 64,
+                        "minLength": 8,
+                        "pattern": "^[a-zA-Z0-9&@#!?]{8,64}$",
+                        "type": "string",
+                        "format": "o:HA:password",
+                        "example": "hellopixi",
+                        "x-42c-format": "o:HA:password"
                     },
                     "name": {
+                        "maxLength": 30,
+                        "minLength": 5,
+                        "pattern": "^[\\w\\s\\.]{5,30}$",
                         "type": "string"
                     },
                     "is_admin": {
@@ -354,29 +448,56 @@
             },
             "VehicleInput": {
                 "type": "object",
+                "additionalProperties": false,
                 "properties": {
                     "vin": {
-                        "type": "string"
+                        "type": "string",
+                        "format": "o:Vehicle-Locator-API:VIN",
+                        "example": "SALVA2AE4EH877322",
+                        "pattern": "^[A-Z0-9]{17}$",
+                        "minLength": 17,
+                        "maxLength": 17,
+                        "x-42c-format": "o:Vehicle-Locator-API:VIN"
                     },
                     "lat": {
                         "type": "number",
-                        "format": "float"
+                        "format": "float",
+                        "minimum": -90,
+                        "maximum": 90
                     },
                     "lng": {
                         "type": "number",
-                        "format": "float"
+                        "format": "float",
+                        "minimum": -180,
+                        "maximum": 180
                     },
                     "make": {
-                        "type": "string"
+                        "type": "string",
+                        "maxLength": 30,
+                        "minLength": 1,
+                        "pattern": "^[\\w\\s\\.]{1,30}$",
+                        "description": "Vehicle make"
                     },
                     "model": {
-                        "type": "string"
+                        "type": "string",
+                        "maxLength": 30,
+                        "minLength": 1,
+                        "pattern": "^[\\w\\s\\.]{1,30}$",
+                        "description": "Vehicle model"
                     },
                     "year": {
-                        "type": "integer"
+                        "type": "integer",
+                        "description": "Vehicle year",
+                        "minimum": 1000,
+                        "maximum": 3000,
+                        "format": "int32"
                     },
                     "color": {
-                        "type": "string"
+                        "type": "string",
+                        "maxLength": 30,
+                        "minLength": 1,
+                        "pattern": "^[\\w\\s\\.]{1,30}$",
+                        "description": "Vehicle color"
                     }
                 },
                 "required": [
@@ -391,14 +512,19 @@
             },
             "LocationUpdate": {
                 "type": "object",
+                "additionalProperties": false,
                 "properties": {
                     "lat": {
                         "type": "number",
-                        "format": "float"
+                        "format": "float",
+                        "minimum": -90,
+                        "maximum": 90
                     },
                     "lng": {
                         "type": "number",
-                        "format": "float"
+                        "format": "float",
+                        "minimum": -180,
+                        "maximum": 180
                     }
                 },
                 "required": [
