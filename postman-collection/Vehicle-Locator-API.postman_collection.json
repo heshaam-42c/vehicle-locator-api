@@ -20,10 +20,9 @@
 									"listen": "test",
 									"script": {
 										"exec": [
-											"var jsonData = pm.response.json();",
-											"if (jsonData.id != null) {",
-											"    pm.collectionVariables.set(\"vehicleId\", jsonData.id);",
-											"}"
+											"pm.test(\"Status code is 403\", function () {",
+											"    pm.expect(pm.response.code).to.be.equal(403);",
+											"});"
 										],
 										"type": "text/javascript",
 										"packages": {}
@@ -58,7 +57,21 @@
 							"response": []
 						},
 						{
-							"name": "Undocumented Endpoint",
+							"name": "API8:2023 - Undocumented Endpoint",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 400\", function () {",
+											"    pm.expect(pm.response.code).to.be.equal(400);",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
 							"request": {
 								"method": "GET",
 								"header": [],
@@ -77,7 +90,97 @@
 							"response": []
 						},
 						{
-							"name": "Login with No-SQL injection",
+							"name": "API8:2023 - Undocumented method",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 405\", function () {",
+											"    pm.expect(pm.response.code).to.be.equal(405);",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "OPTIONS",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "API7:2023 - XXE/SSRF",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 415\", function () {",
+											"    pm.expect(pm.response.code).to.be.equal(415);",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/xml"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "<?xml version=\"1.0\"?>\n<!DOCTYPE foo [ \n  <!ENTITY xxe SYSTEM \"http://localhost:8000/internal-api\"> ]>\n<foo>&xxe;</foo>",
+									"options": {
+										"raw": {
+											"language": "xml"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/vehicles",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"vehicles"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "API8:2019 - Login with No-SQL injection",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 415\", function () {",
+											"    pm.expect(pm.response.code).to.be.equal(415);",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
 							"request": {
 								"method": "POST",
 								"header": [],
@@ -102,6 +205,49 @@
 								}
 							},
 							"response": []
+						},
+						{
+							"name": "API8:2023 - Content Type Manipulation",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 400\", function () {",
+											"    pm.expect(pm.response.code).to.be.equal(400);",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"id\": true\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/vehicles",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"vehicles"
+									]
+								}
+							},
+							"response": []
 						}
 					],
 					"description": "API Attacks that are detected and blocked with a low OpenAPI Audit score"
@@ -111,6 +257,20 @@
 					"item": [
 						{
 							"name": "API8:2019 - SQL injection",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 400\", function () {",
+											"    pm.expect(pm.response.code).to.be.equal(400);",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
 							"request": {
 								"auth": {
 									"type": "noauth"
@@ -119,7 +279,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"email\": \"scanuser@test.com ' or 1=1\",\n    \"pass\": \"scanpassword\"\n}",
+									"raw": "{\n    \"email\": \"scanuser@test.com' or 1=1\",\n    \"pass\": \"scanpassword\"\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -141,6 +301,68 @@
 						},
 						{
 							"name": "API6:2019 - Schema Injection",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"// VIN characters (excluding I, O, Q)",
+											"const vinChars = 'ABCDEFGHJKLMNPRSTUVWXYZ0123456789';",
+											"",
+											"function generateRandomVIN() {",
+											"    let vin = '';",
+											"    for (let i = 0; i < 17; i++) {",
+											"        vin += vinChars.charAt(Math.floor(Math.random() * vinChars.length));",
+											"    }",
+											"    return vin;",
+											"}",
+											"",
+											"// Retrieve API host",
+											"let myHost = pm.collectionVariables.get('baseUrl');",
+											"console.log(myHost);",
+											"pm.sendRequest({",
+											"    url: myHost+'/vehicles',",
+											"    method: 'POST',",
+											"    header: {",
+											"        'Content-Type': 'application/json',",
+											"        'Accept': 'application/json',",
+											"        'Authorization': 'Bearer ' + pm.collectionVariables.get('bearerAuth')",
+											"      },",
+											"    body: {",
+											"        mode: 'raw',",
+											"        raw: JSON.stringify(",
+											"            {",
+											"                \"vin\": generateRandomVIN(),",
+											"                \"lat\": 40.7128,",
+											"                \"lng\": -74.0060,",
+											"                \"make\": \"Toyota\",",
+											"                \"model\": \"Camry\",",
+											"                \"year\": 2025,",
+											"                \"color\": \"Blue\"",
+											"            })",
+											"    }",
+											"}, function (err, res) {",
+											"    console.log (res)",
+											"    pm.collectionVariables.set(\"vehicleId\", res.json().id);",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 400\", function () {",
+											"    pm.expect(pm.response.code).to.be.equal(400);",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
 							"request": {
 								"method": "PUT",
 								"header": [
@@ -181,6 +403,20 @@
 					"item": [
 						{
 							"name": "API3:2023 - Data Leakage (Vehicle Location)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 502\", function () {",
+											"    pm.expect(pm.response.code).to.be.equal(502);",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
 							"request": {
 								"method": "GET",
 								"header": [],
