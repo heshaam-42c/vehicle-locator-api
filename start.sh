@@ -26,4 +26,5 @@ cd ../api-firewall
 
 # Start the Vehicle Locator API
 cd ../app
+npm install -y
 npm start

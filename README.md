@@ -1,5 +1,18 @@
 # vehicle-locator-api
+
 Code repository for the intentionally vulnerable Vehicle Locator API. This is a NodeJS API built with OWASP API Top 10 security vulnerabilities.
+
+#### OpenAPI Spec:
+`openapi-spec/openapi-spec.json`
+
+#### Postman Collection:
+`postman-collection/Vehicle-Locator-API.postman_collection.json`
+
+#### Conformance Scan (v2) configuration:
+`.42c/scan/vehicle-locator-api/scanconf.json`
+
+#### GitHub Actions workflow (includes 42Crunch Audit, Scan, and Protect):
+`.github/workflows/42crunch.yml`
 
 ## Run the Vehicle Locator API
 
@@ -25,21 +38,6 @@ npm start
 ```
 PORT=3000
 MONGO_URI=mongodb://localhost:27017/vehicleLocator
-```
-
-#### Postman Collection:
-```
-postman-collection/Vehicle-Locator-API.postman_collection.json
-```
-
-#### OpenAPI Spec:
-```
-openapi-spec/openapi-spec.json
-```
-
-#### Conformance Scan configuration:
-```
-.42c/scan/vehicle-locator-api/scanconf.json
 ```
 
 ## Run the API Firewall
@@ -69,9 +67,15 @@ cd database
 ./database.sh down
 ```
 
-## GitHub Actions workflow (includes 42Crunch Audit, Scan, and Protect):
+## Quick-start script to run all of the above (Database, API, and API Firewall):
 ```
-.github/workflows/42crunch.yml
+./start.sh
+```
+### Quick shut-down:
+```
+Ctrl+C
+
+./start.sh down
 ```
 
 ## OWASP API Top 10 Vulnerabilities
