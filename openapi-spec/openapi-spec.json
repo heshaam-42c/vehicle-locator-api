@@ -60,7 +60,14 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "200 OK"
+                        "description": "200 OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "default": {
                         "description": "unexpected error",
@@ -97,7 +104,14 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "successfully registered, token received"
+                        "description": "successfully registered, token received",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "default": {
                         "description": "unexpected error",
@@ -156,6 +170,16 @@
                                 }
                             }
                         }
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorMessage"
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -184,6 +208,16 @@
                                 }
                             }
                         }
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorMessage"
+                                }
+                            }
+                        }
                     }
                 }
             },
@@ -207,6 +241,16 @@
                             "application/json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/Vehicle"
+                                }
+                            }
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorMessage"
                                 }
                             }
                         }
@@ -249,8 +293,8 @@
                             }
                         }
                     },
-                    "404": {
-                        "description": "Vehicle not found",
+                    "default": {
+                        "description": "Unexpected error",
                         "content": {
                             "application/json": {
                                 "schema": {
