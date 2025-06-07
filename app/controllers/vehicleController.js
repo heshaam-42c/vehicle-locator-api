@@ -52,7 +52,9 @@ async function updateVehicle (req, res) {
     try {
         const vehicle = await VehicleModel.findOneAndUpdate(
             { id: req.params.id },
-            { lat, lng },
+            // API6:2019 - Mass Assignment - FIX: Update only the lat and lng fields
+            // { lat, lng },
+            req.body,
             { new: true }
         );
 

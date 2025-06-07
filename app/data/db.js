@@ -3,6 +3,15 @@ import UserModel from '../models/userModel.js';
 import VehicleModel from '../models/vehicleModel.js';
 import { v4 as uuidv4 } from 'uuid';
 
+function generateRandomVIN() {
+    const chars = 'ABCDEFGHJKLMNPRSTUVWXYZ0123456789'; // Excludes I, O, Q
+    let vin = '';
+    for (let i = 0; i < 17; i++) {
+        vin += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    return vin;
+}
+
 const connectDB = async () => {
     try {
         const connection = await mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/vehicleLocator'); 
@@ -70,7 +79,7 @@ const seedDefaultUsers = async () => {
 const seedDefaultVehicles = async () => {
   try {
     const newVehicle = new VehicleModel({
-      vin: "1HGCM82633A123456", // Example VIN
+      vin: generateRandomVIN(),
       lat: "-23", 
       lng: "96",
       make: "Honda",
