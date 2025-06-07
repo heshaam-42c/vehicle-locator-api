@@ -91,7 +91,7 @@ cd database
 | API8:2019 - Injection                                               | [POST /vehicles](#api82019)                |
 
 ### API1:2023
-Description: User is able to GET and DELETE vehicles with invalid authorization
+Description: User is able to GET and DELETE vehicles with invalid authorization. User is able to update (PUT) vehicles with invalid authorization.
 
 ![image](https://github.com/user-attachments/assets/9f4f0786-f519-4aa9-937c-24910f235476)
 
