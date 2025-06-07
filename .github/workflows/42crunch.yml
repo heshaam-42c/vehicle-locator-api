@@ -161,3 +161,4 @@ jobs:
         run: |
           apiId=$(cat ./audit-action-report-${{ github.run_id }}.json | jq -r '.audit.report."openapi-spec/openapi-spec.json".apiId')
           python .42c/scripts/protection.py $apiId ${{ env.PLATFORM_URL}} ${{ secrets.API_TOKEN }}
+          echo "API Protection policy updated: https://demolabs.42crunch.cloud/apis/$apiId/protection"
