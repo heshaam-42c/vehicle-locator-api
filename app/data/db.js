@@ -91,7 +91,22 @@ const seedDefaultVehicles = async () => {
       id: uuidv4(), // Generate a unique vehicle ID
     });
     await newVehicle.save();
-    console.log("Default vehicle created");
+    console.log("One vehicle created");
+
+    const newVehicle2 = new VehicleModel({
+      vin: generateRandomVIN(),
+      lat: "-16.5", 
+      lng: "36.5",
+      make: "Toyota",
+      model: "Corolla", 
+      year: "2023",
+      color: "White",
+      status: "active",
+      lastUpdated: Date.now(),
+      id: uuidv4(), // Generate a unique vehicle ID
+    });
+    await newVehicle2.save();
+    console.log("Two vehicles created");
   } catch (error) {
     console.error("Error seeding default vehicles:", error.message);
   }
