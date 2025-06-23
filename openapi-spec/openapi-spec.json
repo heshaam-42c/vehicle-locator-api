@@ -68,22 +68,10 @@
                                 "type": "object",
                                 "properties": {
                                     "email": {
-                                        "type": "string",
-                                        "format": "o:HA:email",
-                                        "example": "scanuser@test.com",
-                                        "pattern": "^(?:[\\w\\-+!#$%&'*/=?^`|{}~]+(?:\\.[\\w\\-+!#$%&'*/=?^`|{}~]+)*)@(?:(?:[A-Za-z0-9](?:[\\w\\-]{0,61}[A-Za-z0-9])?)(?:\\.(?:[A-Za-z0-9](?:[\\w\\-]{0,61}[A-Za-z0-9])?))*\\.[A-Za-z]{2,})$",
-                                        "minLength": 6,
-                                        "maxLength": 320,
-                                        "x-42c-format": "o:HA:email"
+                                        "type": "string"
                                     },
                                     "pass": {
-                                        "type": "string",
-                                        "format": "o:HA:password",
-                                        "example": "hellopixi",
-                                        "pattern": "^[a-zA-Z0-9&@#!?]{8,64}$",
-                                        "minLength": 8,
-                                        "maxLength": 64,
-                                        "x-42c-format": "o:HA:password"
+                                        "type": "string"
                                     }
                                 }
                             }
