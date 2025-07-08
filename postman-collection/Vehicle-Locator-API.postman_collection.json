@@ -45,12 +45,12 @@
 									"raw": "{\n  \"vin\": \"A9K3JFIU23FH54J1K\",\n  \"lat\": 40.7128,\n  \"lng\": -74.0060,\n  \"make\": \"Toyota\",\n  \"model\": \"Camry\",\n  \"year\": 2025,\n  \"color\": \"Blue\"\n}"
 								},
 								"url": {
-									"raw": "{{baseUrl}}/vehicles",
+									"raw": "{{baseUrl}}/",
 									"host": [
 										"{{baseUrl}}"
 									],
 									"path": [
-										"vehicles"
+										""
 									]
 								}
 							},
