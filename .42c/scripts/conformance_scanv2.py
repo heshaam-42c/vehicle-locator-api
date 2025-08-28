@@ -71,18 +71,24 @@ def testUUID(token):
     return re.match("^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$", token)
 
 def testConfName(name):
-    return re.match ( "^[a-zA-Z0-9_\-]+$", name)
+    return re.match (r"^[a-zA-Z0-9_\-]+$", name)
 
 def testFileName (filename):
-    return re.match ("^[a-zA-Z0-9\s_\-\/\.]{5,256}$", filename)
+    return re.match (r"^[a-zA-Z0-9\s_\-\/\.]{5,256}$", filename)
+
+def enforce_https(url):
+    if url.startswith("http://"):
+        url = "https://" + url[7:]  # Replace "http://" with "https://"
+    elif not url.startswith("https://"):
+        url = "https://" + url
+    return url
 
 # Generate a default scan V2 config
 def gen_default_config(token: str, name: str, aid: str):
     url =  f"{PLATFORM}/api/v2/apis/{aid}/scanConfigurations/default"
     headers = {"accept": "application/json", "X-API-KEY": token}
 
-    # payload = {"name": name, "reference": True, "v1CompatibilityMode": True}
-    payload = {"name": name, "reference": True}
+    payload = {"name": name, "reference": True, "v1CompatibilityMode": True}
     response = requests.post(url, data=json.dumps(payload), headers=headers) 
 
     if response.status_code != 200:
@@ -105,6 +111,20 @@ def retrieve_config_names (token: str, aid: str):
             scan_conf_id = c['configuration']['id']
             scan_confs_list.update ({scan_conf_name:scan_conf_id})
 
+# We need to use this call to retrieve a scan SQG status from its API UUID.
+def retrieve_SQG (token: str, aid: str):
+    url =  f"{PLATFORM}/api/v2/apis/{aid}/branches/main?readScan=true"
+    headers = {"accept": "application/json", "X-API-KEY": token}
+
+    response = requests.get(url, headers=headers)
+
+    if response.status_code != 200:
+        logger.error(f"Error: unable to retrieve SQG Status {response.status_code} : {response.reason}")
+        sys.exit(1)
+    else:
+        scan_SQG_status = response.json()['scan']['sqgPass']
+    return scan_SQG_status
+            
 # We use this call to retrieve the list of scan ids from the scan conf name.
 def retrieve_config_id(token: str, name: str, aid: str, token_default: bool = False):
     scan_conf_id = ""
@@ -396,22 +416,23 @@ if __name__ == "__main__":
     parser.add_argument('-q', "--quiet", default=False, action="store_true", help="Quiet output - only minimal is shown")
     parser.add_argument('-v', '--verbose', default=False, action="store_true", help="Enable verbose")
     parser.add_argument("-c", "--credentials", required=True, help="API key")  
-    parser.add_argument('-p', '--platform',  required=False, default='https://us.42crunch.cloud', help="Default is https://us.42crunch.cloud", type=str)
+    parser.add_argument('-p', '--platform',  required=False, default='https://us.42crunch.cloud', help="Default is https://us.42crunch.cloud", type=enforce_https)
     parser.add_argument("-a", "--api_uuid", required=True, help="API UUID")
     parser.add_argument('-n', "--config_name", required=False, default="Defaultv2Config", help="Scan configuration friendly name")
     parser.add_argument('-f', "--config_filename", required=False, help="Scan configuration filename", default="scanconf_Defaultv2Config.json")
     parser.add_argument("-t", "--token_file", help="filename to output the scan token - ie token.json - used with create_conf, upload_conf, or get_token")
-    parser.add_argument("-r", "--reference", help="During create_conf, upload_conf, regen_conf, and get_token - set the named scan config to be the reference")
+    parser.add_argument("-r", "--reference", default=False, action="store_true", help="During create_conf, upload_conf, regen_conf, and get_token - set the named scan config to be the reference")
     parser.add_argument("-d", "--default", required=False, default=False, action="store_true", help="During get_token, if a config does not exist, create a default one")
     parser.add_argument("--action", required=True, help="Action to perform:")
     subparsers.add_parser("list_reports", help="List all scan reports available for an API")
     subparsers.add_parser("get_report", help="Get associated scan report for -n/--config_name")
+    subparsers.add_parser("get_sqg", help="Get the SQG Status of the associated API UUID")
     subparsers.add_parser("get_token", help="Get the scan token for -n/--config_name.  Optionally provide -d/--default")
     subparsers.add_parser("create_conf", help="Create a new scan configuration - if named config already exists, it will be overwritten with a DEFAULT scan config. This is good for refreshing your scan config if your OAS has been modified.")
     subparsers.add_parser("delete_conf", help="Delete scan config -n/--config_name")
     subparsers.add_parser("download_conf", help="Download the JSON scan configuration file for config -n/--config_name")
     subparsers.add_parser("upload_conf", help="Upload a scan config for config -n/--config_name.  Requires -f/--config_filename")
-    subparsers.add_parser("set_reference", help="Set the reference scan config for SQG evaluation (CURRENTLY BROKEN IN SCRIPT ONLY)")
+    subparsers.add_parser("set_reference", help="Set the reference scan config for SQG evaluation")
     args = parser.parse_args()
 
     global PLATFORM, token_file
@@ -426,9 +447,10 @@ if __name__ == "__main__":
     token_file = args.token_file
     PLATFORM = args.platform
     action = args.action
-
+    
     logger = CustomLogger(__name__, logging.DEBUG, quiet=quiet, verbose=verbose)
-
+    logger.info(f"Using Platform {PLATFORM}")
+    
     if not testUUID(aid):
         logger.error("Error, API ID must be in UUID format.")
         sys.exit(1)
@@ -512,6 +534,16 @@ if __name__ == "__main__":
         retrieve_config_names(apitoken, aid)
         logger.info(f"Retrieving report for scan {name}...")
         retrieveReport (apitoken, aid, name)
+    elif action == "get_sqg":
+        # Fill the config names dict.
+        logger.info("Retrieving SQG Results...")
+        sqgPass = retrieve_SQG(apitoken, aid)
+        if sqgPass:
+            logger.info("SQG marked as Passed, exiting 0...")
+            sys.exit(0)
+        else: 
+            logger.info("SQG marked as Failed, exiting 1...")
+            sys.exit(1)
     elif action =="upload_conf":
         logger.info(f"Uploading {filename} into API {aid} for scan config {name}")
         scan_conf_id = update_config (apitoken, name, aid, filename)
@@ -523,7 +555,7 @@ if __name__ == "__main__":
                 logger.info(f"Setting this config to be the reference...")
                 set_reference(apitoken, aid, scan_conf_id)
     elif action == "set_reference":
-        logger.info("Updating reference scan configuration...")
+        logger.info(f"Updating reference scan configuration... to {name}")
         scan_conf_id = retrieve_config_id (apitoken, name, aid)
         if not testUUID(scan_conf_id):
             logger.error(f"Scan Configuration ID is not a valid UUID - {scan_conf_id}.  Exiting...")
