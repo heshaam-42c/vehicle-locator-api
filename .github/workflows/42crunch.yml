@@ -144,11 +144,11 @@ jobs:
       #       python .42c/scripts/manage_scanv2_reports.py ${{ secrets.API_TOKEN }} ${{steps.get_vehicle_api_id.outputs.VEHICLE_API_UUID}} -o retrieve -p ${{ env.PLATFORM_URL}} -t $taskId
       #       # Print the scan report URL using Scan Config ID
       #       echo "Scan report - ${{ env.PLATFORM_URL }}/apis/${{steps.get_vehicle_api_id.outputs.VEHICLE_API_UUID}}/scan/report?configId=$configId"
-      - name: Stop app and database
+      - name: Check API Scan SQG status
         run: |
             scan_sgq_status=$(curl ${{env.PLATFORM_URL}}/api/v2/apis/${{steps.get_vehicle_api_id.outputs.VEHICLE_API_UUID}}/branches/main?readScan=true -H "X-API-KEY: ${{ secrets.API_TOKEN }}") | jq -r .scan.sqgPass
             echo $scan_sgq_status
-            if [ $scan_sgq_status == false ]; then
+            if [ "$scan_sgq_status" = "false" ]; then
               echo "42Crunch API Scan SQG Failed."
               exit 1
             fi
