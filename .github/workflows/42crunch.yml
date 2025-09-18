@@ -151,7 +151,8 @@ jobs:
             scan_sgq_status=$(curl ${{env.PLATFORM_URL}}/api/v2/apis/${{steps.get_vehicle_api_id.outputs.VEHICLE_API_UUID}}/branches/main?readScan=true -H "X-API-KEY: ${{ secrets.API_TOKEN }}" | jq -r .scan.sqgPass)
             if [ "$scan_sgq_status" = "false" ]; then
               echo "42Crunch API Scan SQG Failed."
-              curl ${{env.PLATFORM_URL}}/api/v2/sqgs/reportComplianceStatus?taskId=${{ steps.api-security-testing.outputs.SCANV2_TASK_ID }}&reportType=scan -H "X-API-KEY: ${{ secrets.API_TOKEN }}" | jq .
+              echo "curl ${{env.PLATFORM_URL}}/api/v2/sqgs/reportComplianceStatus?taskId=${{ steps.api-security-testing.outputs.SCANV2_TASK_ID }}&reportType=scan -H \"X-API-KEY: ${{ secrets.API_TOKEN }}\""
+              curl ${{env.PLATFORM_URL}}/api/v2/sqgs/reportComplianceStatus?taskId=${{ steps.api-security-testing.outputs.SCANV2_TASK_ID }}&reportType=scan -H "X-API-KEY: ${{ secrets.API_TOKEN }}"
               exit 1
             else
               echo "42Crunch API Scan SQG Passed."
