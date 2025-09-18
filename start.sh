@@ -14,17 +14,21 @@ if [ "$1" == "down" ]; then
   ./deployFirewall.sh down
 
   exit 0
+elif [ $# -lt 1 ]; then
+  echo "Starting Vehicle Locator API Firewall and DB..."
+  # Start the Database
+  cd ./database
+  ./database.sh
+
+  # Start the API Firewall
+  cd ../api-firewall
+  ./deployFirewall.sh
+
+  # Start the Vehicle Locator API
+  cd ../app
+  npm install -y
+  npm start
+else
+  echo "Invalid argument. Use 'down' to stop the services or no arguments to start."
+  exit 1
 fi
-
-# Start the Database
-cd ./database
-./database.sh
-
-# Start the API Firewall
-cd ../api-firewall
-./deployFirewall.sh
-
-# Start the Vehicle Locator API
-cd ../app
-npm install -y
-npm start
