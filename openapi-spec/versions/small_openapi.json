@@ -1,0 +1,65 @@
+{
+    "openapi": "3.0.3",
+    "info": {
+        "title": "Vehicle Locator API",
+        "description": "API to track and manage vehicle locations",
+        "version": "1.0.2"
+    },
+    "servers": [
+        {
+            "url": "https://vehicle-api-secured.42crunch.test"
+        }
+    ],
+    "paths": {
+        "/": {
+            "get": {
+                "summary": "API status",
+                "operationId": "getStatus",
+                "responses": {
+                    "200": {
+                        "description": "Welcome message",
+                        "content": {
+                            "text/html": {
+                                "schema": {
+                                    "type": "string",
+                                    "minLength": 1,
+                                    "maxLength": 255,
+                                    "pattern": "^[\\w\\s\\.\\-@:,;]{1,255}$"
+                                }
+                            }
+                        }
+                    },
+                    "default": {
+                        "description": "Default",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorMessage"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "ErrorMessage": {
+                "required": [
+                    "message"
+                ],
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                    "message": {
+                        "maxLength": 255,
+                        "minLength": 1,
+                        "pattern": "^[\\w\\s\\.\\-@:,;]{1,255}$",
+                        "type": "string"
+                    }
+                }
+            }
+        }
+    }
+}

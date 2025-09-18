@@ -4,8 +4,8 @@ services:
     ports:
       - '4241:4241'
     volumes:
-      - ./storage/apifirewall/ssl:/opt/guardian/conf/ssl
-      - ./storage/apifirewall/logs:/opt/guardian/logs
+      - ./storage/ssl:/opt/guardian/conf/ssl
+      - ./storage/logs:/opt/guardian/logs
     command: ["/bin/squire", "-platform", "protection.demolabs.42crunch.cloud:8001", "-debug"]
     environment:
       - PROTECTION_TOKEN=${PROTECTION_TOKEN}
@@ -16,6 +16,7 @@ services:
       - GUARDIAN_NODE_NAME=Local-Firewall
       - GUARDIAN_INSTANCE_NAME=Local-Firewall
       - LOG_LEVEL=DEBUG
-      - LOG_DESTINATION=PLATFORM+STDOUT
+      - LOG_DESTINATION=FILES
+      - TRANSACTION_LOG_CONTENT=request.body:8092,response.body:8092
     env_file:
       - .env
