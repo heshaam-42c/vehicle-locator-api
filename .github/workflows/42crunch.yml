@@ -148,11 +148,10 @@ jobs:
             echo "Scan report - ${{ env.PLATFORM_URL }}/apis/${{steps.get_vehicle_api_id.outputs.VEHICLE_API_UUID}}/scan/report?configId=$configId"
       - name: Check API Scan SQG status
         run: |
-            scan_sgq_status=$(curl ${{env.PLATFORM_URL}}/api/v2/apis/${{steps.get_vehicle_api_id.outputs.VEHICLE_API_UUID}}/branches/main?readScan=true -H "X-API-KEY: ${{ secrets.API_TOKEN }}" | jq -r .scan.sqgPass)
+            scan_sgq_status=$(curl -s ${{env.PLATFORM_URL}}/api/v2/apis/${{steps.get_vehicle_api_id.outputs.VEHICLE_API_UUID}}/branches/main?readScan=true -H "X-API-KEY: ${{ secrets.API_TOKEN }}" | jq -r .scan.sqgPass)
             if [ "$scan_sgq_status" = "false" ]; then
               echo "42Crunch API Scan SQG Failed."
-              echo "${{env.PLATFORM_URL}}/api/v2/sqgs/reportComplianceStatus?taskId=${{ steps.api-security-testing.outputs.SCANV2_TASK_ID }}&reportType=scan -H \"X-API-KEY: ${{ secrets.API_TOKEN }}\""
-              curl "${{env.PLATFORM_URL}}/api/v2/sqgs/reportComplianceStatus?taskId=${{ steps.api-security-testing.outputs.SCANV2_TASK_ID }}&reportType=scan" -H "X-API-KEY: ${{ secrets.API_TOKEN }}"
+              curl -s "${{env.PLATFORM_URL}}/api/v2/sqgs/reportComplianceStatus?taskId=${{ steps.api-security-testing.outputs.SCANV2_TASK_ID }}&reportType=scan" -H "X-API-KEY: ${{ secrets.API_TOKEN }}" | jq .
               exit 1
             else
               echo "42Crunch API Scan SQG Passed."
