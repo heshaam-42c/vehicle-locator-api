@@ -128,6 +128,7 @@ jobs:
             scan_token=$(cat scan_token.json | jq -r '.scan_token')
             echo "SCANV2_TOKEN=$scan_token" >> $GITHUB_OUTPUT
       - name: 42crunch-dynamic-api-testing
+        id: api-security-testing
         run: |
             docker pull ${{vars.SCAN_AGENT_V2}}
             docker run --network=host -e SCAN_TOKEN=${{ steps.upload_v2_scan_config.outputs.SCANV2_TOKEN }} -e SCAN42C_HOST=http://localhost:3000 -e PLATFORM_SERVICE=${{ env.PLATFORM_SERVICE_ENDPOINT }} ${{vars.SCAN_AGENT_V2}}
@@ -136,6 +137,7 @@ jobs:
             # List the scan reports for the target API and save the Task ID for github-actions
             taskId=$(python .42c/scripts/manage_scanv2_reports.py ${{ secrets.API_TOKEN }} ${{steps.get_vehicle_api_id.outputs.VEHICLE_API_UUID}} -o list -p ${{ env.PLATFORM_URL}} -q | grep ${{ env.SCAN_CONFIG }} | cut -d',' -f1)
             echo "Task ID - $taskId"
+            echo "SCANV2_TASK_ID=$taskId" >> $GITHUB_OUTPUT
 
             configId=$(python .42c/scripts/manage_scanv2_reports.py ${{ secrets.API_TOKEN }} ${{steps.get_vehicle_api_id.outputs.VEHICLE_API_UUID}} -o list -p ${{ env.PLATFORM_URL}} -q | grep ${{ env.SCAN_CONFIG }} | cut -d',' -f2)
             echo "Config ID - $configId"
@@ -149,6 +151,7 @@ jobs:
             scan_sgq_status=$(curl ${{env.PLATFORM_URL}}/api/v2/apis/${{steps.get_vehicle_api_id.outputs.VEHICLE_API_UUID}}/branches/main?readScan=true -H "X-API-KEY: ${{ secrets.API_TOKEN }}" | jq -r .scan.sqgPass)
             if [ "$scan_sgq_status" = "false" ]; then
               echo "42Crunch API Scan SQG Failed."
+              curl ${{env.PLATFORM_URL}}/api/v2/sqgs/reportComplianceStatus?taskId=${{ steps.api-security-testing.outputs.SCANV2_TASK_ID }}&reportType=scan
               exit 1
             else
               echo "42Crunch API Scan SQG Passed."
