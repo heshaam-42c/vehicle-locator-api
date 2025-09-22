@@ -16,7 +16,7 @@ services:
       - GUARDIAN_NODE_NAME=Local-Firewall
       - GUARDIAN_INSTANCE_NAME=Local-Firewall
       - LOG_LEVEL=DEBUG
-      - LOG_DESTINATION=FILES
+      - LOG_DESTINATION=PLATFORM+STDOUT
       - TRANSACTION_LOG_CONTENT=request.body:8092,response.body:8092
     env_file:
       - .env
