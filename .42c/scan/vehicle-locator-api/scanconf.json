@@ -62,6 +62,18 @@
           "from": "environment",
           "required": false,
           "default": "http://localhost:3000"
+        },
+        "email": {
+          "name": "SCAN42C_EMAIL",
+          "default": "scanuser@test.com",
+          "required": false,
+          "from": "environment"
+        },
+        "pass": {
+          "name": "SCAN42C_PASS",
+          "default": "scanpassword",
+          "required": false,
+          "from": "environment"
         }
       }
     }
@@ -117,11 +129,7 @@
           "requests": [
             {
               "fuzzing": true,
-              "$ref": "#/operations/authenticate/request",
-              "environment": {
-                "email": "scanuser@test.com",
-                "pass": "scanpassword"
-              }
+              "$ref": "#/operations/authenticate/request"
             }
           ],
           "fuzzing": true
