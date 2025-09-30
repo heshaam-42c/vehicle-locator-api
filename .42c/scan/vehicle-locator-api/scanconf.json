@@ -65,15 +65,15 @@
         },
         "email": {
           "name": "SCAN42C_EMAIL",
-          "default": "scanuser@test.com",
+          "from": "environment",
           "required": false,
-          "from": "environment"
+          "default": "scanuser@test.com"
         },
         "pass": {
           "name": "SCAN42C_PASS",
-          "default": "scanpassword",
+          "from": "environment",
           "required": false,
-          "from": "environment"
+          "default": "scanpassword"
         }
       }
     }
@@ -278,7 +278,10 @@
           "requests": [
             {
               "fuzzing": true,
-              "$ref": "#/operations/getVehicleById/request"
+              "$ref": "#/operations/getVehicleById/request",
+              "environment": {
+                "vehicle_id": "test"
+              }
             }
           ],
           "fuzzing": true
