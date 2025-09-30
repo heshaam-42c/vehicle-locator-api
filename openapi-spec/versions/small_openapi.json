@@ -3,11 +3,16 @@
     "info": {
         "title": "Vehicle Locator API",
         "description": "API to track and manage vehicle locations",
-        "version": "1.0.2"
+        "version": "1.0.0"
     },
     "servers": [
         {
-            "url": "https://vehicle-api-secured.42crunch.test"
+            "url": "http://localhost:3000"
+        }
+    ],
+    "security": [
+        {
+            "bearerAuth": []
         }
     ],
     "paths": {
@@ -17,20 +22,279 @@
                 "operationId": "getStatus",
                 "responses": {
                     "200": {
-                        "description": "Welcome message",
+                        "description": "Welcome message"
+                    }
+                }
+            }
+        },
+        "/user/login": {
+            "post": {
+                "tags": [
+                    "anyone"
+                ],
+                "security": [],
+                "summary": "user/password based login",
+                "description": "user supplies user name and password and receives a json web token",
+                "operationId": "authenticate",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "pass",
+                                    "email"
+                                ],
+                                "type": "object",
+                                "properties": {
+                                    "email": {
+                                      "type": "string"
+                                    },
+                                    "pass": {
+                                      "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "200 OK",
                         "content": {
-                            "text/html": {
+                            "application/json": {
                                 "schema": {
-                                    "type": "string",
-                                    "minLength": 1,
-                                    "maxLength": 255,
-                                    "pattern": "^[\\w\\s\\.\\-@:,;]{1,255}$"
+                                    "type": "object"
                                 }
                             }
                         }
                     },
                     "default": {
-                        "description": "Default",
+                        "description": "unexpected error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorMessage"
+                                }
+                            }
+                        }
+                    }
+                },
+                "x-42c-no-authentication": true
+            }
+        },
+        "/user/register": {
+            "post": {
+                "tags": [
+                    "anyone"
+                ],
+                "security": [],
+                "summary": "register for an account",
+                "description": "user supplies email and password to register and receives a json web token.",
+                "operationId": "register",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UserRegistrationData"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "successfully registered, token received",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "default": {
+                        "description": "unexpected error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorMessage"
+                                }
+                            }
+                        }
+                    }
+                },
+                "x-42c-no-authentication": true
+            }
+        },
+        "/vehicles": {
+            "get": {
+                "summary": "Get all vehicles",
+                "operationId": "getVehicles",
+                "responses": {
+                    "200": {
+                        "description": "A list of all vehicles",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Vehicle"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "summary": "Add a new vehicle",
+                "operationId": "postVehicle",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/VehicleInput"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Vehicle created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Vehicle"
+                                }
+                            }
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorMessage"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/vehicles/{id}": {
+            "get": {
+                "summary": "Get a vehicle by ID",
+                "operationId": "getVehicleById",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Vehicle found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Vehicle"
+                                }
+                            }
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorMessage"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Delete a vehicle by ID",
+                "operationId": "deleteVehicleById",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Vehicle deleted",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Vehicle"
+                                }
+                            }
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorMessage"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/vehicles/{id}/location": {
+            "put": {
+                "summary": "Update vehicle location",
+                "operationId": "updateVehicleLocation",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/LocationUpdate"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Location updated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Vehicle"
+                                }
+                            }
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -50,15 +314,104 @@
                     "message"
                 ],
                 "type": "object",
-                "additionalProperties": false,
                 "properties": {
                     "message": {
-                        "maxLength": 255,
-                        "minLength": 1,
-                        "pattern": "^[\\w\\s\\.\\-@:,;]{1,255}$",
                         "type": "string"
                     }
                 }
+            },
+            "UserRegistrationData": {
+                "required": [
+                    "is_admin",
+                    "name",
+                    "pass",
+                    "email"
+                ],
+                "type": "object",
+                "example": {
+                    "email": "register@test.com",
+                    "pass": "testpassword",
+                    "name": "VehicleUser",
+                    "is_admin": false
+                },
+                "properties": {
+                    "email": {
+                        "type": "string"
+                    },
+                    "pass": {
+                        "type": "string"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "is_admin": {
+                        "type": "boolean"
+                    }
+                }
+            },
+            "Vehicle": {
+                "type": "object"
+            },
+            "VehicleInput": {
+                "type": "object",
+                "properties": {
+                    "vin": {
+                        "type": "string"
+                    },
+                    "lat": {
+                        "type": "number",
+                        "format": "float"
+                    },
+                    "lng": {
+                        "type": "number",
+                        "format": "float"
+                    },
+                    "make": {
+                        "type": "string"
+                    },
+                    "model": {
+                        "type": "string"
+                    },
+                    "year": {
+                        "type": "integer"
+                    },
+                    "color": {
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "vin",
+                    "lat",
+                    "lng",
+                    "make",
+                    "model",
+                    "year",
+                    "color"
+                ]
+            },
+            "LocationUpdate": {
+                "type": "object",
+                "properties": {
+                    "lat": {
+                        "type": "number",
+                        "format": "float"
+                    },
+                    "lng": {
+                        "type": "number",
+                        "format": "float"
+                    }
+                },
+                "required": [
+                    "lat",
+                    "lng"
+                ]
+            }
+        },
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "scheme": "bearer",
+                "bearerFormat": "JWT"
             }
         }
     }

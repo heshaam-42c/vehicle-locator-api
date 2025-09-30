@@ -278,10 +278,7 @@
           "requests": [
             {
               "fuzzing": true,
-              "$ref": "#/operations/getVehicleById/request",
-              "environment": {
-                "vehicle_id": "test"
-              }
+              "$ref": "#/operations/getVehicleById/request"
             }
           ],
           "fuzzing": true

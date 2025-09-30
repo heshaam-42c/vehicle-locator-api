@@ -2,6 +2,15 @@
 
 # This script is used to start the vehicle locator API service.
 
+if [ "$1" == "-h" ]; then
+    echo "usage: $0 [down|restart]\n"
+    echo "This script is used to manage the Vehicle Locator API"
+    echo "   -h          Show this help message"
+    echo "   down        Shut down the Vehicle Locator API"
+    echo "   restart     Restart the Vehicle Locator API"
+    exit 0
+fi
+
 if [ "$1" == "down" ]; then
   echo "Stopping Vehicle Locator API, Firewall and DB..."
 
@@ -52,6 +61,6 @@ elif [ $# -lt 1 ]; then
   npm install -y
   npm start
 else
-  echo "Invalid argument. Use 'down' to stop the services or no arguments to start."
+  echo "Invalid argument. Use -h for help."
   exit 1
 fi
