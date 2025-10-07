@@ -45,7 +45,7 @@ elif [ "$1" == "restart" ]; then
   # Start the Vehicle Locator API
   cd ../app
   npm install -y
-  npm start
+  nodemon start
 elif [ $# -lt 1 ]; then
   echo "Starting Vehicle Locator API, Firewall and DB..."
   # Start the Database
@@ -59,7 +59,7 @@ elif [ $# -lt 1 ]; then
   # Start the Vehicle Locator API
   cd ../app
   npm install -y
-  npm start
+  nodemon start
 else
   echo "Invalid argument. Use -h for help."
   exit 1

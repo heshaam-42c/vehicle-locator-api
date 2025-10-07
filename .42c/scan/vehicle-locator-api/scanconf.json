@@ -363,8 +363,8 @@
                 "color": "Black",
                 "lat": -26.523462783452146,
                 "lng": -96.59882815504184,
-                "make": "Toyota",
-                "model": "Camry",
+                "make": "Ford",
+                "model": "Mustang",
                 "vin": "{{$randomFromSchema}}",
                 "year": 2024
               }

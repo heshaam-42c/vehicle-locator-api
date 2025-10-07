@@ -728,7 +728,11 @@
                         "maxLength": 38,
                         "x-42c-format": "o:date-time"
                     }
-                }
+                },
+                "required": [
+                    "id",
+                    "vin"
+                ]
             },
             "VehicleInput": {
                 "type": "object",

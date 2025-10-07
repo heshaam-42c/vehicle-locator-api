@@ -10,8 +10,11 @@ var privateKey = fs.readFileSync('./keys/private.key', 'utf8');
 async function userLogin (req, res) {
 	if ((!req.body.email) || (!req.body.pass)) {
 		res.status(422).json({ "message": "missing username and or password parameters" });
-	}
-	else {
+    // API8:2019 - Injection
+    // Solution: Validate input types
+	} else if ((typeof req.body.email !== 'string') || (typeof req.body.pass !== 'string')){
+        res.status(400).json({ "message": "invalid username and or password parameters" });
+    } else {
 		api_authenticate(req.body.email, req.body.pass, req, res);
 	}
 }
