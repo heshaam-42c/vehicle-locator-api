@@ -4,7 +4,7 @@ import { v4 as uuidv4 } from 'uuid';
 // Get all vehicles
 async function getVehicles(req, res) {
     // Fetch all vehicles, excluding the MongoDB _id field
-    const vehicles = await VehicleModel.find().select('-_id -lat -lng').limit(10);
+    const vehicles = await VehicleModel.find().select('-_id').limit(10);
     res.json(vehicles);
 }
 
