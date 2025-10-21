@@ -279,7 +279,7 @@
 					"name": "Medium-Score Attacks",
 					"item": [
 						{
-							"name": "API8:2019 - SQL injection",
+							"name": "API8:2019 - noSQL injection",
 							"event": [
 								{
 									"listen": "test",
@@ -290,7 +290,8 @@
 											"});"
 										],
 										"type": "text/javascript",
-										"packages": {}
+										"packages": {},
+										"requests": {}
 									}
 								}
 							],
@@ -302,7 +303,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"email\": \"scanuser@test.com' or 1=1\",\n    \"pass\": \"scanpassword\"\n}",
+									"raw": "{\n    \"email\": {\"$ne\": \"66daba21d0bc05aa1d335067\"},\n    \"pass\": \"scanpassword\"\n}",
 									"options": {
 										"raw": {
 											"language": "json"
