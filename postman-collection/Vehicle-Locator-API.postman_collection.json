@@ -189,30 +189,34 @@
 							"response": []
 						},
 						{
-							"name": "API8:2019 - Login with No-SQL injection",
+							"name": "API8:2019 - noSQL injection",
 							"event": [
 								{
 									"listen": "test",
 									"script": {
 										"exec": [
-											"pm.test(\"Status code is 415\", function () {",
-											"    pm.expect(pm.response.code).to.be.equal(415);",
+											"pm.test(\"Status code is 400\", function () {",
+											"    pm.expect(pm.response.code).to.be.equal(400);",
 											"});"
 										],
 										"type": "text/javascript",
-										"packages": {}
+										"packages": {},
+										"requests": {}
 									}
 								}
 							],
 							"request": {
+								"auth": {
+									"type": "noauth"
+								},
 								"method": "POST",
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "user=userscanlogin@acme.com&pass[$ne]=",
+									"raw": "{\n    \"email\": {\"$ne\": \"66daba21d0bc05aa1d335067\"},\n    \"pass\": \"scanpassword\"\n}",
 									"options": {
 										"raw": {
-											"language": "text"
+											"language": "json"
 										}
 									}
 								},
@@ -278,51 +282,6 @@
 				{
 					"name": "Medium-Score Attacks",
 					"item": [
-						{
-							"name": "API8:2019 - noSQL injection",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											"pm.test(\"Status code is 400\", function () {",
-											"    pm.expect(pm.response.code).to.be.equal(400);",
-											"});"
-										],
-										"type": "text/javascript",
-										"packages": {},
-										"requests": {}
-									}
-								}
-							],
-							"request": {
-								"auth": {
-									"type": "noauth"
-								},
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\n    \"email\": {\"$ne\": \"66daba21d0bc05aa1d335067\"},\n    \"pass\": \"scanpassword\"\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "{{baseUrl}}/user/login",
-									"host": [
-										"{{baseUrl}}"
-									],
-									"path": [
-										"user",
-										"login"
-									]
-								}
-							},
-							"response": []
-						},
 						{
 							"name": "API6:2019 - Schema Injection",
 							"event": [
