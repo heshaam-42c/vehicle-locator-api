@@ -685,6 +685,7 @@
 			"script": {
 				"type": "text/javascript",
 				"packages": {},
+				"requests": {},
 				"exec": [
 					""
 				]
@@ -695,6 +696,7 @@
 			"script": {
 				"type": "text/javascript",
 				"packages": {},
+				"requests": {},
 				"exec": [
 					""
 				]
@@ -704,17 +706,15 @@
 	"variable": [
 		{
 			"key": "baseUrl",
-			"value": "http://localhost:3000",
-			"type": "string"
+			"value": "http://localhost:3000"
 		},
 		{
 			"key": "bearerAuth",
-			"value": "",
-			"type": "default"
+			"value": "eyJhbGciOiJSUzM4NCIsInR5cCI6IkpXVCJ9.eyJpZCI6Ijc5MDI3YjI1LTAzOGItNGQyNi05ZjdkLTUyNTUwZWEwYmMwNCIsImlhdCI6MTc2NTg5NzQ3NSwiZXhwIjoxNzY4MzE2Njc1LCJhdWQiOiJ2ZWhpY2xlTG9jYXRvclVzZXJzIiwiaXNzIjoiaHR0cHM6Ly9pc3N1ZXIuNDJjcnVuY2guZGVtbyIsInN1YiI6InNjYW51c2VyQHRlc3QuY29tIn0.hlnIenIecvMACi2A-pkEhAcKpIhvYb1IoSI3YbTJwxuoumomS670XdBOLA5mdZevP8LM5w1S1KVVZBpTDQGRjXNjrcBB8mQ_-luQ2vvIjopWvL54kzdFUutHOzF98TURjde1cJGxl2rGzAN80-1Y8fz1l7nKcS-PlO4Tg4hErc5gEXMqZdHjDb_AhvFCPay8F_1lTqUBgmGbZqtqJ55BHrzx9l-ivyZHjMMRhzBdmZPmOdHPKfBIU7mDvokotEbAiRprJZcc-8IZjmCYe1n0szV1IcHYE10bw7-Vgt-fjKwtT0X42JzXixhyeQnd_zqdfFOmDKk3j3RRhbqC_4lL9g"
 		},
 		{
 			"key": "vehicleId",
-			"value": ""
+			"value": "3cb72aec-fbf0-4778-a9ba-5d69c45ec94c"
 		}
 	]
 }
