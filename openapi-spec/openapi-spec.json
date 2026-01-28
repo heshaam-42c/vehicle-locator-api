@@ -735,13 +735,7 @@
                 "additionalProperties": false,
                 "properties": {
                     "vin": {
-                        "type": "string",
-                        "format": "o:Vehicle-Locator-API:VIN",
-                        "example": "SALVA2AE4EH877322",
-                        "pattern": "^[A-Z0-9]{17}$",
-                        "minLength": 17,
-                        "maxLength": 17,
-                        "x-42c-format": "o:Vehicle-Locator-API:VIN"
+                      "type": "string"
                     },
                     "lat": {
                         "type": "number",
