@@ -141,7 +141,7 @@
       "request": {
         "operationId": "deleteVehicleById",
         "auth": [
-          "bearerAuth"
+          "bearerAuth/adminBearerAuth"
         ],
         "request": {
           "type": "42c",
@@ -187,7 +187,8 @@
         }
       ],
       "authorizationTests": [
-        "BOLA"
+        "BFLA",
+        "BOLA-Admin"
       ]
     },
     "getStatus": {
@@ -679,6 +680,15 @@
       ],
       "target": [
         "bearerAuth/bearerAuth"
+      ]
+    },
+    "BOLA-Admin": {
+      "key": "authentication-swapping-bola",
+      "source": [
+        "bearerAuth/adminBearerAuth"
+      ],
+      "target": [
+        "bearerAuth/BOLA-BearerAuth"
       ]
     }
   }
