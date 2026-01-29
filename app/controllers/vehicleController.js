@@ -13,9 +13,9 @@ async function getVehicle (req, res) {
     const vehicle = await VehicleModel.findOne({ id: req.params.id });
     // API1:2023 - BOLA
     // Solution: Check if the email associated with the vehicle matches the authenticated user
-    if (!vehicle || vehicle.email !== req.user.sub) {
-        return res.status(403).json({ message: "Forbidden" });
-    }
+    // if (!vehicle || vehicle.email !== req.user.sub) {
+    //     return res.status(403).json({ message: "Forbidden" });
+    // }
     
     vehicle ? res.json(vehicle) : res.status(404).json({ message: "Vehicle not found" });
 }
@@ -59,7 +59,8 @@ async function updateVehicle (req, res) {
     try {
         const vehicle = await VehicleModel.findOneAndUpdate(
             { id: req.params.id },
-            // API6:2019 - Mass Assignment - FIX: Update only the lat and lng fields
+            // API6:2019 - Mass Assignment
+            // Solution: Update only the lat and lng fields
             // { lat, lng },
             req.body,
             { new: true }
@@ -80,11 +81,11 @@ async function deleteVehicle (req, res) {
     if (vehicle) {
         // API1:2023 - BOLA
         // API5:2023 - BFLA
-        // Solutions: Check if the email associated with the vehicle matches the authenticated user
+        // Solution: Check if the email associated with the vehicle matches the authenticated user
         //            Check if the user is an administrator
-        if (vehicle.email !== req.user.sub && !req.user.is_admin) {
-            return res.status(403).json({ message: "Forbidden" });
-        }
+        // if (vehicle.email !== req.user.sub && !req.user.is_admin) {
+        //     return res.status(403).json({ message: "Forbidden" });
+        // }
         await VehicleModel.deleteOne({ id: req.params.id });
     } else {
         return res.status(404).json({ message: "Vehicle not found" });
