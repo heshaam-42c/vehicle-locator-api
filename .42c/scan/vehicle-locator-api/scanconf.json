@@ -176,7 +176,10 @@
           "key": "happy.path",
           "requests": [
             {
-              "$ref": "#/operations/postVehicle/request"
+              "$ref": "#/operations/postVehicle/request",
+              "environment": {
+                "email": "scanadmin@test.com"
+              }
             },
             {
               "fuzzing": true,
@@ -367,7 +370,8 @@
                 "make": "Ford",
                 "model": "Mustang",
                 "vin": "{{$randomFromSchema}}",
-                "year": 2024
+                "year": 2024,
+                "email": "{{email}}"
               }
             }
           }

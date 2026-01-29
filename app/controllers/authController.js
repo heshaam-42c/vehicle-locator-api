@@ -39,7 +39,7 @@ async function api_authenticate(email, pass, req, res) {
             return res.status(401).json({ message: "Invalid email or password" });
         } else {
             // Create JWT token
-            var token = create_jwt('RS384', 'vehicleLocatorUsers', 'https://issuer.42crunch.demo', user.email, { id: user.id }, privateKey);
+            var token = create_jwt('RS384', 'vehicleLocatorUsers', 'https://issuer.42crunch.demo', user.email, { id: user.id, is_admin: user.is_admin }, privateKey);
             res.status(200).json({ message: "success", token: token, _id: user.id });
         }
     } catch (err) {

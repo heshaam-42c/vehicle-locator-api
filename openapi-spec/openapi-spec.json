@@ -651,6 +651,15 @@
                         "minLength": 20,
                         "maxLength": 38,
                         "x-42c-format": "o:date-time"
+                    },
+                    "email": {
+                      "type": "string",
+                      "format": "o:HA:email",
+                      "example": "scanuser@test.com",
+                      "pattern": "^(?:[\\w\\-+!#$%&'*/=?^`|{}~]+(?:\\.[\\w\\-+!#$%&'*/=?^`|{}~]+)*)@(?:(?:[A-Za-z0-9](?:[\\w\\-]{0,61}[A-Za-z0-9])?)(?:\\.(?:[A-Za-z0-9](?:[\\w\\-]{0,61}[A-Za-z0-9])?))*\\.[A-Za-z]{2,})$",
+                      "minLength": 6,
+                      "maxLength": 320,
+                      "x-42c-format": "o:HA:email"
                     }
                 },
                 "required": [
@@ -782,6 +791,16 @@
                         "minLength": 1,
                         "pattern": "^[\\w\\s\\.]{1,30}$",
                         "description": "Vehicle color"
+                    },
+                    "email": {
+                      "type": "string",
+                      "format": "o:HA:email",
+                      "example": "scanuser@test.com",
+                      "pattern": "^(?:[\\w\\-+!#$%&'*/=?^`|{}~]+(?:\\.[\\w\\-+!#$%&'*/=?^`|{}~]+)*)@(?:(?:[A-Za-z0-9](?:[\\w\\-]{0,61}[A-Za-z0-9])?)(?:\\.(?:[A-Za-z0-9](?:[\\w\\-]{0,61}[A-Za-z0-9])?))*\\.[A-Za-z]{2,})$",
+                      "description": "Email of the vehicle owner",
+                      "minLength": 6,
+                      "maxLength": 320,
+                      "x-42c-format": "o:HA:email"
                     }
                 },
                 "required": [

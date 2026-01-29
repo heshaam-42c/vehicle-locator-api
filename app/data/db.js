@@ -89,6 +89,7 @@ const seedDefaultVehicles = async () => {
       status: "active",
       lastUpdated: Date.now(),
       id: uuidv4(), // Generate a unique vehicle ID
+      email: "scanuser@test.com"
     });
     await newVehicle.save();
     console.log("One vehicle created");
@@ -103,7 +104,8 @@ const seedDefaultVehicles = async () => {
       color: "White",
       status: "active",
       lastUpdated: Date.now(),
-      id: uuidv4(), // Generate a unique vehicle ID
+      id: uuidv4(), // Generate a unique vehicle ID,
+      email: "scanuser@test.com"
     });
     await newVehicle2.save();
     console.log("Two vehicles created");

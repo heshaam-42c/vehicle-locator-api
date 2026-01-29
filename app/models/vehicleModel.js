@@ -12,7 +12,8 @@ const vehicleSchema = new mongoose.Schema(
         year: { type: Number, required: true },
         color: { type: String, required: true },
         status: { type: String, enum: ['active', 'inactive'], default: 'active' },
-        lastUpdated: { type: Date, default: Date.now }
+        lastUpdated: { type: Date, default: Date.now },
+        email: { type: String, required: true }
     }, 
     {
         versionKey: false,

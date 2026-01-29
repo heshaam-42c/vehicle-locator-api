@@ -3,14 +3,20 @@ import { v4 as uuidv4 } from 'uuid';
 
 // Get all vehicles
 async function getVehicles(req, res) {
-    // Fetch all vehicles, excluding the MongoDB _id field
-    const vehicles = await VehicleModel.find().select('-_id').limit(10);
+    // Fetch all vehicles, excluding the MongoDB _id and email fields
+    const vehicles = await VehicleModel.find().select('-_id -email').limit(10);
     res.json(vehicles);
 }
 
 // Get a single vehicle by ID
 async function getVehicle (req, res) {
     const vehicle = await VehicleModel.findOne({ id: req.params.id });
+    // API1:2023 - BOLA
+    // Solution: Check if the email associated with the vehicle matches the authenticated user
+    if (!vehicle || vehicle.email !== req.user.sub) {
+        return res.status(403).json({ message: "Forbidden" });
+    }
+    
     vehicle ? res.json(vehicle) : res.status(404).json({ message: "Vehicle not found" });
 }
 
@@ -34,6 +40,7 @@ async function addVehicle (req, res) {
         vehicle.id = uuidv4();
         vehicle.lastUpdated = Date.now();
         vehicle.status = 'active'; // Default status
+        vehicle.email = req.body.email;
         await vehicle.save();
         res.status(201).json(vehicle);
     } catch (err) {
@@ -69,8 +76,20 @@ async function updateVehicle (req, res) {
 
 // Delete a vehicle
 async function deleteVehicle (req, res) {
-    const vehicle = await VehicleModel.findOneAndDelete({ id: req.params.id });
-    if (!vehicle) return res.status(404).json({ message: "Vehicle not found" });
+    const vehicle = await VehicleModel.findOne({ id: req.params.id });
+    // API1:2023 - BOLA
+    // API5:2023 - BFLA
+    // Solutions: Check if the email associated with the vehicle matches the authenticated user
+    //           Check if the user is an administrator
+    if (!vehicle || vehicle.email !== req.user.sub || !req.user.is_admin) {
+        return res.status(403).json({ message: "Forbidden" });
+    }
+
+    if (vehicle)
+        await VehicleModel.deleteOne({ id: req.params.id });
+    else
+        return res.status(404).json({ message: "Vehicle not found" });
+
     res.json(vehicle);
 }
 
