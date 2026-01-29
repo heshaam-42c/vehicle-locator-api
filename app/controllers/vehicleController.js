@@ -13,9 +13,9 @@ async function getVehicle (req, res) {
     const vehicle = await VehicleModel.findOne({ id: req.params.id });
     // API1:2023 - BOLA
     // Solution: Check if the email associated with the vehicle matches the authenticated user
-    // if (!vehicle || vehicle.email !== req.user.sub) {
-    //     return res.status(403).json({ message: "Forbidden" });
-    // }
+    if (!vehicle || vehicle.email !== req.user.sub) {
+        return res.status(403).json({ message: "Forbidden" });
+    }
     
     vehicle ? res.json(vehicle) : res.status(404).json({ message: "Vehicle not found" });
 }
