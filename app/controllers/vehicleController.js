@@ -77,18 +77,18 @@ async function updateVehicle (req, res) {
 // Delete a vehicle
 async function deleteVehicle (req, res) {
     const vehicle = await VehicleModel.findOne({ id: req.params.id });
-    // API1:2023 - BOLA
-    // API5:2023 - BFLA
-    // Solutions: Check if the email associated with the vehicle matches the authenticated user
-    //           Check if the user is an administrator
-    if (!vehicle || vehicle.email !== req.user.sub || !req.user.is_admin) {
-        return res.status(403).json({ message: "Forbidden" });
-    }
-
-    if (vehicle)
+    if (vehicle) {
+        // API1:2023 - BOLA
+        // API5:2023 - BFLA
+        // Solutions: Check if the email associated with the vehicle matches the authenticated user
+        //            Check if the user is an administrator
+        if (vehicle.email !== req.user.sub && !req.user.is_admin) {
+            return res.status(403).json({ message: "Forbidden" });
+        }
         await VehicleModel.deleteOne({ id: req.params.id });
-    else
+    } else {
         return res.status(404).json({ message: "Vehicle not found" });
+    }
 
     res.json(vehicle);
 }
