@@ -3,5 +3,6 @@ audit:
     '*':
       discovery:
         search:
-          - openapi-spec/openapi-spec.json
+          # - openapi-spec/openapi-spec.json
+          - openapi-spec/swagger.yaml
 
