@@ -7,7 +7,7 @@
     },
     "servers": [
         {
-            "url": "http://localhost:3000"
+            "url": "https://localhost:3000"
         }
     ],
     "security": [
@@ -22,7 +22,70 @@
                 "operationId": "getStatus",
                 "responses": {
                     "200": {
-                        "description": "Welcome message"
+                        "description": "Welcome message",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "maxLength": 200,
+                                            "pattern": "^[a-zA-Z0-9 .!_-]+$"
+                                        }
+                                    },
+                                    "additionalProperties": false
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": { "$ref": "#/components/schemas/ErrorMessage" }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "content": {
+                            "application/json": {
+                                "schema": { "$ref": "#/components/schemas/ErrorMessage" }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "application/json": {
+                                "schema": { "$ref": "#/components/schemas/ErrorMessage" }
+                            }
+                        }
+                    },
+                    "406": {
+                        "description": "Not Acceptable",
+                        "content": {
+                            "application/json": {
+                                "schema": { "$ref": "#/components/schemas/ErrorMessage" }
+                            }
+                        }
+                    },
+                    "429": {
+                        "description": "Too Many Requests",
+                        "content": {
+                            "application/json": {
+                                "schema": { "$ref": "#/components/schemas/ErrorMessage" }
+                            }
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "content": {
+                            "application/json": {
+                                "schema": { "$ref": "#/components/schemas/ErrorMessage" }
+                            }
+                        }
                     }
                 }
             }
@@ -47,12 +110,17 @@
                                 "type": "object",
                                 "properties": {
                                     "email": {
-                                      "type": "string"
+                                        "type": "string",
+                                        "maxLength": 100,
+                                        "pattern": "^[a-zA-Z0-9._%+\\-]+@[a-zA-Z0-9.\\-]+\\.[a-zA-Z]{2,}$"
                                     },
                                     "pass": {
-                                      "type": "string"
+                                        "type": "string",
+                                        "maxLength": 64,
+                                        "pattern": "^[a-zA-Z0-9!@#$%^&*()_+\\-=]{8,64}$"
                                     }
-                                }
+                                },
+                                "additionalProperties": false
                             }
                         }
                     },
@@ -64,7 +132,15 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "type": "object"
+                                    "type": "object",
+                                    "properties": {
+                                        "token": {
+                                            "type": "string",
+                                            "maxLength": 1000,
+                                            "pattern": "^[a-zA-Z0-9._\\-]+$"
+                                        }
+                                    },
+                                    "additionalProperties": false
                                 }
                             }
                         }
@@ -73,9 +149,7 @@
                         "description": "unexpected error",
                         "content": {
                             "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ErrorMessage"
-                                }
+                                "schema": { "$ref": "#/components/schemas/ErrorMessage" }
                             }
                         }
                     }
@@ -108,7 +182,15 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "type": "object"
+                                    "type": "object",
+                                    "properties": {
+                                        "token": {
+                                            "type": "string",
+                                            "maxLength": 1000,
+                                            "pattern": "^[a-zA-Z0-9._\\-]+$"
+                                        }
+                                    },
+                                    "additionalProperties": false
                                 }
                             }
                         }
@@ -117,9 +199,7 @@
                         "description": "unexpected error",
                         "content": {
                             "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ErrorMessage"
-                                }
+                                "schema": { "$ref": "#/components/schemas/ErrorMessage" }
                             }
                         }
                     }
@@ -140,8 +220,57 @@
                                     "type": "array",
                                     "items": {
                                         "$ref": "#/components/schemas/Vehicle"
-                                    }
+                                    },
+                                    "maxItems": 100
                                 }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": { "$ref": "#/components/schemas/ErrorMessage" }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "content": {
+                            "application/json": {
+                                "schema": { "$ref": "#/components/schemas/ErrorMessage" }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "application/json": {
+                                "schema": { "$ref": "#/components/schemas/ErrorMessage" }
+                            }
+                        }
+                    },
+                    "406": {
+                        "description": "Not Acceptable",
+                        "content": {
+                            "application/json": {
+                                "schema": { "$ref": "#/components/schemas/ErrorMessage" }
+                            }
+                        }
+                    },
+                    "429": {
+                        "description": "Too Many Requests",
+                        "content": {
+                            "application/json": {
+                                "schema": { "$ref": "#/components/schemas/ErrorMessage" }
+                            }
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "content": {
+                            "application/json": {
+                                "schema": { "$ref": "#/components/schemas/ErrorMessage" }
                             }
                         }
                     }
@@ -171,13 +300,43 @@
                             }
                         }
                     },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": { "$ref": "#/components/schemas/ErrorMessage" }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "content": {
+                            "application/json": {
+                                "schema": { "$ref": "#/components/schemas/ErrorMessage" }
+                            }
+                        }
+                    },
+                    "406": {
+                        "description": "Not Acceptable",
+                        "content": {
+                            "application/json": {
+                                "schema": { "$ref": "#/components/schemas/ErrorMessage" }
+                            }
+                        }
+                    },
+                    "429": {
+                        "description": "Too Many Requests",
+                        "content": {
+                            "application/json": {
+                                "schema": { "$ref": "#/components/schemas/ErrorMessage" }
+                            }
+                        }
+                    },
                     "default": {
                         "description": "Unexpected error",
                         "content": {
                             "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ErrorMessage"
-                                }
+                                "schema": { "$ref": "#/components/schemas/ErrorMessage" }
                             }
                         }
                     }
@@ -194,7 +353,9 @@
                         "in": "path",
                         "required": true,
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "maxLength": 50,
+                            "pattern": "^[a-zA-Z0-9._-]+$"
                         }
                     }
                 ],
@@ -209,13 +370,51 @@
                             }
                         }
                     },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": { "$ref": "#/components/schemas/ErrorMessage" }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "content": {
+                            "application/json": {
+                                "schema": { "$ref": "#/components/schemas/ErrorMessage" }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "application/json": {
+                                "schema": { "$ref": "#/components/schemas/ErrorMessage" }
+                            }
+                        }
+                    },
+                    "406": {
+                        "description": "Not Acceptable",
+                        "content": {
+                            "application/json": {
+                                "schema": { "$ref": "#/components/schemas/ErrorMessage" }
+                            }
+                        }
+                    },
+                    "429": {
+                        "description": "Too Many Requests",
+                        "content": {
+                            "application/json": {
+                                "schema": { "$ref": "#/components/schemas/ErrorMessage" }
+                            }
+                        }
+                    },
                     "default": {
                         "description": "Unexpected error",
                         "content": {
                             "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ErrorMessage"
-                                }
+                                "schema": { "$ref": "#/components/schemas/ErrorMessage" }
                             }
                         }
                     }
@@ -230,7 +429,9 @@
                         "in": "path",
                         "required": true,
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "maxLength": 50,
+                            "pattern": "^[a-zA-Z0-9._-]+$"
                         }
                     }
                 ],
@@ -245,13 +446,51 @@
                             }
                         }
                     },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": { "$ref": "#/components/schemas/ErrorMessage" }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "content": {
+                            "application/json": {
+                                "schema": { "$ref": "#/components/schemas/ErrorMessage" }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "application/json": {
+                                "schema": { "$ref": "#/components/schemas/ErrorMessage" }
+                            }
+                        }
+                    },
+                    "406": {
+                        "description": "Not Acceptable",
+                        "content": {
+                            "application/json": {
+                                "schema": { "$ref": "#/components/schemas/ErrorMessage" }
+                            }
+                        }
+                    },
+                    "429": {
+                        "description": "Too Many Requests",
+                        "content": {
+                            "application/json": {
+                                "schema": { "$ref": "#/components/schemas/ErrorMessage" }
+                            }
+                        }
+                    },
                     "default": {
                         "description": "Unexpected error",
                         "content": {
                             "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ErrorMessage"
-                                }
+                                "schema": { "$ref": "#/components/schemas/ErrorMessage" }
                             }
                         }
                     }
@@ -268,7 +507,9 @@
                         "in": "path",
                         "required": true,
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "maxLength": 50,
+                            "pattern": "^[a-zA-Z0-9._-]+$"
                         }
                     }
                 ],
@@ -293,13 +534,51 @@
                             }
                         }
                     },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": { "$ref": "#/components/schemas/ErrorMessage" }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "content": {
+                            "application/json": {
+                                "schema": { "$ref": "#/components/schemas/ErrorMessage" }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "application/json": {
+                                "schema": { "$ref": "#/components/schemas/ErrorMessage" }
+                            }
+                        }
+                    },
+                    "406": {
+                        "description": "Not Acceptable",
+                        "content": {
+                            "application/json": {
+                                "schema": { "$ref": "#/components/schemas/ErrorMessage" }
+                            }
+                        }
+                    },
+                    "429": {
+                        "description": "Too Many Requests",
+                        "content": {
+                            "application/json": {
+                                "schema": { "$ref": "#/components/schemas/ErrorMessage" }
+                            }
+                        }
+                    },
                     "default": {
                         "description": "Unexpected error",
                         "content": {
                             "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ErrorMessage"
-                                }
+                                "schema": { "$ref": "#/components/schemas/ErrorMessage" }
                             }
                         }
                     }
@@ -316,9 +595,12 @@
                 "type": "object",
                 "properties": {
                     "message": {
-                        "type": "string"
+                        "type": "string",
+                        "maxLength": 200,
+                        "pattern": "^[a-zA-Z0-9 .!_\\-]+$"
                     }
-                }
+                },
+                "additionalProperties": false
             },
             "UserRegistrationData": {
                 "required": [
@@ -336,47 +618,115 @@
                 },
                 "properties": {
                     "email": {
-                        "type": "string"
+                        "type": "string",
+                        "maxLength": 100,
+                        "pattern": "^[a-zA-Z0-9._%+\\-]+@[a-zA-Z0-9.\\-]+\\.[a-zA-Z]{2,}$"
                     },
                     "pass": {
-                        "type": "string"
+                        "type": "string",
+                        "maxLength": 64,
+                        "pattern": "^[a-zA-Z0-9!@#$%^&*()_+\\-=]{8,64}$"
                     },
                     "name": {
-                        "type": "string"
+                        "type": "string",
+                        "maxLength": 50,
+                        "pattern": "^[a-zA-Z0-9 .\\-]{1,50}$"
                     },
                     "is_admin": {
                         "type": "boolean"
                     }
-                }
+                },
+                "additionalProperties": false
             },
             "Vehicle": {
-                "type": "object"
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "maxLength": 50,
+                        "pattern": "^[a-zA-Z0-9._-]+$"
+                    },
+                    "vin": {
+                        "type": "string",
+                        "maxLength": 17,
+                        "pattern": "^[A-HJ-NPR-Z0-9]{17}$"
+                    },
+                    "lat": {
+                        "type": "number",
+                        "format": "float",
+                        "minimum": -90,
+                        "maximum": 90
+                    },
+                    "lng": {
+                        "type": "number",
+                        "format": "float",
+                        "minimum": -180,
+                        "maximum": 180
+                    },
+                    "make": {
+                        "type": "string",
+                        "maxLength": 50,
+                        "pattern": "^[a-zA-Z0-9 .\\-]+$"
+                    },
+                    "model": {
+                        "type": "string",
+                        "maxLength": 50,
+                        "pattern": "^[a-zA-Z0-9 .\\-]+$"
+                    },
+                    "year": {
+                        "type": "integer",
+                        "format": "int32",
+                        "minimum": 1900,
+                        "maximum": 2100
+                    },
+                    "color": {
+                        "type": "string",
+                        "maxLength": 20,
+                        "pattern": "^[a-zA-Z0-9 .\\-]+$"
+                    }
+                },
+                "additionalProperties": false
             },
             "VehicleInput": {
                 "type": "object",
                 "properties": {
                     "vin": {
-                        "type": "string"
+                        "type": "string",
+                        "maxLength": 17,
+                        "pattern": "^[A-HJ-NPR-Z0-9]{17}$"
                     },
                     "lat": {
                         "type": "number",
-                        "format": "float"
+                        "format": "float",
+                        "minimum": -90,
+                        "maximum": 90
                     },
                     "lng": {
                         "type": "number",
-                        "format": "float"
+                        "format": "float",
+                        "minimum": -180,
+                        "maximum": 180
                     },
                     "make": {
-                        "type": "string"
+                        "type": "string",
+                        "maxLength": 50,
+                        "pattern": "^[a-zA-Z0-9 .\\-]+$"
                     },
                     "model": {
-                        "type": "string"
+                        "type": "string",
+                        "maxLength": 50,
+                        "pattern": "^[a-zA-Z0-9 .\\-]+$"
                     },
                     "year": {
-                        "type": "integer"
+                        "type": "integer",
+                        "format": "int32",
+                        "minimum": 1900,
+                        "maximum": 2100
                     },
                     "color": {
-                        "type": "string"
+                        "type": "string",
+                        "maxLength": 20,
+                        "pattern": "^[a-zA-Z0-9 .\\-]+$"
                     }
                 },
                 "required": [
@@ -387,24 +737,30 @@
                     "model",
                     "year",
                     "color"
-                ]
+                ],
+                "additionalProperties": false
             },
             "LocationUpdate": {
                 "type": "object",
                 "properties": {
                     "lat": {
                         "type": "number",
-                        "format": "float"
+                        "format": "float",
+                        "minimum": -90,
+                        "maximum": 90
                     },
                     "lng": {
                         "type": "number",
-                        "format": "float"
+                        "format": "float",
+                        "minimum": -180,
+                        "maximum": 180
                     }
                 },
                 "required": [
                     "lat",
                     "lng"
-                ]
+                ],
+                "additionalProperties": false
             }
         },
         "securitySchemes": {
