@@ -1,0 +1,266 @@
+arazzo: "1.0.1"
+info:
+  title: Vehicle Locator API Workflows
+  summary: Arazzo workflows for the Vehicle Locator API
+  version: "1.0.0"
+
+sourceDescriptions:
+  - name: vehicleLocatorApi
+    url: ./openapi-spec.json
+    type: openapi
+
+workflows:
+
+  # ─────────────────────────────────────────────────────────────────────────────
+  # Workflow 1: User Registration and Login
+  # Register a new account, then authenticate to obtain a JWT bearer token.
+  # ─────────────────────────────────────────────────────────────────────────────
+  - workflowId: userRegistrationAndLogin
+    summary: Register a new user account and log in to obtain a JWT token
+    description: >
+      Creates a new user account via /user/register, then authenticates via
+      /user/login to receive a JWT bearer token that can be used for subsequent
+      protected API calls.
+    inputs:
+      type: object
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+        name:
+          type: string
+        is_admin:
+          type: boolean
+    steps:
+      - stepId: registerUser
+        operationId: vehicleLocatorApi.register
+        requestBody:
+          contentType: application/json
+          payload:
+            email: $inputs.email
+            pass: $inputs.password
+            name: $inputs.name
+            is_admin: $inputs.is_admin
+        successCriteria:
+          - condition: $statusCode == 200
+        outputs:
+          registrationToken: $response.body#/token
+
+      - stepId: loginUser
+        operationId: vehicleLocatorApi.authenticate
+        requestBody:
+          contentType: application/json
+          payload:
+            email: $inputs.email
+            pass: $inputs.password
+        successCriteria:
+          - condition: $statusCode == 200
+        outputs:
+          authToken: $response.body#/token
+
+    outputs:
+      authToken: $steps.loginUser.outputs.authToken
+
+  # ─────────────────────────────────────────────────────────────────────────────
+  # Workflow 2: Vehicle CRUD Lifecycle
+  # Log in, create a vehicle, retrieve it, update its location, then delete it.
+  # ─────────────────────────────────────────────────────────────────────────────
+  - workflowId: vehicleLifecycle
+    summary: Full CRUD lifecycle for a vehicle — create, read, update location, delete
+    description: >
+      Authenticates the user, adds a new vehicle, retrieves the vehicle to
+      confirm creation, updates its GPS location, and finally deletes it.
+    inputs:
+      type: object
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+        vin:
+          type: string
+        make:
+          type: string
+        model:
+          type: string
+        year:
+          type: integer
+        color:
+          type: string
+        initialLat:
+          type: number
+        initialLng:
+          type: number
+        updatedLat:
+          type: number
+        updatedLng:
+          type: number
+    steps:
+      - stepId: login
+        operationId: vehicleLocatorApi.authenticate
+        requestBody:
+          contentType: application/json
+          payload:
+            email: $inputs.email
+            pass: $inputs.password
+        successCriteria:
+          - condition: $statusCode == 200
+        outputs:
+          authToken: $response.body#/token
+
+      - stepId: createVehicle
+        operationId: vehicleLocatorApi.postVehicle
+        parameters:
+          - name: Authorization
+            in: header
+            value: "Bearer $steps.login.outputs.authToken"
+        requestBody:
+          contentType: application/json
+          payload:
+            vin: $inputs.vin
+            make: $inputs.make
+            model: $inputs.model
+            year: $inputs.year
+            color: $inputs.color
+            lat: $inputs.initialLat
+            lng: $inputs.initialLng
+        successCriteria:
+          - condition: $statusCode == 201
+        outputs:
+          vehicleId: $response.body#/id
+
+      - stepId: getVehicle
+        operationId: vehicleLocatorApi.getVehicleById
+        parameters:
+          - name: id
+            in: path
+            value: $steps.createVehicle.outputs.vehicleId
+          - name: Authorization
+            in: header
+            value: "Bearer $steps.login.outputs.authToken"
+        successCriteria:
+          - condition: $statusCode == 200
+        outputs:
+          vehicleData: $response.body#/
+
+      - stepId: updateLocation
+        operationId: vehicleLocatorApi.updateVehicleLocation
+        parameters:
+          - name: id
+            in: path
+            value: $steps.createVehicle.outputs.vehicleId
+          - name: Authorization
+            in: header
+            value: "Bearer $steps.login.outputs.authToken"
+        requestBody:
+          contentType: application/json
+          payload:
+            lat: $inputs.updatedLat
+            lng: $inputs.updatedLng
+        successCriteria:
+          - condition: $statusCode == 200
+        outputs:
+          updatedVehicle: $response.body#/
+
+      - stepId: deleteVehicle
+        operationId: vehicleLocatorApi.deleteVehicleById
+        parameters:
+          - name: id
+            in: path
+            value: $steps.createVehicle.outputs.vehicleId
+          - name: Authorization
+            in: header
+            value: "Bearer $steps.login.outputs.authToken"
+        successCriteria:
+          - condition: $statusCode == 200
+
+    outputs:
+      vehicleId: $steps.createVehicle.outputs.vehicleId
+      updatedVehicle: $steps.updateLocation.outputs.updatedVehicle
+
+  # ─────────────────────────────────────────────────────────────────────────────
+  # Workflow 3: Track Vehicle Location
+  # Log in, list all vehicles, update a specific vehicle's location, verify.
+  # ─────────────────────────────────────────────────────────────────────────────
+  - workflowId: trackVehicleLocation
+    summary: Locate and update the GPS position of a known vehicle
+    description: >
+      Authenticates the user, retrieves the full vehicle list to discover
+      available vehicles, updates the location of a specific vehicle by ID,
+      then fetches that vehicle again to confirm the location change.
+    inputs:
+      type: object
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+        vehicleId:
+          type: string
+        newLat:
+          type: number
+        newLng:
+          type: number
+    steps:
+      - stepId: login
+        operationId: vehicleLocatorApi.authenticate
+        requestBody:
+          contentType: application/json
+          payload:
+            email: $inputs.email
+            pass: $inputs.password
+        successCriteria:
+          - condition: $statusCode == 200
+        outputs:
+          authToken: $response.body#/token
+
+      - stepId: listVehicles
+        operationId: vehicleLocatorApi.getVehicles
+        parameters:
+          - name: Authorization
+            in: header
+            value: "Bearer $steps.login.outputs.authToken"
+        successCriteria:
+          - condition: $statusCode == 200
+        outputs:
+          vehicles: $response.body#/
+
+      - stepId: updateVehicleLocation
+        operationId: vehicleLocatorApi.updateVehicleLocation
+        parameters:
+          - name: id
+            in: path
+            value: $inputs.vehicleId
+          - name: Authorization
+            in: header
+            value: "Bearer $steps.login.outputs.authToken"
+        requestBody:
+          contentType: application/json
+          payload:
+            lat: $inputs.newLat
+            lng: $inputs.newLng
+        successCriteria:
+          - condition: $statusCode == 200
+        onFailure:
+          - name: retryOnError
+            type: retry
+            retryAfter: 1
+            retryLimit: 3
+
+      - stepId: verifyLocation
+        operationId: vehicleLocatorApi.getVehicleById
+        parameters:
+          - name: id
+            in: path
+            value: $inputs.vehicleId
+          - name: Authorization
+            in: header
+            value: "Bearer $steps.login.outputs.authToken"
+        successCriteria:
+          - condition: $statusCode == 200
+        outputs:
+          vehicle: $response.body#/
+
+    outputs:
+      updatedVehicle: $steps.verifyLocation.outputs.vehicle
