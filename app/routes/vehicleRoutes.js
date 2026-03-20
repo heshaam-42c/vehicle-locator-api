@@ -50,10 +50,8 @@ const router  = express.Router();
  *               $ref: '#/components/schemas/ErrorMessage'
  */
 router.route('/')
-    // API2 - Missing Authentication
-    // Fix: Add authentication middleware to the GET / route
-    // .get(api_token_check, getVehicles)
-    .get(getVehicles)
+    // API2 - Missing Authentication: enforce auth so only authenticated users can list vehicles
+    .get(api_token_check, getVehicles)
     .post(api_token_check, addVehicle)
 
 /**

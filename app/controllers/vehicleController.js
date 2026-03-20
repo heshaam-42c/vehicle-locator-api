@@ -12,11 +12,10 @@ async function getVehicles(req, res) {
 async function getVehicle (req, res) {
     const vehicle = await VehicleModel.findOne({ id: req.params.id });
     if (vehicle) {
-        // API1:2023 - BOLA
-        // Solution: Check if the email associated with the vehicle matches the authenticated user
-        // if (vehicle.email !== req.user.sub) {
-        //     return res.status(403).json({ message: "Forbidden" });
-        // }
+        // API1:2023 - BOLA: enforce ownership — only the vehicle owner can view their vehicle
+        if (vehicle.email !== req.user.sub) {
+            return res.status(403).json({ message: "Forbidden" });
+        }
         res.json(vehicle);
     } else {
         res.status(404).json({ message: "Vehicle not found" });
@@ -60,6 +59,13 @@ async function updateVehicle (req, res) {
     }
 
     try {
+        // API1:2023 - BOLA: check ownership before allowing location update
+        const existing = await VehicleModel.findOne({ id: req.params.id });
+        if (!existing) return res.status(404).json({ message: "Vehicle not found" });
+        if (existing.email !== req.user.sub) {
+            return res.status(403).json({ message: "Forbidden" });
+        }
+
         const vehicle = await VehicleModel.findOneAndUpdate(
             { id: req.params.id },
             // API6:2019 - Mass Assignment
@@ -82,13 +88,10 @@ async function updateVehicle (req, res) {
 async function deleteVehicle (req, res) {
     const vehicle = await VehicleModel.findOne({ id: req.params.id });
     if (vehicle) {
-        // API1:2023 - BOLA
-        // API5:2023 - BFLA
-        // Solution: Check if the email associated with the vehicle matches the authenticated user
-        //            Check if the user is an administrator
-        // if (vehicle.email !== req.user.sub && !req.user.is_admin) {
-        //     return res.status(403).json({ message: "Forbidden" });
-        // }
+        // API1:2023 - BOLA + API5:2023 - BFLA: only the owner or an admin can delete
+        if (vehicle.email !== req.user.sub && !req.user.is_admin) {
+            return res.status(403).json({ message: "Forbidden" });
+        }
         await VehicleModel.deleteOne({ id: req.params.id });
     } else {
         return res.status(404).json({ message: "Vehicle not found" });

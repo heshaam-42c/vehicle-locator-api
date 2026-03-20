@@ -7,7 +7,7 @@
     },
     "servers": [
         {
-            "url": "http://localhost:3000"
+            "url": "https://localhost:3000"
         }
     ],
     "security": [
@@ -20,9 +20,20 @@
             "get": {
                 "summary": "API status",
                 "operationId": "getStatus",
+                "security": [],
                 "responses": {
                     "200": {
-                        "description": "Welcome message"
+                        "description": "Welcome message",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string",
+                                    "pattern": "^[\\w\\s]+$",
+                                    "maxLength": 255,
+                                    "example": "Vehicle Locator API"
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -45,12 +56,18 @@
                                     "email"
                                 ],
                                 "type": "object",
+                                "additionalProperties": false,
                                 "properties": {
                                     "email": {
-                                      "type": "string"
+                                        "type": "string",
+                                        "pattern": "^[a-zA-Z0-9._%+\\-]+@[a-zA-Z0-9.\\-]+\\.[a-zA-Z]{2,}$",
+                                        "maxLength": 255
                                     },
                                     "pass": {
-                                      "type": "string"
+                                        "type": "string",
+                                        "pattern": "^[\\w!@#$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>\\/?]+$",
+                                        "maxLength": 64,
+                                        "minLength": 5
                                     }
                                 }
                             }
@@ -194,7 +211,10 @@
                         "in": "path",
                         "required": true,
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+                            "maxLength": 36,
+                            "minLength": 36
                         }
                     }
                 ],
@@ -230,7 +250,10 @@
                         "in": "path",
                         "required": true,
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+                            "maxLength": 36,
+                            "minLength": 36
                         }
                     }
                 ],
@@ -268,7 +291,10 @@
                         "in": "path",
                         "required": true,
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+                            "maxLength": 36,
+                            "minLength": 36
                         }
                     }
                 ],
@@ -328,6 +354,7 @@
                     "email"
                 ],
                 "type": "object",
+                "additionalProperties": false,
                 "example": {
                     "email": "register@test.com",
                     "pass": "testpassword",
@@ -336,13 +363,20 @@
                 },
                 "properties": {
                     "email": {
-                        "type": "string"
+                        "type": "string",
+                        "pattern": "^[a-zA-Z0-9._%+\\-]+@[a-zA-Z0-9.\\-]+\\.[a-zA-Z]{2,}$",
+                        "maxLength": 255
                     },
                     "pass": {
-                        "type": "string"
+                        "type": "string",
+                        "pattern": "^[\\w!@#$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>\\/?]+$",
+                        "maxLength": 64,
+                        "minLength": 5
                     },
                     "name": {
-                        "type": "string"
+                        "type": "string",
+                        "pattern": "^[\\w\\s]+$",
+                        "maxLength": 50
                     },
                     "is_admin": {
                         "type": "boolean"
@@ -350,21 +384,23 @@
                 }
             },
             "Vehicle": {
-                "type": "object"
-            },
-            "VehicleInput": {
                 "type": "object",
+                "additionalProperties": false,
                 "properties": {
+                    "_id": {
+                        "type": "string"
+                    },
+                    "id": {
+                        "type": "string"
+                    },
                     "vin": {
                         "type": "string"
                     },
                     "lat": {
-                        "type": "number",
-                        "format": "float"
+                        "type": "number"
                     },
                     "lng": {
-                        "type": "number",
-                        "format": "float"
+                        "type": "number"
                     },
                     "make": {
                         "type": "string"
@@ -378,8 +414,58 @@
                     "color": {
                         "type": "string"
                     },
+                    "status": {
+                        "type": "string",
+                        "enum": ["active", "inactive"]
+                    },
+                    "lastUpdated": {
+                        "type": "string"
+                    },
                     "email": {
                         "type": "string"
+                    }
+                }
+            },
+            "VehicleInput": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                    "vin": {
+                        "type": "string",
+                        "pattern": "^[A-HJ-NPR-Z0-9]{17}$",
+                        "maxLength": 17,
+                        "minLength": 17
+                    },
+                    "lat": {
+                        "type": "number",
+                        "format": "float"
+                    },
+                    "lng": {
+                        "type": "number",
+                        "format": "float"
+                    },
+                    "make": {
+                        "type": "string",
+                        "pattern": "^[\\w\\s]+$",
+                        "maxLength": 50
+                    },
+                    "model": {
+                        "type": "string",
+                        "pattern": "^[\\w\\s]+$",
+                        "maxLength": 50
+                    },
+                    "year": {
+                        "type": "integer"
+                    },
+                    "color": {
+                        "type": "string",
+                        "pattern": "^[a-zA-Z\\s]+$",
+                        "maxLength": 30
+                    },
+                    "email": {
+                        "type": "string",
+                        "pattern": "^[a-zA-Z0-9._%+\\-]+@[a-zA-Z0-9.\\-]+\\.[a-zA-Z]{2,}$",
+                        "maxLength": 255
                     }
                 },
                 "required": [
