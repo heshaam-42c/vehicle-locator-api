@@ -377,6 +377,9 @@
                     },
                     "color": {
                         "type": "string"
+                    },
+                    "email": {
+                        "type": "string"
                     }
                 },
                 "required": [
