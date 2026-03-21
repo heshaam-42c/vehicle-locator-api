@@ -378,6 +378,12 @@
                     "color": {
                         "type": "string"
                     },
+                    "status": {
+                        "type": "string"
+                    },
+                    "lastUpdated": {
+                        "type": "string"
+                    },
                     "email": {
                         "type": "string"
                     }
