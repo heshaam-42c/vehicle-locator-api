@@ -4,12 +4,12 @@ docker_yaml=docker-compose-db.yaml
 
 if [ "$1" == "down" ]; then
     echo "Stopping DB..."
-    docker-compose -f $docker_yaml down
+    docker-compose -f $docker_yaml down -v
     exit 0
 fi
 
 echo "Stopping DB..."
-docker-compose -f $docker_yaml down
+docker-compose -f $docker_yaml down -v
 echo "Creating DB..."
 docker-compose -f $docker_yaml up -d
 
