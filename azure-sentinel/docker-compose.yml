@@ -1,0 +1,15 @@
+version: "3.4"
+
+services:
+  logsforwarder:
+    image: 42crunch/42c-fw-2la:latest
+    restart: on-failure
+    volumes:
+      - ../api-firewall/storage/logs:/opt/guardian/logs:ro
+      - ../api-firewall/logs-forwarder-state:/app/.state
+    environment:
+      - FW2LA_WORKSPACE_ID=${FW2LA_WORKSPACE_ID}
+      - FW2LA_WORKSPACE_KEY=${FW2LA_WORKSPACE_KEY}
+      - FW2LA_LOGS_FOLDER=/opt/guardian/logs
+      - FW2LA_TICK_INTERVAL=10
+    env_file: ".env"
