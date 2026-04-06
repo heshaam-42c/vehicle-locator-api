@@ -1,0 +1,51 @@
+version: "3.4"
+
+services:
+  database:
+    image: mongodb/mongodb-community-server:latest
+    command: mongod --quiet
+    container_name: mongo-db
+    ports:
+      - "27017:27017"
+    restart: always
+  apiserver:
+    image: vehicle-locator-api:latest
+    container_name: vehicle-locator-api
+    ports:
+      - "3000:3000"
+    depends_on:
+      - database
+    restart: always
+    env_file: ".env"
+  api-firewall:
+    image: 42crunch/apifirewall:latest
+    ports:
+      - '4241:4241'
+    volumes:
+      - ../api-firewall/storage/ssl:/opt/guardian/conf/ssl
+      - ../api-firewall/storage/logs:/opt/guardian/logs:rw
+    command: ["/bin/squire", "-platform", "protection.demolabs.42crunch.cloud:8001", "-debug"]
+    environment:
+      - PROTECTION_TOKEN=${PROTECTION_TOKEN}
+      - LISTEN_PORT=4241
+      - TARGET_URL=http://host.docker.internal:3000
+      - LISTEN_NO_TLS=true
+      - SERVER_NAME=vehicle-api-secured.42crunch.test
+      - GUARDIAN_NODE_NAME=Local-Firewall
+      - GUARDIAN_INSTANCE_NAME=Local-Firewall
+      - LOG_LEVEL=DEBUG
+      - LOG_DESTINATION=FILES+STDOUT
+      - TRANSACTION_LOG_CONTENT=request.body:8092,response.body:8092
+    env_file: ".env"
+  logsforwarder:
+    image: 42crunch/42c-fw-2la:latest
+    restart: on-failure
+    volumes:
+      - ../api-firewall/storage/logs:/opt/guardian/logs:ro
+      - ../api-firewall/logs-forwarder-state:/app/.state
+    environment:
+      - FW2LA_WORKSPACE_ID=${FW2LA_WORKSPACE_ID}
+      - FW2LA_WORKSPACE_KEY=${FW2LA_WORKSPACE_KEY}
+      - FW2LA_LOGS_FOLDER=/opt/guardian/logs
+      - FW2LA_TICK_INTERVAL=10
+    env_file: ".env"
