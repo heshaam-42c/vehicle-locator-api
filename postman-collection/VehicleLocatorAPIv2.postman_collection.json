@@ -1,0 +1,307 @@
+{
+  "info": {
+    "_postman_id": "514b2738-1359-41ef-8cf8-b74ba689bc1d",
+    "name": "Vehicle Locator API",
+    "description": "Postman collection for testing the Vehicle Locator API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "9054155"
+  },
+  "item": [
+    {
+      "name": "User Registration",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"scanuser1@test.com\",\n  \"pass\": \"scanpassword\",\n  \"name\": \"{{$randomFullName}}\",\n  \"is_admin\": false\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/user/register",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "user",
+            "register"
+          ]
+        },
+        "description": "user supplies email and password to register and receives a json web token."
+      },
+      "response": []
+    },
+    {
+      "name": "User Login",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "var jsonData = pm.response.json();",
+              "if (jsonData.token != null) {",
+              "    pm.collectionVariables.set(\"bearerAuth\", jsonData.token);",
+              "}"
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"email\": \"scanuser@test.com\",\n    \"pass\": \"scanpassword\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/user/login",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "user",
+            "login"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get API Root",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            ""
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get All Vehicles",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/vehicles",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "vehicles"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Add New Vehicle",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "var jsonData = pm.response.json();",
+              "if (jsonData.id != null) {",
+              "    pm.collectionVariables.set(\"vehicleId\", jsonData.id);",
+              "}"
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"vin\": \"A9K3JFIU23FH54J1K\",\n  \"lat\": 40.7128,\n  \"lng\": -74.0060,\n  \"make\": \"Toyota\",\n  \"model\": \"Camry\",\n  \"year\": 2025,\n  \"color\": \"Blue\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/vehicles",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "vehicles"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get Vehicle by ID",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/vehicles/:vehicleId",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "vehicles",
+            ":vehicleId"
+          ],
+          "variable": [
+            {
+              "key": "vehicleId",
+              "value": "{{vehicleId}}"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Update Vehicle Location",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"lat\": 41.0,\n  \"lng\": -75.0\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/vehicles/:vehicleId/location",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "vehicles",
+            ":vehicleId",
+            "location"
+          ],
+          "variable": [
+            {
+              "key": "vehicleId",
+              "value": "{{vehicleId}}"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Delete Vehicle",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/vehicles/:vehicleId",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "vehicles",
+            ":vehicleId"
+          ],
+          "variable": [
+            {
+              "key": "vehicleId",
+              "value": "{{vehicleId}}"
+            }
+          ]
+        }
+      },
+      "response": []
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{bearerAuth}}",
+        "type": "string"
+      }
+    ]
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000"
+    },
+    {
+      "key": "bearerAuth",
+      "value": "eyJhbGciOiJSUzM4NCIsInR5cCI6IkpXVCJ9.eyJpZCI6Ijc5MDI3YjI1LTAzOGItNGQyNi05ZjdkLTUyNTUwZWEwYmMwNCIsImlhdCI6MTc2NTg5NzQ3NSwiZXhwIjoxNzY4MzE2Njc1LCJhdWQiOiJ2ZWhpY2xlTG9jYXRvclVzZXJzIiwiaXNzIjoiaHR0cHM6Ly9pc3N1ZXIuNDJjcnVuY2guZGVtbyIsInN1YiI6InNjYW51c2VyQHRlc3QuY29tIn0.hlnIenIecvMACi2A-pkEhAcKpIhvYb1IoSI3YbTJwxuoumomS670XdBOLA5mdZevP8LM5w1S1KVVZBpTDQGRjXNjrcBB8mQ_-luQ2vvIjopWvL54kzdFUutHOzF98TURjde1cJGxl2rGzAN80-1Y8fz1l7nKcS-PlO4Tg4hErc5gEXMqZdHjDb_AhvFCPay8F_1lTqUBgmGbZqtqJ55BHrzx9l-ivyZHjMMRhzBdmZPmOdHPKfBIU7mDvokotEbAiRprJZcc-8IZjmCYe1n0szV1IcHYE10bw7-Vgt-fjKwtT0X42JzXixhyeQnd_zqdfFOmDKk3j3RRhbqC_4lL9g"
+    },
+    {
+      "key": "vehicleId",
+      "value": "3cb72aec-fbf0-4778-a9ba-5d69c45ec94c"
+    }
+  ]
+}
