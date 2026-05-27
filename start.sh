@@ -7,6 +7,7 @@ if [ "$1" == "-h" ]; then
     echo "This script is used to manage the Vehicle Locator API"
     echo "   -h          Show this help message"
     echo "   down        Shut down the Vehicle Locator API"
+    echo "   db-reset    Reset the Database (cleans and restarts the database)"
     echo "   restart     Restart the Vehicle Locator API"
     exit 0
 fi
@@ -23,6 +24,20 @@ if [ "$1" == "down" ]; then
   ./deployFirewall.sh down
 
   exit 0
+elif [ "$1" == "db-reset" ]; then
+  echo "Resetting Database..."
+
+  # Stop the Database
+  cd ./database
+  ./database.sh down
+
+  # Start the Database
+  ./database.sh
+
+  # Start the Vehicle Locator API
+  cd ../app
+  npm install -y
+  nodemon start
 elif [ "$1" == "restart" ]; then
   echo "Restarting Vehicle Locator API, Firewall and DB..."
 
