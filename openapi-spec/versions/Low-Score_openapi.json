@@ -64,7 +64,23 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "type": "object"
+                                    "type": "object",
+                                    "required": [
+                                        "message",
+                                        "token"
+                                    ],
+                                    "additionalProperties": false,
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "token": {
+                                            "type": "string"
+                                        },
+                                        "_id": {
+                                            "type": "string"
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -350,7 +366,59 @@
                 }
             },
             "Vehicle": {
-                "type": "object"
+                "type": "object",
+                "properties": {
+                    "_id": {
+                        "type": "string",
+                        "description": "MongoDB ID"
+                    },
+                    "id": {
+                        "type": "string"
+                    },
+                    "lat": {
+                        "type": "number",
+                        "format": "float"
+                    },
+                    "lng": {
+                        "type": "number",
+                        "format": "float"
+                    },
+                    "vin": {
+                        "type": "string"
+                    },
+                    "make": {
+                        "type": "string"
+                    },
+                    "model": {
+                        "type": "string"
+                    },
+                    "year": {
+                        "type": "integer"
+                    },
+                    "color": {
+                        "type": "string"
+                    },
+                    "status": {
+                        "type": "string",
+                        "enum": [
+                            "active",
+                            "inactive"
+                        ],
+                        "description": "Vehicle status"
+                    },
+                    "lastUpdated": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "email": {
+                      "type": "string"
+                    }
+                },
+                "required": [
+                    "id",
+                    "lat",
+                    "lng"
+                ]
             },
             "VehicleInput": {
                 "type": "object",
