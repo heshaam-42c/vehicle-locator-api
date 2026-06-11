@@ -1,720 +1,721 @@
 {
-	"info": {
-		"_postman_id": "e944a592-85d4-4c91-99d2-6b24437d3463",
-		"name": "Vehicle Locator API",
-		"description": "Postman collection for testing the Vehicle Locator API",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "9054155"
-	},
-	"item": [
-		{
-			"name": "API Attacks",
-			"item": [
-				{
-					"name": "Low-Score Attacks",
-					"item": [
-						{
-							"name": "API2:2023 - Unauthenticated Access",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											"pm.test(\"Status code is 403\", function () {",
-											"    pm.expect(pm.response.code).to.be.equal(403);",
-											"});"
-										],
-										"type": "text/javascript",
-										"packages": {}
-									}
-								}
-							],
-							"request": {
-								"auth": {
-									"type": "noauth"
-								},
-								"method": "GET",
-								"header": [
-									{
-										"key": "Content-Type",
-										"value": "application/json"
-									}
-								],
-								"url": {
-									"raw": "{{baseUrl}}/",
-									"host": [
-										"{{baseUrl}}"
-									],
-									"path": [
-										""
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "API8:2023 - Undocumented Endpoint",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											"pm.test(\"Status code is 400\", function () {",
-											"    pm.expect(pm.response.code).to.be.equal(400);",
-											"});"
-										],
-										"type": "text/javascript",
-										"packages": {}
-									}
-								},
-								{
-									"listen": "prerequest",
-									"script": {
-										"exec": [
-											"// Retrieve host",
-											"let myHost = pm.environment.get('baseUrl');",
-											"console.log(myHost);",
-											"pm.sendRequest({",
-											"    url: myHost+'/user/login',",
-											"    method: 'POST',",
-											"    header: {",
-											"        'Accept': 'application/json',",
-											"        'Content-Type': 'application/json'",
-											"      },",
-											"    body: {",
-											"        mode: 'raw',",
-											"        raw: JSON.stringify({\"email\": \"scanuser@test.com\",\"pass\": \"scanpassword\"})",
-											"    }",
-											"}, function (err, res) {",
-											"    console.log (res)",
-											"    pm.environment.set(\"bearerAuth\", res.json().token);",
-											"});"
-										],
-										"type": "text/javascript",
-										"packages": {}
-									}
-								}
-							],
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "{{baseUrl}}/vehicle/vin/1DEFK23JADWH2315F",
-									"host": [
-										"{{baseUrl}}"
-									],
-									"path": [
-										"vehicle",
-										"vin",
-										"1DEFK23JADWH2315F"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "API8:2023 - Undocumented method",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											"pm.test(\"Status code is 405\", function () {",
-											"    pm.expect(pm.response.code).to.be.equal(405);",
-											"});"
-										],
-										"type": "text/javascript",
-										"packages": {}
-									}
-								}
-							],
-							"request": {
-								"method": "OPTIONS",
-								"header": [],
-								"url": {
-									"raw": "{{baseUrl}}/",
-									"host": [
-										"{{baseUrl}}"
-									],
-									"path": [
-										""
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "API7:2023 - XXE/SSRF",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											"pm.test(\"Status code is 415\", function () {",
-											"    pm.expect(pm.response.code).to.be.equal(415);",
-											"});"
-										],
-										"type": "text/javascript",
-										"packages": {}
-									}
-								}
-							],
-							"request": {
-								"method": "POST",
-								"header": [
-									{
-										"key": "Content-Type",
-										"value": "application/xml"
-									}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": "<?xml version=\"1.0\"?>\n<!DOCTYPE foo [ \n  <!ENTITY xxe SYSTEM \"http://localhost:8000/internal-api\"> ]>\n<foo>&xxe;</foo>",
-									"options": {
-										"raw": {
-											"language": "xml"
-										}
-									}
-								},
-								"url": {
-									"raw": "{{baseUrl}}/vehicles",
-									"host": [
-										"{{baseUrl}}"
-									],
-									"path": [
-										"vehicles"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "API8:2019 - noSQL injection",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											"pm.test(\"Status code is 400\", function () {",
-											"    pm.expect(pm.response.code).to.be.equal(400);",
-											"});"
-										],
-										"type": "text/javascript",
-										"packages": {},
-										"requests": {}
-									}
-								}
-							],
-							"request": {
-								"auth": {
-									"type": "noauth"
-								},
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\n    \"email\": {\"$ne\": \"66daba21d0bc05aa1d335067\"},\n    \"pass\": \"scanpassword\"\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "{{baseUrl}}/user/login",
-									"host": [
-										"{{baseUrl}}"
-									],
-									"path": [
-										"user",
-										"login"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "API8:2023 - Content Type Manipulation",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											"pm.test(\"Status code is 400\", function () {",
-											"    pm.expect(pm.response.code).to.be.equal(400);",
-											"});"
-										],
-										"type": "text/javascript",
-										"packages": {}
-									}
-								}
-							],
-							"protocolProfileBehavior": {
-								"disableBodyPruning": true
-							},
-							"request": {
-								"method": "GET",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\n    \"id\": true\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "{{baseUrl}}/vehicles",
-									"host": [
-										"{{baseUrl}}"
-									],
-									"path": [
-										"vehicles"
-									]
-								}
-							},
-							"response": []
-						}
-					],
-					"description": "API Attacks that are detected and blocked with a low OpenAPI Audit score"
-				},
-				{
-					"name": "Medium-Score Attacks",
-					"item": [
-						{
-							"name": "API6:2019 - Schema Injection",
-							"event": [
-								{
-									"listen": "prerequest",
-									"script": {
-										"exec": [
-											"// VIN characters (excluding I, O, Q)",
-											"const vinChars = 'ABCDEFGHJKLMNPRSTUVWXYZ0123456789';",
-											"",
-											"function generateRandomVIN() {",
-											"    let vin = '';",
-											"    for (let i = 0; i < 17; i++) {",
-											"        vin += vinChars.charAt(Math.floor(Math.random() * vinChars.length));",
-											"    }",
-											"    return vin;",
-											"}",
-											"",
-											"// Retrieve API host",
-											"let myHost = pm.collectionVariables.get('baseUrl');",
-											"console.log(myHost);",
-											"pm.sendRequest({",
-											"    url: myHost+'/vehicles',",
-											"    method: 'POST',",
-											"    header: {",
-											"        'Content-Type': 'application/json',",
-											"        'Accept': 'application/json',",
-											"        'Authorization': 'Bearer ' + pm.collectionVariables.get('bearerAuth')",
-											"      },",
-											"    body: {",
-											"        mode: 'raw',",
-											"        raw: JSON.stringify(",
-											"            {",
-											"                \"vin\": generateRandomVIN(),",
-											"                \"lat\": 40.7128,",
-											"                \"lng\": -74.0060,",
-											"                \"make\": \"Toyota\",",
-											"                \"model\": \"Camry\",",
-											"                \"year\": 2025,",
-											"                \"color\": \"Blue\"",
-											"            })",
-											"    }",
-											"}, function (err, res) {",
-											"    console.log (res)",
-											"    pm.collectionVariables.set(\"vehicleId\", res.json().id);",
-											"});"
-										],
-										"type": "text/javascript",
-										"packages": {}
-									}
-								},
-								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											"pm.test(\"Status code is 400\", function () {",
-											"    pm.expect(pm.response.code).to.be.equal(400);",
-											"});"
-										],
-										"type": "text/javascript",
-										"packages": {}
-									}
-								}
-							],
-							"request": {
-								"method": "PUT",
-								"header": [
-									{
-										"key": "Content-Type",
-										"value": "application/json"
-									}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": "{\n  \"lat\": 41.0,\n  \"lng\": -75.0,\n  \"status\": \"inactive\"\n}"
-								},
-								"url": {
-									"raw": "{{baseUrl}}/vehicles/:vehicleId/location",
-									"host": [
-										"{{baseUrl}}"
-									],
-									"path": [
-										"vehicles",
-										":vehicleId",
-										"location"
-									],
-									"variable": [
-										{
-											"key": "vehicleId",
-											"value": "{{vehicleId}}"
-										}
-									]
-								}
-							},
-							"response": []
-						}
-					],
-					"description": "API Attacks that are detected and blocked with a medium OpenAPI Audit score"
-				},
-				{
-					"name": "High-Score Attacks",
-					"item": [
-						{
-							"name": "API3:2023 - Data Leakage (Vehicle Location)",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											"pm.test(\"Status code is 502\", function () {",
-											"    pm.expect(pm.response.code).to.be.equal(502);",
-											"});"
-										],
-										"type": "text/javascript",
-										"packages": {}
-									}
-								}
-							],
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "{{baseUrl}}/vehicles",
-									"host": [
-										"{{baseUrl}}"
-									],
-									"path": [
-										"vehicles"
-									]
-								}
-							},
-							"response": []
-						}
-					],
-					"description": "API Attacks that are detected and blocked with a high OpenAPI Audit score"
-				}
-			]
-		},
-		{
-			"name": "User Registration",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							""
-						],
-						"type": "text/javascript",
-						"packages": {}
-					}
-				}
-			],
-			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"value": "application/json"
-					},
-					{
-						"key": "Accept",
-						"value": "application/json"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n  \"email\": \"scanuser1@test.com\",\n  \"pass\": \"scanpassword\",\n  \"name\": \"{{$randomFullName}}\",\n  \"is_admin\": false\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "{{baseUrl}}/user/register",
-					"host": [
-						"{{baseUrl}}"
-					],
-					"path": [
-						"user",
-						"register"
-					]
-				},
-				"description": "user supplies email and password to register and receives a json web token."
-			},
-			"response": []
-		},
-		{
-			"name": "User Login",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"var jsonData = pm.response.json();",
-							"if (jsonData.token != null) {",
-							"    pm.collectionVariables.set(\"bearerAuth\", jsonData.token);",
-							"}"
-						],
-						"type": "text/javascript",
-						"packages": {}
-					}
-				}
-			],
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"email\": \"scanuser@test.com\",\n    \"pass\": \"scanpassword\"\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "{{baseUrl}}/user/login",
-					"host": [
-						"{{baseUrl}}"
-					],
-					"path": [
-						"user",
-						"login"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Get API Root",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "{{baseUrl}}/",
-					"host": [
-						"{{baseUrl}}"
-					],
-					"path": [
-						""
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Get All Vehicles",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "{{baseUrl}}/vehicles",
-					"host": [
-						"{{baseUrl}}"
-					],
-					"path": [
-						"vehicles"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Add New Vehicle",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"var jsonData = pm.response.json();",
-							"if (jsonData.id != null) {",
-							"    pm.collectionVariables.set(\"vehicleId\", jsonData.id);",
-							"}"
-						],
-						"type": "text/javascript",
-						"packages": {}
-					}
-				}
-			],
-			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"value": "application/json"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n  \"vin\": \"A9K3JFIU23FH54J1K\",\n  \"lat\": 40.7128,\n  \"lng\": -74.0060,\n  \"make\": \"Toyota\",\n  \"model\": \"Camry\",\n  \"year\": 2025,\n  \"color\": \"Blue\"\n}"
-				},
-				"url": {
-					"raw": "{{baseUrl}}/vehicles",
-					"host": [
-						"{{baseUrl}}"
-					],
-					"path": [
-						"vehicles"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Get Vehicle by ID",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "{{baseUrl}}/vehicles/:vehicleId",
-					"host": [
-						"{{baseUrl}}"
-					],
-					"path": [
-						"vehicles",
-						":vehicleId"
-					],
-					"variable": [
-						{
-							"key": "vehicleId",
-							"value": "{{vehicleId}}"
-						}
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Update Vehicle Location",
-			"request": {
-				"method": "PUT",
-				"header": [
-					{
-						"key": "Content-Type",
-						"value": "application/json"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n  \"lat\": 41.0,\n  \"lng\": -75.0\n}"
-				},
-				"url": {
-					"raw": "{{baseUrl}}/vehicles/:vehicleId/location",
-					"host": [
-						"{{baseUrl}}"
-					],
-					"path": [
-						"vehicles",
-						":vehicleId",
-						"location"
-					],
-					"variable": [
-						{
-							"key": "vehicleId",
-							"value": "{{vehicleId}}"
-						}
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Delete Vehicle",
-			"request": {
-				"method": "DELETE",
-				"header": [],
-				"url": {
-					"raw": "{{baseUrl}}/vehicles/:vehicleId",
-					"host": [
-						"{{baseUrl}}"
-					],
-					"path": [
-						"vehicles",
-						":vehicleId"
-					],
-					"variable": [
-						{
-							"key": "vehicleId",
-							"value": "{{vehicleId}}"
-						}
-					]
-				}
-			},
-			"response": []
-		}
-	],
-	"auth": {
-		"type": "bearer",
-		"bearer": [
-			{
-				"key": "token",
-				"value": "{{bearerAuth}}",
-				"type": "string"
-			}
-		]
-	},
-	"event": [
-		{
-			"listen": "prerequest",
-			"script": {
-				"type": "text/javascript",
-				"packages": {},
-				"requests": {},
-				"exec": [
-					""
-				]
-			}
-		},
-		{
-			"listen": "test",
-			"script": {
-				"type": "text/javascript",
-				"packages": {},
-				"requests": {},
-				"exec": [
-					""
-				]
-			}
-		}
-	],
-	"variable": [
-		{
-			"key": "baseUrl",
-			"value": "http://localhost:3000"
-		},
-		{
-			"key": "bearerAuth",
-			"value": "eyJhbGciOiJSUzM4NCIsInR5cCI6IkpXVCJ9.eyJpZCI6Ijc5MDI3YjI1LTAzOGItNGQyNi05ZjdkLTUyNTUwZWEwYmMwNCIsImlhdCI6MTc2NTg5NzQ3NSwiZXhwIjoxNzY4MzE2Njc1LCJhdWQiOiJ2ZWhpY2xlTG9jYXRvclVzZXJzIiwiaXNzIjoiaHR0cHM6Ly9pc3N1ZXIuNDJjcnVuY2guZGVtbyIsInN1YiI6InNjYW51c2VyQHRlc3QuY29tIn0.hlnIenIecvMACi2A-pkEhAcKpIhvYb1IoSI3YbTJwxuoumomS670XdBOLA5mdZevP8LM5w1S1KVVZBpTDQGRjXNjrcBB8mQ_-luQ2vvIjopWvL54kzdFUutHOzF98TURjde1cJGxl2rGzAN80-1Y8fz1l7nKcS-PlO4Tg4hErc5gEXMqZdHjDb_AhvFCPay8F_1lTqUBgmGbZqtqJ55BHrzx9l-ivyZHjMMRhzBdmZPmOdHPKfBIU7mDvokotEbAiRprJZcc-8IZjmCYe1n0szV1IcHYE10bw7-Vgt-fjKwtT0X42JzXixhyeQnd_zqdfFOmDKk3j3RRhbqC_4lL9g"
-		},
-		{
-			"key": "vehicleId",
-			"value": "3cb72aec-fbf0-4778-a9ba-5d69c45ec94c"
-		}
-	]
+  "info": {
+    "_postman_id": "8d4d2f4c-0609-4eda-a377-0ee01f2efe2e",
+    "name": "Vehicle Locator API",
+    "description": "Postman collection for testing the Vehicle Locator API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "9054155"
+  },
+  "item": [
+    {
+      "name": "API Attacks",
+      "item": [
+        {
+          "name": "Low-Score Attacks",
+          "item": [
+            {
+              "name": "API2:2023 - Unauthenticated Access",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status code is 403\", function () {",
+                      "    pm.expect(pm.response.code).to.be.equal(403);",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "noauth"
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    ""
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "API8:2023 - Undocumented Endpoint",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status code is 400\", function () {",
+                      "    pm.expect(pm.response.code).to.be.equal(400);",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                },
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "exec": [
+                      "// Retrieve host",
+                      "let myHost = pm.environment.get('baseUrl');",
+                      "console.log(myHost);",
+                      "pm.sendRequest({",
+                      "    url: myHost+'/user/login',",
+                      "    method: 'POST',",
+                      "    header: {",
+                      "        'Accept': 'application/json',",
+                      "        'Content-Type': 'application/json'",
+                      "      },",
+                      "    body: {",
+                      "        mode: 'raw',",
+                      "        raw: JSON.stringify({\"email\": \"scanuser@test.com\",\"pass\": \"scanpassword\"})",
+                      "    }",
+                      "}, function (err, res) {",
+                      "    console.log (res)",
+                      "    pm.environment.set(\"bearerAuth\", res.json().token);",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/vehicle/vin/1DEFK23JADWH2315F",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "vehicle",
+                    "vin",
+                    "1DEFK23JADWH2315F"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "API8:2023 - Undocumented method",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status code is 405\", function () {",
+                      "    pm.expect(pm.response.code).to.be.equal(405);",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "OPTIONS",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    ""
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "API7:2023 - XXE/SSRF",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status code is 415\", function () {",
+                      "    pm.expect(pm.response.code).to.be.equal(415);",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/xml"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "<?xml version=\"1.0\"?>\n<!DOCTYPE foo [ \n  <!ENTITY xxe SYSTEM \"http://localhost:8000/internal-api\"> ]>\n<foo>&xxe;</foo>",
+                  "options": {
+                    "raw": {
+                      "language": "xml"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/vehicles",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "vehicles"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "API8:2019 - noSQL injection",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status code is 400\", function () {",
+                      "    pm.expect(pm.response.code).to.be.equal(400);",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "noauth"
+                },
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"email\": {\"$ne\": \"66daba21d0bc05aa1d335067\"},\n    \"pass\": \"scanpassword\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/user/login",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "user",
+                    "login"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "API8:2023 - Content Type Manipulation",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status code is 400\", function () {",
+                      "    pm.expect(pm.response.code).to.be.equal(400);",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"id\": true\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/vehicles",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "vehicles"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ],
+          "description": "API Attacks that are detected and blocked with a low OpenAPI Audit score"
+        },
+        {
+          "name": "Medium-Score Attacks",
+          "item": [
+            {
+              "name": "API6:2019 - Schema Injection",
+              "event": [
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "exec": [
+                      "// VIN characters (excluding I, O, Q)",
+                      "const vinChars = 'ABCDEFGHJKLMNPRSTUVWXYZ0123456789';",
+                      "",
+                      "function generateRandomVIN() {",
+                      "    let vin = '';",
+                      "    for (let i = 0; i < 17; i++) {",
+                      "        vin += vinChars.charAt(Math.floor(Math.random() * vinChars.length));",
+                      "    }",
+                      "    return vin;",
+                      "}",
+                      "",
+                      "// Retrieve API host",
+                      "let myHost = pm.collectionVariables.get('baseUrl');",
+                      "console.log(myHost);",
+                      "pm.sendRequest({",
+                      "    url: myHost+'/vehicles',",
+                      "    method: 'POST',",
+                      "    header: {",
+                      "        'Content-Type': 'application/json',",
+                      "        'Accept': 'application/json',",
+                      "        'Authorization': 'Bearer ' + pm.collectionVariables.get('bearerAuth')",
+                      "      },",
+                      "    body: {",
+                      "        mode: 'raw',",
+                      "        raw: JSON.stringify(",
+                      "            {",
+                      "                \"vin\": generateRandomVIN(),",
+                      "                \"lat\": 40.7128,",
+                      "                \"lng\": -74.0060,",
+                      "                \"make\": \"Toyota\",",
+                      "                \"model\": \"Camry\",",
+                      "                \"year\": 2025,",
+                      "                \"color\": \"Blue\"",
+                      "            })",
+                      "    }",
+                      "}, function (err, res) {",
+                      "    console.log (res)",
+                      "    pm.collectionVariables.set(\"vehicleId\", res.json().id);",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                },
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status code is 400\", function () {",
+                      "    pm.expect(pm.response.code).to.be.equal(400);",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"lat\": 41.0,\n  \"lng\": -75.0,\n  \"status\": \"inactive\"\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/vehicles/:vehicleId/location",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "vehicles",
+                    ":vehicleId",
+                    "location"
+                  ],
+                  "variable": [
+                    {
+                      "key": "vehicleId",
+                      "value": "{{vehicleId}}"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            }
+          ],
+          "description": "API Attacks that are detected and blocked with a medium OpenAPI Audit score"
+        },
+        {
+          "name": "High-Score Attacks",
+          "item": [
+            {
+              "name": "API3:2023 - Data Leakage (Vehicle Location)",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status code is 502\", function () {",
+                      "    pm.expect(pm.response.code).to.be.equal(502);",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/vehicles",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "vehicles"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ],
+          "description": "API Attacks that are detected and blocked with a high OpenAPI Audit score"
+        }
+      ]
+    },
+    {
+      "name": "User Registration",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"scanuser1@test.com\",\n  \"pass\": \"scanpassword\",\n  \"name\": \"{{$randomFullName}}\",\n  \"is_admin\": false\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/user/register",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "user",
+            "register"
+          ]
+        },
+        "description": "user supplies email and password to register and receives a json web token."
+      },
+      "response": []
+    },
+    {
+      "name": "User Login",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "var jsonData = pm.response.json();",
+              "if (jsonData.token != null) {",
+              "    pm.collectionVariables.set(\"bearerAuth\", jsonData.token);",
+              "}"
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"email\": \"scanuser@test.com\",\n    \"pass\": \"scanpassword\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/user/login",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "user",
+            "login"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get API Root",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            ""
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get All Vehicles",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/vehicles",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "vehicles"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Add New Vehicle",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "var jsonData = pm.response.json();",
+              "if (jsonData.id != null) {",
+              "    pm.collectionVariables.set(\"vehicleId\", jsonData.id);",
+              "}"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"vin\": \"A9K3JFIU23FH54J1K\",\n  \"lat\": 40.7128,\n  \"lng\": -74.0060,\n  \"make\": \"Toyota\",\n  \"model\": \"Camry\",\n  \"year\": 2025,\n  \"color\": \"Blue\",\n  \"email\": \"scanuser@test.com\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/vehicles",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "vehicles"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get Vehicle by ID",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/vehicles/:vehicleId",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "vehicles",
+            ":vehicleId"
+          ],
+          "variable": [
+            {
+              "key": "vehicleId",
+              "value": "{{vehicleId}}"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Update Vehicle Location",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"lat\": 41.0,\n  \"lng\": -75.0\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/vehicles/:vehicleId/location",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "vehicles",
+            ":vehicleId",
+            "location"
+          ],
+          "variable": [
+            {
+              "key": "vehicleId",
+              "value": "{{vehicleId}}"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Delete Vehicle",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/vehicles/:vehicleId",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "vehicles",
+            ":vehicleId"
+          ],
+          "variable": [
+            {
+              "key": "vehicleId",
+              "value": "{{vehicleId}}"
+            }
+          ]
+        }
+      },
+      "response": []
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{bearerAuth}}",
+        "type": "string"
+      }
+    ]
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000"
+    },
+    {
+      "key": "bearerAuth",
+      "value": "eyJhbGciOiJSUzM4NCIsInR5cCI6IkpXVCJ9.eyJpZCI6Ijc5MDI3YjI1LTAzOGItNGQyNi05ZjdkLTUyNTUwZWEwYmMwNCIsImlhdCI6MTc2NTg5NzQ3NSwiZXhwIjoxNzY4MzE2Njc1LCJhdWQiOiJ2ZWhpY2xlTG9jYXRvclVzZXJzIiwiaXNzIjoiaHR0cHM6Ly9pc3N1ZXIuNDJjcnVuY2guZGVtbyIsInN1YiI6InNjYW51c2VyQHRlc3QuY29tIn0.hlnIenIecvMACi2A-pkEhAcKpIhvYb1IoSI3YbTJwxuoumomS670XdBOLA5mdZevP8LM5w1S1KVVZBpTDQGRjXNjrcBB8mQ_-luQ2vvIjopWvL54kzdFUutHOzF98TURjde1cJGxl2rGzAN80-1Y8fz1l7nKcS-PlO4Tg4hErc5gEXMqZdHjDb_AhvFCPay8F_1lTqUBgmGbZqtqJ55BHrzx9l-ivyZHjMMRhzBdmZPmOdHPKfBIU7mDvokotEbAiRprJZcc-8IZjmCYe1n0szV1IcHYE10bw7-Vgt-fjKwtT0X42JzXixhyeQnd_zqdfFOmDKk3j3RRhbqC_4lL9g"
+    },
+    {
+      "key": "vehicleId",
+      "value": "3cb72aec-fbf0-4778-a9ba-5d69c45ec94c"
+    }
+  ]
 }
