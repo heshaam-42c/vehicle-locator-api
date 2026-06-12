@@ -465,7 +465,8 @@
                     "make",
                     "model",
                     "year",
-                    "color"
+                    "color",
+                    "email"
                 ]
             },
             "LocationUpdate": {
