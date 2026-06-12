@@ -373,7 +373,9 @@
                         "description": "MongoDB ID"
                     },
                     "id": {
-                        "type": "string"
+                        "type": "string",
+                        "description": "Unique vehicle ID (UUID)",
+                        "format": "uuid"
                     },
                     "lat": {
                         "type": "number",
