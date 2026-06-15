@@ -124,7 +124,7 @@ jobs:
       - name: upload_v2_scan_config
         id: upload_v2_scan_config
         run: | 
-            python .42c/scripts/conformance_scanv2.py -c ${{ secrets.API_TOKEN }} -a ${{steps.get_vehicle_api_id.outputs.VEHICLE_API_UUID}} -t scan_token.json -f .42c/scan/${{ steps.parse_alias.outputs.SCAN_ALIAS }}/scanconf.json -n ${{ env.SCAN_CONFIG }} -p ${{env.PLATFORM_URL}} --action upload_conf
+            python scripts/conformance_scanv2.py -c ${{ secrets.API_TOKEN }} -a ${{steps.get_vehicle_api_id.outputs.VEHICLE_API_UUID}} -t scan_token.json -f .42c/scan/${{ steps.parse_alias.outputs.SCAN_ALIAS }}/scanconf.json -n ${{ env.SCAN_CONFIG }} -p ${{env.PLATFORM_URL}} --action upload_conf
             scan_token=$(cat scan_token.json | jq -r '.scan_token')
             echo "SCANV2_TOKEN=$scan_token" >> $GITHUB_OUTPUT
       - name: 42crunch-dynamic-api-testing
@@ -135,15 +135,15 @@ jobs:
             
             echo "Retrieving Scan report URL"
             # List the scan reports for the target API and save the Task ID for github-actions
-            taskId=$(python .42c/scripts/manage_scanv2_reports.py ${{ secrets.API_TOKEN }} ${{steps.get_vehicle_api_id.outputs.VEHICLE_API_UUID}} -o list -p ${{ env.PLATFORM_URL}} -q | grep ${{ env.SCAN_CONFIG }} | cut -d',' -f1)
+            taskId=$(python scripts/manage_scanv2_reports.py ${{ secrets.API_TOKEN }} ${{steps.get_vehicle_api_id.outputs.VEHICLE_API_UUID}} -o list -p ${{ env.PLATFORM_URL}} -q | grep ${{ env.SCAN_CONFIG }} | cut -d',' -f1)
             echo "Task ID - $taskId"
             echo "SCANV2_TASK_ID=$taskId" >> $GITHUB_OUTPUT
 
-            configId=$(python .42c/scripts/manage_scanv2_reports.py ${{ secrets.API_TOKEN }} ${{steps.get_vehicle_api_id.outputs.VEHICLE_API_UUID}} -o list -p ${{ env.PLATFORM_URL}} -q | grep ${{ env.SCAN_CONFIG }} | cut -d',' -f2)
+            configId=$(python scripts/manage_scanv2_reports.py ${{ secrets.API_TOKEN }} ${{steps.get_vehicle_api_id.outputs.VEHICLE_API_UUID}} -o list -p ${{ env.PLATFORM_URL}} -q | grep ${{ env.SCAN_CONFIG }} | cut -d',' -f2)
             echo "Config ID - $configId"
 
             # Retrieve the scan report for the target API using Task ID
-            python .42c/scripts/manage_scanv2_reports.py ${{ secrets.API_TOKEN }} ${{steps.get_vehicle_api_id.outputs.VEHICLE_API_UUID}} -o retrieve -p ${{ env.PLATFORM_URL}} -t $taskId
+            python scripts/manage_scanv2_reports.py ${{ secrets.API_TOKEN }} ${{steps.get_vehicle_api_id.outputs.VEHICLE_API_UUID}} -o retrieve -p ${{ env.PLATFORM_URL}} -t $taskId
             # Print the scan report URL using Scan Config ID
             echo "Scan report - ${{ env.PLATFORM_URL }}/apis/${{steps.get_vehicle_api_id.outputs.VEHICLE_API_UUID}}/scan/report?configId=$configId"
       - name: Check API Scan SQG status
@@ -173,5 +173,5 @@ jobs:
       - name: update-api-firewall
         run: |
           apiId=$(cat ./audit-action-report-${{ github.run_id }}.json | jq -r '.audit.report."openapi-spec/openapi-spec.json".apiId')
-          python .42c/scripts/protection.py $apiId ${{ env.PLATFORM_URL}} ${{ secrets.API_TOKEN }}
+          python scripts/protection.py $apiId ${{ env.PLATFORM_URL}} ${{ secrets.API_TOKEN }}
           echo "API Protection policy updated: https://demolabs.42crunch.cloud/apis/$apiId/protection"
