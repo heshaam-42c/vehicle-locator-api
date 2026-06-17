@@ -48,7 +48,7 @@ jobs:
       - name: checkout repo
         uses: actions/checkout@v6
       - name: 42crunch-static-api-testing
-        uses: 42crunch/api-security-audit-action@v3
+        uses: 42crunch/api-security-audit-action@v4
         with:
           api-token: ${{ secrets.API_TOKEN }}
           platform-url: ${{ env.PLATFORM_URL}}
