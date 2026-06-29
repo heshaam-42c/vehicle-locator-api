@@ -210,7 +210,9 @@
                         "in": "path",
                         "required": true,
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "format": "uuid",
+                            "description": "Vehicle ID"
                         }
                     }
                 ],
@@ -246,7 +248,9 @@
                         "in": "path",
                         "required": true,
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "format": "uuid",
+                            "description": "Vehicle ID"
                         }
                     }
                 ],
@@ -284,7 +288,9 @@
                         "in": "path",
                         "required": true,
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "format": "uuid",
+                            "description": "Vehicle ID"
                         }
                     }
                 ],
@@ -373,7 +379,9 @@
                         "description": "MongoDB ID"
                     },
                     "id": {
-                        "type": "string"
+                        "type": "string",
+                        "format": "uuid",
+                        "description": "Vehicle ID"
                     },
                     "lat": {
                         "type": "number",
@@ -463,7 +471,8 @@
                     "make",
                     "model",
                     "year",
-                    "color"
+                    "color",
+                    "email"
                 ]
             },
             "LocationUpdate": {
