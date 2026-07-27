@@ -1,0 +1,589 @@
+type: collection.insomnia.rest/5.0
+schema_version: "5.1"
+name: Vehicle Locator API
+meta:
+  id: wrk_bf9b3d9cf57e477db3dbf33bf1a9df54
+  created: 1783628443541
+  modified: 1783628443541
+  description: ""
+collection:
+  - name: Vehicle Locator API
+    meta:
+      id: fld_473bec4c5bba46748e4099e3f90366c4
+      created: 1783628443571
+      modified: 1783628443571
+      sortKey: -1783628434100
+      description: Postman collection for testing the Vehicle Locator API
+    children:
+      - url: "{{baseUrl}}/user/register"
+        name: User Registration
+        meta:
+          id: req_fac51eb29f2f4d2082f589f8134cd15c
+          created: 1783628443593
+          modified: 1783628443593
+          isPrivate: false
+          description: user supplies email and password to register and receives a json
+            web token.
+          sortKey: -1783628434087
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+              "email": "scanuser1@test.com",
+              "pass": "scanpassword",
+              "name": "{% faker 'randomFullName' %}",
+              "is_admin": false
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: Accept
+            value: application/json
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{baseUrl}}/user/login"
+        name: User Login
+        meta:
+          id: req_df7918a602304d33a06558fa6eb71c8c
+          created: 1783628443594
+          modified: 1783628443594
+          isPrivate: false
+          description: ""
+          sortKey: -1783628434086
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+                "email": "scanuser@test.com",
+                "pass": "scanpassword"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+        scripts:
+          afterResponse: |-
+            var jsonData = insomnia.response.json();
+            if (jsonData.token != null) {
+                insomnia.collectionVariables.set("bearerAuth", jsonData.token);
+            }
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{baseUrl}}/"
+        name: Get API Root
+        meta:
+          id: req_21f352d5f29b470db1396f5e103ca235
+          created: 1783628443595
+          modified: 1783628443595
+          isPrivate: false
+          description: ""
+          sortKey: -1783628434085
+        method: GET
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{baseUrl}}/vehicles"
+        name: Get All Vehicles
+        meta:
+          id: req_90af8fc3722c40449ad8a95f1f8813ae
+          created: 1783628443596
+          modified: 1783628443596
+          isPrivate: false
+          description: ""
+          sortKey: -1783628434084
+        method: GET
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{baseUrl}}/vehicles"
+        name: Add New Vehicle
+        meta:
+          id: req_00a03fd21a524899bd0511f6bd40dc8c
+          created: 1783628443597
+          modified: 1783628443597
+          isPrivate: false
+          description: ""
+          sortKey: -1783628434083
+        method: POST
+        body:
+          mimeType: text/plain
+          text: |-
+            {
+              "vin": "A9K3JFIU23FH54J1K",
+              "lat": 40.7128,
+              "lng": -74.0060,
+              "make": "Toyota",
+              "model": "Camry",
+              "year": 2025,
+              "color": "Blue",
+              "email": "scanuser@test.com"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+        scripts:
+          afterResponse: |-
+            var jsonData = insomnia.response.json();
+            if (jsonData.id != null) {
+                insomnia.collectionVariables.set("vehicleId", jsonData.id);
+            }
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{baseUrl}}/vehicles/:vehicleId"
+        name: Get Vehicle by ID
+        meta:
+          id: req_7f375506fc0b4db7894e57d1cec29585
+          created: 1783628443598
+          modified: 1783628443598
+          isPrivate: false
+          description: ""
+          sortKey: -1783628434082
+        method: GET
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+        pathParameters:
+          - name: vehicleId
+            value: "{{vehicleId}}"
+      - url: "{{baseUrl}}/vehicles/:vehicleId/location"
+        name: Update Vehicle Location
+        meta:
+          id: req_9a9579cccf9c4bdc960013c28e9fa15f
+          created: 1783628443599
+          modified: 1783628443599
+          isPrivate: false
+          description: ""
+          sortKey: -1783628434081
+        method: PUT
+        body:
+          mimeType: text/plain
+          text: |-
+            {
+              "lat": 41.0,
+              "lng": -75.0
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+        pathParameters:
+          - name: vehicleId
+            value: "{{vehicleId}}"
+      - url: "{{baseUrl}}/vehicles/:vehicleId"
+        name: Delete Vehicle
+        meta:
+          id: req_9cdccb6d22924d379d708bc7f63c10af
+          created: 1783628443600
+          modified: 1783628443600
+          isPrivate: false
+          description: ""
+          sortKey: -1783628434080
+        method: DELETE
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+        pathParameters:
+          - name: vehicleId
+            value: "{{vehicleId}}"
+      - name: API Attacks
+        meta:
+          id: fld_8c73cab5ee0c48fab995382bcbaae7c9
+          created: 1783628443574
+          modified: 1783628443574
+          sortKey: -1783628434099
+          description: ""
+        children:
+          - name: Low-Score Attacks
+            meta:
+              id: fld_cc87386b233b4e8f9fca25356f8f5ed7
+              created: 1783628443575
+              modified: 1783628443575
+              sortKey: -1783628434098
+              description: API Attacks that are detected and blocked with a low OpenAPI Audit
+                score
+            children:
+              - url: "{{baseUrl}}/"
+                name: API2:2023 - Unauthenticated Access
+                meta:
+                  id: req_72ab4fffd2da41dab2cf95f2e271154b
+                  created: 1783628443577
+                  modified: 1783628443577
+                  isPrivate: false
+                  description: ""
+                  sortKey: -1783628434097
+                method: GET
+                headers:
+                  - name: Content-Type
+                    value: application/json
+                scripts:
+                  afterResponse: >-
+                    insomnia.test("Status code is 403", function () {
+                        insomnia.expect(insomnia.response.code).to.be.equal(403);
+                    });
+                settings:
+                  renderRequestBody: true
+                  encodeUrl: true
+                  followRedirects: global
+                  cookies:
+                    send: true
+                    store: true
+                  rebuildPath: true
+              - url: "{{baseUrl}}/vehicle/vin/1DEFK23JADWH2315F"
+                name: API8:2023 - Undocumented Endpoint
+                meta:
+                  id: req_33ea9f16a3e045c081bdb742462701af
+                  created: 1783628443579
+                  modified: 1783628443579
+                  isPrivate: false
+                  description: ""
+                  sortKey: -1783628434096
+                method: GET
+                scripts:
+                  preRequest: >-
+                    // Retrieve host
+
+                    let myHost = insomnia.environment.get('baseUrl');
+
+                    console.log(myHost);
+
+                    insomnia.sendRequest({
+                        url: myHost+'/user/login',
+                        method: 'POST',
+                        header: {
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json'
+                          },
+                        body: {
+                            mode: 'raw',
+                            raw: JSON.stringify({"email": "scanuser@test.com","pass": "scanpassword"})
+                        }
+                    }, function (err, res) {
+                        console.log (res)
+                        insomnia.environment.set("bearerAuth", res.json().token);
+                    });
+                  afterResponse: >-
+                    insomnia.test("Status code is 400", function () {
+                        insomnia.expect(insomnia.response.code).to.be.equal(400);
+                    });
+                settings:
+                  renderRequestBody: true
+                  encodeUrl: true
+                  followRedirects: global
+                  cookies:
+                    send: true
+                    store: true
+                  rebuildPath: true
+              - url: "{{baseUrl}}/"
+                name: API8:2023 - Undocumented method
+                meta:
+                  id: req_7004063584d847f2a0bf74db4d8c4823
+                  created: 1783628443580
+                  modified: 1783628443580
+                  isPrivate: false
+                  description: ""
+                  sortKey: -1783628434095
+                method: OPTIONS
+                scripts:
+                  afterResponse: >-
+                    insomnia.test("Status code is 405", function () {
+                        insomnia.expect(insomnia.response.code).to.be.equal(405);
+                    });
+                settings:
+                  renderRequestBody: true
+                  encodeUrl: true
+                  followRedirects: global
+                  cookies:
+                    send: true
+                    store: true
+                  rebuildPath: true
+              - url: "{{baseUrl}}/vehicles"
+                name: API7:2023 - XXE/SSRF
+                meta:
+                  id: req_b55ae8d2d22049d7af112818fa3d8daa
+                  created: 1783628443581
+                  modified: 1783628443581
+                  isPrivate: false
+                  description: ""
+                  sortKey: -1783628434094
+                method: POST
+                body:
+                  mimeType: application/xml
+                  text: >-
+                    <?xml version="1.0"?>
+
+                    <!DOCTYPE foo [ 
+                      <!ENTITY xxe SYSTEM "http://localhost:8000/internal-api"> ]>
+                    <foo>&xxe;</foo>
+                headers:
+                  - name: Content-Type
+                    value: application/xml
+                scripts:
+                  afterResponse: >-
+                    insomnia.test("Status code is 415", function () {
+                        insomnia.expect(insomnia.response.code).to.be.equal(415);
+                    });
+                settings:
+                  renderRequestBody: true
+                  encodeUrl: true
+                  followRedirects: global
+                  cookies:
+                    send: true
+                    store: true
+                  rebuildPath: true
+              - url: "{{baseUrl}}/user/login"
+                name: API8:2019 - noSQL injection
+                meta:
+                  id: req_28e1981a34914500a8edcbcba5e0a91c
+                  created: 1783628443583
+                  modified: 1783628443583
+                  isPrivate: false
+                  description: ""
+                  sortKey: -1783628434093
+                method: POST
+                body:
+                  mimeType: application/json
+                  text: |-
+                    {
+                        "email": {"$ne": "66daba21d0bc05aa1d335067"},
+                        "pass": "scanpassword"
+                    }
+                headers:
+                  - name: Content-Type
+                    value: application/json
+                scripts:
+                  afterResponse: >-
+                    insomnia.test("Status code is 400", function () {
+                        insomnia.expect(insomnia.response.code).to.be.equal(400);
+                    });
+                settings:
+                  renderRequestBody: true
+                  encodeUrl: true
+                  followRedirects: global
+                  cookies:
+                    send: true
+                    store: true
+                  rebuildPath: true
+              - url: "{{baseUrl}}/vehicles"
+                name: API8:2023 - Content Type Manipulation
+                meta:
+                  id: req_38a15955b0dc4cfdaf67f9a945f49de2
+                  created: 1783628443585
+                  modified: 1783628443585
+                  isPrivate: false
+                  description: ""
+                  sortKey: -1783628434092
+                method: GET
+                body:
+                  mimeType: application/json
+                  text: |-
+                    {
+                        "id": true
+                    }
+                headers:
+                  - name: Content-Type
+                    value: application/json
+                scripts:
+                  afterResponse: >-
+                    insomnia.test("Status code is 400", function () {
+                        insomnia.expect(insomnia.response.code).to.be.equal(400);
+                    });
+                settings:
+                  renderRequestBody: true
+                  encodeUrl: true
+                  followRedirects: global
+                  cookies:
+                    send: true
+                    store: true
+                  rebuildPath: true
+          - name: Medium-Score Attacks
+            meta:
+              id: fld_1101e9a53d7e446cba2988359fd5b812
+              created: 1783628443587
+              modified: 1783628443587
+              sortKey: -1783628434091
+              description: API Attacks that are detected and blocked with a medium OpenAPI
+                Audit score
+            children:
+              - url: "{{baseUrl}}/vehicles/:vehicleId/location"
+                name: API6:2019 - Schema Injection
+                meta:
+                  id: req_33a2aef1e9854c78a381984784d49e71
+                  created: 1783628443589
+                  modified: 1783628443589
+                  isPrivate: false
+                  description: ""
+                  sortKey: -1783628434090
+                method: PUT
+                body:
+                  mimeType: text/plain
+                  text: |-
+                    {
+                      "lat": 41.0,
+                      "lng": -75.0,
+                      "status": "inactive"
+                    }
+                headers:
+                  - name: Content-Type
+                    value: application/json
+                scripts:
+                  preRequest: >-
+                    // VIN characters (excluding I, O, Q)
+
+                    const vinChars = 'ABCDEFGHJKLMNPRSTUVWXYZ0123456789';
+
+
+                    function generateRandomVIN() {
+                        let vin = '';
+                        for (let i = 0; i < 17; i++) {
+                            vin += vinChars.charAt(Math.floor(Math.random() * vinChars.length));
+                        }
+                        return vin;
+                    }
+
+
+                    // Retrieve API host
+
+                    let myHost = insomnia.collectionVariables.get('baseUrl');
+
+                    console.log(myHost);
+
+                    insomnia.sendRequest({
+                        url: myHost+'/vehicles',
+                        method: 'POST',
+                        header: {
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/json',
+                            'Authorization': 'Bearer ' + insomnia.collectionVariables.get('bearerAuth')
+                          },
+                        body: {
+                            mode: 'raw',
+                            raw: JSON.stringify(
+                                {
+                                    "vin": generateRandomVIN(),
+                                    "lat": 40.7128,
+                                    "lng": -74.0060,
+                                    "make": "Toyota",
+                                    "model": "Camry",
+                                    "year": 2025,
+                                    "color": "Blue"
+                                })
+                        }
+                    }, function (err, res) {
+                        console.log (res)
+                        insomnia.collectionVariables.set("vehicleId", res.json().id);
+                    });
+                  afterResponse: >-
+                    insomnia.test("Status code is 400", function () {
+                        insomnia.expect(insomnia.response.code).to.be.equal(400);
+                    });
+                settings:
+                  renderRequestBody: true
+                  encodeUrl: true
+                  followRedirects: global
+                  cookies:
+                    send: true
+                    store: true
+                  rebuildPath: true
+                pathParameters:
+                  - name: vehicleId
+                    value: "{{vehicleId}}"
+          - name: High-Score Attacks
+            meta:
+              id: fld_07ebfdb076154090a5e5273fe94ad294
+              created: 1783628443591
+              modified: 1783628443591
+              sortKey: -1783628434089
+              description: API Attacks that are detected and blocked with a high OpenAPI Audit
+                score
+            children:
+              - url: "{{baseUrl}}/vehicles"
+                name: API3:2023 - Data Leakage (Vehicle Location)
+                meta:
+                  id: req_5b175ece33f44b30a779d16464f0e83f
+                  created: 1783628443592
+                  modified: 1783628443592
+                  isPrivate: false
+                  description: ""
+                  sortKey: -1783628434088
+                method: GET
+                scripts:
+                  afterResponse: >-
+                    insomnia.test("Status code is 502", function () {
+                        insomnia.expect(insomnia.response.code).to.be.equal(502);
+                    });
+                settings:
+                  renderRequestBody: true
+                  encodeUrl: true
+                  followRedirects: global
+                  cookies:
+                    send: true
+                    store: true
+                  rebuildPath: true
+    authentication:
+      type: bearer
+      disabled: false
+      token: "{{bearerAuth}}"
+      prefix: ""
+cookieJar:
+  name: Default Jar
+  meta:
+    id: jar_06aba96d899118f8f73077e4e657578a203f3c87
+    created: 1783628443701
+    modified: 1783628443701
+environments:
+  name: Variables
+  meta:
+    id: env_a15a7ad4cd334d52beef2ff776049f0e
+    created: 1783628443600
+    modified: 1783628443600
+    isPrivate: false
+  data:
+    baseUrl: http://localhost:3000
+    bearerAuth: eyJhbGciOiJSUzM4NCIsInR5cCI6IkpXVCJ9.eyJpZCI6Ijc5MDI3YjI1LTAzOGItNGQyNi05ZjdkLTUyNTUwZWEwYmMwNCIsImlhdCI6MTc2NTg5NzQ3NSwiZXhwIjoxNzY4MzE2Njc1LCJhdWQiOiJ2ZWhpY2xlTG9jYXRvclVzZXJzIiwiaXNzIjoiaHR0cHM6Ly9pc3N1ZXIuNDJjcnVuY2guZGVtbyIsInN1YiI6InNjYW51c2VyQHRlc3QuY29tIn0.hlnIenIecvMACi2A-pkEhAcKpIhvYb1IoSI3YbTJwxuoumomS670XdBOLA5mdZevP8LM5w1S1KVVZBpTDQGRjXNjrcBB8mQ_-luQ2vvIjopWvL54kzdFUutHOzF98TURjde1cJGxl2rGzAN80-1Y8fz1l7nKcS-PlO4Tg4hErc5gEXMqZdHjDb_AhvFCPay8F_1lTqUBgmGbZqtqJ55BHrzx9l-ivyZHjMMRhzBdmZPmOdHPKfBIU7mDvokotEbAiRprJZcc-8IZjmCYe1n0szV1IcHYE10bw7-Vgt-fjKwtT0X42JzXixhyeQnd_zqdfFOmDKk3j3RRhbqC_4lL9g
+    vehicleId: 3cb72aec-fbf0-4778-a9ba-5d69c45ec94c
