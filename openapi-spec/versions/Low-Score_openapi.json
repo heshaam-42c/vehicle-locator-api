@@ -210,7 +210,8 @@
                         "in": "path",
                         "required": true,
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "format": "uuid"
                         }
                     }
                 ],
@@ -246,7 +247,8 @@
                         "in": "path",
                         "required": true,
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "format": "uuid"
                         }
                     }
                 ],
@@ -284,7 +286,8 @@
                         "in": "path",
                         "required": true,
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "format": "uuid"
                         }
                     }
                 ],
@@ -373,7 +376,9 @@
                         "description": "MongoDB ID"
                     },
                     "id": {
-                        "type": "string"
+                        "type": "string",
+                        "description": "Vehicle ID",
+                        "format": "uuid"
                     },
                     "lat": {
                         "type": "number",
