@@ -125,7 +125,7 @@ jobs:
       - name: upload_v2_scan_config
         id: upload_v2_scan_config
         run: | 
-            python scripts/conformance_scanv2.py -c ${{ secrets.API_TOKEN }} -a ${{steps.get_vehicle_api_id.outputs.VEHICLE_API_UUID}} -t scan_token.json -f .42c/scan/${{ steps.parse_alias.outputs.SCAN_ALIAS }}/scanconf.json -n ${{ env.SCAN_CONFIG }} -p ${{env.PLATFORM_URL}} --action upload_conf
+            python scripts/conformance_scanv2.py -c ${{ secrets.API_TOKEN }} -a ${{steps.get_vehicle_api_id.outputs.VEHICLE_API_UUID}} -t scan_token.json -cf .42c/scan/${{ steps.parse_alias.outputs.SCAN_ALIAS }}/scanconf.json -n ${{ env.SCAN_CONFIG }} -p ${{env.PLATFORM_URL}} --action upload_conf
             scan_token=$(cat scan_token.json | jq -r '.scan_token')
             echo "SCANV2_TOKEN=$scan_token" >> $GITHUB_OUTPUT
       - name: 42crunch-dynamic-api-testing
