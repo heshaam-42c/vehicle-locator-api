@@ -43,7 +43,7 @@ jobs:
     permissions:
       contents: read # for actions/checkout to fetch code
       security-events: write # for 42Crunch/api-security-audit-action to upload results to Github Code Scanning
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     steps:
       - name: checkout repo
         uses: actions/checkout@v6
@@ -78,7 +78,7 @@ jobs:
   run_42c_scan:
     permissions:
       contents: read # for actions/checkout to fetch code
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     needs: run_42c_audit
     services:
       docker:
@@ -160,7 +160,7 @@ jobs:
             fi
 
   update_42c_protection:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     needs: run_42c_audit
     permissions:
       contents: read # for actions/checkout to fetch code
