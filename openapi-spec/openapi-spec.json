@@ -18,7 +18,7 @@
     "paths": {
         "/": {
             "get": {
-                "summary": "API status",
+                "summary": "API statuss",
                 "operationId": "getStatus",
                 "responses": {
                     "200": {
