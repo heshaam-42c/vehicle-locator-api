@@ -101,7 +101,7 @@ jobs:
         run: |
           cd database
           chmod +x ./database.sh
-          ./database.sh
+          bash ./database.sh
       - name: Install dependencies & Start app
         run: |
           cd app
