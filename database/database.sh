@@ -4,14 +4,14 @@ docker_yaml=docker-compose-db.yaml
 
 if [ "$1" == "down" ]; then
     echo "Stopping DB..."
-    docker-compose -f $docker_yaml down -v
+    docker compose -f $docker_yaml down -v
     exit 0
 fi
 
 echo "Stopping DB..."
-docker-compose -f $docker_yaml down -v
+docker compose -f $docker_yaml down -v
 echo "Creating DB..."
-docker-compose -f $docker_yaml up -d
+docker compose -f $docker_yaml up -d
 
 # Check if API is running
 api_invoke_url="http://localhost:3000/"
